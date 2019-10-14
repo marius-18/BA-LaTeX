@@ -1,0 +1,962 @@
+\documentclass[a4paper]{scrreprt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some common includes. Add additional includes you need.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{ngerman}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[margin=23mm,bottom=30mm]{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath,amsfonts,amssymb,amsthm}
+\RequirePackage{listingsutf8}
+\RequirePackage{textcomp}
+\RequirePackage{tikz}
+\RequirePackage{eurosym}
+\usetikzlibrary{snakes}
+
+\usepackage{fancyvrb}
+
+\usepackage{subfigure}
+
+\usepackage{url}
+
+
+%\usepackage{subcaption}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defines for mathematical notation. Add additional defines as needed.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\O{\mathcal{O}}
+\def\sort{\mathrm{sort}}
+\def\scan{\mathrm{scan}}
+\def\dist{\mathrm{dist}}
+
+\newcommand{\tomorrow}{{\AdvanceDate[1]\today}}
+
+
+\title{Matching Markets \\ ~}
+\subtitle{Ausarbeitung zum Seminar\\ ''Aktuelle Themen der Theoretischen Informatik - Algorithmen'' \\ ~}
+\author{Marius Hagemann \\ 5732742 \\ ~}
+
+%\date{\tomorrow}
+\publishers{Universität Frankfurt am Main \\ Fachbereich Informatik \\ ~ \\ Dr. Annamaria Kovacs}
+
+%\swapnumbers
+
+\theoremstyle{plain} %Text ist Kursiv
+\newtheorem{theorem}{Satz}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Korollar}
+
+\theoremstyle{definition} %Text ist \"upright"
+\newtheorem{remark}[theorem]{Bemerkung}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Beispiel}
+
+
+
+\usepackage{listings}% http://ctan.org/pkg/listings
+\lstset{
+  basicstyle=\ttfamily,
+  mathescape,
+    showspaces=false,
+  showstringspaces=false
+}
+
+\lstset{
+   basicstyle=\fontsize{10}{13}\selectfont\ttfamily
+}
+
+\lstset{literate=%
+  {Ö}{{\"O}}1
+  {Ä}{{\"A}}1
+  {Ü}{{\"U}}1
+  {ß}{{\ss}}1
+  {ü}{{\"u}}1
+  {ä}{{\"a}}1
+  {ö}{{\"o}}1
+}
+
+\begin{document}
+\maketitle
+
+
+%\begin{abstract}
+%Eine kurze Zusammenfassung des Inhaltes.
+%blasbaslabsllasblasblbas
+%\end{abstract}
+
+
+\tableofcontents
+
+
+
+\chapter{Einleitung}
+In dieser Ausarbeitung wird untersucht, wann bipartite Graphen ein perfektes Matching 
+besitzen. Weiterhin wird eine Art Markt mit Preisen und Angeboten modelliert, wofür 
+der Graph Begriff leicht verändert wird. Dabei wird untersucht, wann es in diesem Markt eine
+optimale Zuteilung von ''Gütern'' zu ''Käufern'' gibt und wie die Preise der Güter eine solche 
+optimale Zuteilung beeinflussen.
+Ein wichtiger Begriff dabei ist der markträumende Preis, welcher in Kapitel 4 behandelt wird. Auch wird
+ein Algorithmus angegeben, welcher markträumende Preise berechnet.
+\\
+\\
+Die Ausarbeitung orientiert sich am Kapitel 10 des Buchs \textbf{Networks, Crowds, and Markets} von David Easley und
+Jon Kleinberg \cite{alles}.
+
+%{\let\clearpage\relax \chapter{Allgemeine bipartite Graphen}}
+
+
+
+\chapter{Allgemeine bipartite Graphen}
+Zu Beginn definieren wir die grundlegenden mathematischen Begriffe. Als wichtigste Grundlage dient 
+hierbei das Konstrukt des Graphen.
+\begin{definition}[Graph] ~\\
+Ein (ungerichteter) \textbf{Graph} $G = (V,E)$ ist ein Tupel bestehend aus einer Knotenmenge $V$ und einer Kantenmenge
+ $E$. Eine Kante verbindet zwei Knoten miteinander und ist damit eine Menge, aus zwei Knoten.
+ Es gilt: $E \subseteq \{ \{u,v\} | u,v \in V, u \neq v \}$.  
+\end{definition}
+
+%\noindent
+%Graphen werden häufig in einer grafischen Form dargestellt. Ein Beispiel dazu ist in 
+%Abbildung \ref{fig:bspgraph} gegeben. Der dargestellte Graph entspricht dabei der Form:
+%$G=(V,E)$ mit $V= \{v_1,v_2,v_3\}$ und $E= \{ \{v_1,v_2\}, \{v_1,v_3\}, \{v_2,v_3\} \}$
+
+
+%\begin{figure}[h]
+%\centering
+%\begin{tikzpicture}
+%\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+%\node[node style] at (0, 0)     (1)     {$v_1$};
+%\node[node style] at (3, 0)   (2)     {$v_2$};
+%\node[node style] at (1.5, 1.5)   (3)     {$v_3$};
+   
+%\draw[line width=0.1mm, >=latex]
+            %(1)     edge[right]    node {} (2)
+            %(1)     edge[right]    node {} (3)
+            %(2)     edge[right]    node {} (3)
+%;
+%\end{tikzpicture}
+%\caption{Beispiel eines Graphen}
+%\label{fig:bspgraph}
+%\end{figure}
+
+\noindent
+In dieser Arbeit spielt eine spezielle Klasse von Graphen, bipartite Graphen, eine zentrale Rolle.
+Bei einem bipartiten Graphen kann man die Knoten in zwei Mengen teilen, sodass alle Kanten nur zwischen den 
+beiden Mengen verlaufen und nicht innerhalb einer Menge. Formal bedeutet dies:
+\begin{definition}[bipartiter Graph] ~\\
+Ein Graph $G=(V,E)$ heißt \textbf{bipartit}, wenn es Teilmengen $V_1 \subset V$ und $V_2 \subset V$ gibt, für die 
+$V_1 \cup V_2 = V$ und $V_1 \cap V_2 = \emptyset$ gilt,
+ sodass für jede Kante $e \in E$ ein $u \in V_1$ und ein $v \in V_2$ existiert, sodass $e = \{u,v\}$ gilt.
+Die Knotenmengen $V_1$ und $V_2$ werden auch als Partitionen bezeichnet.
+\end{definition}
+
+\noindent
+Ein Beispiel für einen bipartiten Graphen sieht man in Abbildung \ref{fig:bipstd}. Dabei gilt für die Partitionen:
+$V_1 = \{v_1,v_2,v_3,v_4\}$ und $V_2 = \{v_5,v_6,v_7,v_8\}$. Man sieht deutlich, dass alle Kanten die Partitionen
+$V_1$ und $V_2$ ''kreuzen''.
+
+\begin{figure}[h]
+%bipartiter graph
+\centering
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (0, 0)     (1)     {$v_1$};
+\node[node style] at (0, -1.5)   (2)     {$v_2$};
+\node[node style] at (0, -3)     (3)     {$v_3$};
+\node[node style] at (0, -4.5)   (4)     {$v_4$};
+
+\node[node style] at (3, 0)     (5)     {$v_5$};
+\node[node style] at (3, -1.5)   (6)     {$v_6$};
+\node[node style] at (3, -3)   (7)     {$v_7$};
+\node[node style] at (3, -4.5)   (8)     {$v_8$};
+
+   
+\draw[line width=0.1mm, >=latex]
+            (1)     edge[right]    node {} (5)
+            (1)     edge[right]    node {} (6)
+            (1)     edge[right]    node {} (7)
+            (2)     edge[right]    node {} (5)
+            (2)     edge[right]    node {} (6)
+            (3)     edge[right]    node {} (6)
+            (4)     edge[right]    node {} (5)
+            (4)     edge[right]    node {} (8)
+;
+\end{tikzpicture}
+\caption{Beispiel eines bipartiten Graphen}
+\label{fig:bipstd}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%
+%\newpage
+\noindent
+Weiterhin soll in dieser Arbeit der Begriff eines \textbf{Matchings} näher behandelt werden.
+\begin{definition}[Matching] ~\\
+Ein \textbf{Matching} $M \subseteq E$ ist eine Kantenmenge, wobei kein Knoten mit mehr als einer Kante
+aus $M$ inzident ist. 
+\end{definition}
+
+\noindent
+In Abbildung \ref{fig:bspmatching} sind verschiedene Matchings zu sehen. Die Kanten, die im Matching
+enthalten sind, sind jeweils hervorgehoben.
+
+\begin{figure}[h]
+%bipartiter graph
+\centering
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (0, 2)     (1)     {$v_1$};
+\node[node style] at (2, 0)   (2)     {$v_2$};
+\node[node style] at (-2, 0)     (3)     {$v_3$};
+\node[node style] at (0, -2)   (4)     {$v_4$};
+   
+\draw[line width=0.1mm, >=latex]
+            (1)     edge[right]    node {} (4)
+            (2)     edge[right]    node {} (1)
+            (3)     edge[right]    node {} (4)
+            (2)     edge[right]    node {} (3)
+;
+
+\draw[line width=0.8mm, >=latex]
+            (4)     edge[right]    node {} (2)
+;
+\end{tikzpicture}
+\end{subfigure}
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (0, 2)     (1)     {$v_1$};
+\node[node style] at (2, 0)   (2)     {$v_2$};
+\node[node style] at (-2, 0)     (3)     {$v_3$};
+\node[node style] at (0, -2)   (4)     {$v_4$};
+   
+\draw[line width=0.1mm, >=latex]
+            (1)     edge[right]    node {} (4)
+            (2)     edge[right]    node {} (4)
+            (2)     edge[right]    node {} (3)
+;
+
+\draw[line width=0.8mm, >=latex]
+            (4)     edge[right]    node {} (3)
+            (2)     edge[right]    node {} (1)
+;
+\end{tikzpicture}
+\end{subfigure}
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (0, 2)     (1)     {$v_1$};
+\node[node style] at (2, 0)   (2)     {$v_2$};
+\node[node style] at (-2, 0)     (3)     {$v_3$};
+\node[node style] at (0, -2)   (4)     {$v_4$};
+   
+\draw[line width=0.1mm, >=latex]
+            (2)     edge[right]    node {} (1)
+            (2)     edge[right]    node {} (4)
+            (4)     edge[right]    node {} (3)
+
+;
+
+\draw[line width=0.8mm, >=latex]
+            (1)     edge[right]    node {} (4)
+            (2)     edge[right]    node {} (3)
+;
+\end{tikzpicture}
+\end{subfigure}
+
+\caption{Verschiedene Matchings auf einem Beispielgraphen}
+\label{fig:bspmatching}
+\end{figure}
+
+\noindent
+Ein Matching ist \textbf{nicht-erweiterbar}, wenn -- wie der Name schon sagt -- man keine weitere
+Kante zum Matching hinzufügen kann, da sonst die Matching-Eigenschaft verletzt werden würde.
+Ein \textbf{größtmögliches} Matching hat die größtmögliche Anzahl an Kanten, die ein Matching auf dem gegebenen Graphen haben
+kann, und ein \textbf{perfektes} Matching ist ein Matching, welches alle Knoten überdeckt.
+Im obigen Beispiel sind alle drei Matchings nicht erweiterbar, jedoch sind nur die letzten beiden 
+perfekt (und somit auch größtmöglich). Mit anderen Worten:
+
+\begin{definition}[perfektes Matching] ~\\
+Ein Matching $M$ heißt \textbf{perfekt}, wenn $2\cdot |M| = |V|$ gilt.
+\end{definition}
+
+
+\noindent 
+Betrachtet man perfekte Matchings auf bipartiten Graphen, muss offensichtlich $|V_1| = |V_2|$ gelten. 
+Ferner gilt für bipartite Graphen, dass in einem solchen Graphen nur dann ein perfektes Matching existiert, 
+wenn es eine eins-zu-eins Zuordnung der Knoten aus $V_1$ und $V_2$ gibt. Mathematisch bedeutet dies,
+dass es eine bijektive Abbildung $f: V_1 \rightarrow V_2$ geben muss, sodass für alle $v \in V_1$:  
+$\{v,f(v)\} \in E$ gilt. Das perfekte Matching ist dann: $M=\{\{v,f(v)\} \in E ~ | ~ v\in V_1\}$.
+\\
+\\
+Nun geht es um die Frage, ob ein gegebener bipartiter Graph ein perfektes Matching enthält oder
+nicht. Gibt es ein perfektes Matching, ist dies leicht zu zeigen: Man muss lediglich eine Kantenmenge
+angeben und nachweisen, dass diese die Eigenschaft eines perfekten Matchings erfüllt. Gibt es hingegen kein
+perfektes Matching, ist es auf den ersten Blick nicht einfach, dies zu zeigen. Dabei hilft Satz \ref{matchingtheorem},
+welcher Matching-Theorem, Satz von Hall und König oder auch Heiratssatz \cite{heirat} genannt wird.
+\\
+Um diesen Satz zu formulieren werden noch zwei weitere Definitionen benötigt. Zuerst wird die Nachbarschaft
+einer Knotenmenge definiert.
+
+\begin{definition}[Nachbarschaft] ~\\
+Die \textbf{Nachbarschaft} $N(S)$ einer Knotenmenge $S$ ist gegeben als:
+\[N(S) = \Big\{ v \in V \setminus S \ | \ \exists u \in S : \{v,u\}\in E  \Big\}\]
+\end{definition}
+
+
+\noindent
+Für bipartite Graphen gilt offensichtlich: Wenn $S \subseteq V_1$, dann ist $N(S) \subseteq V_2$. 
+Die zweite Definition bezieht sich auf das Größenverhältnis zwischen einer Menge und ihrer Nachbarschaft.
+
+\begin{definition}[blockierende Menge] ~\\
+Eine Knotenmenge $S \subseteq V_1$ (bzw. $S \subseteq V_2$) heißt \textbf{blockierend}, wenn $|S| > |N(S)|$ gilt.
+\end{definition}
+
+\noindent
+Eine Menge ist also blockierend, wenn sie mehr Elemente hat als ihre Nachbarschaft. Intuitiv ist sofort klar,
+dass es in dem Fall, wenn eine blockierende Menge existiert, kein perfektes Matching geben kann.
+Dies gilt,  da es bei 
+einem perfekten Matching eine eins-zu-eins Zuordnung der Knoten aus der blockierenden Menge zu den Knoten 
+aus der Nachbarschaft geben muss. Wenn in der Nachbarschaft aber echt weniger Knoten vorhanden sind, 
+ist dies nicht möglich. Somit ist die Nicht-Existenz einer blockierenden Menge notwendig
+für die Existenz eines perfektes Matchings. Das Matching-Theorem besagt nun, dass die Nicht-Existenz
+sogar hinreichend ist.
+
+
+
+\begin{theorem}[Matching-Theorem]
+\ \\
+Hat ein bipartiter Graph kein perfektes Matching, dann muss es eine blockierende Menge geben.
+\label{matchingtheorem}
+\end{theorem}
+
+\noindent
+Der Beweis dieses Satzes wird an dieser Stelle ausgelassen, kann aber in Kapitel 10.6 von ''Networks, Crowds, and Markets'' \cite{alles} nachgelesen werden.
+\\
+\\
+Weiterhin lässt sich auch zeigen, dass in dem Fall, wenn ein bipartiter Graph kein
+perfektes Matching hat, es in beiden Partitionen eine blockierende Menge gibt.
+Mit Hilfe des Matching-Theorems ist es nun einfacher zu zeigen, dass es auf einem bipartiten Graphen
+kein perfektes Matching gibt. Es reicht demnach also aus, eine blockierende Menge zu finden. Hat man
+eine blockierende Menge gefunden, kann der Graph kein perfektes Matching haben.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\newpage
+
+\chapter{Preise und Bewertungen}
+Die bisher behandelten bipartiten Graphen sind statisch. Entweder es gibt ein perfektes
+Matching in einem gegebenen Graphen oder es gibt kein perfektes Matching. Um einen Markt zu simulieren wird jedoch
+ein dynamischeres Modell benötigt. Dies wird durch einige Veränderungen umgesetzt: Die ''festen'' Kanten zwischen den
+Partitionen werden abgeschafft. Dafür wählt jeder Knoten der Partition $V_2$ (ab jetzt ''\textbf{Käufer}'' genannt)
+zu jedem Knoten aus $V_1$ eine nichtnegative ganzzahlige \textbf{Bewertung}. Dabei drückt die Bewertung aus, wie sehr eine Verbindung ''gewollt'' ist.
+Wenn die Bewertung hoch ist, ist diese Verbindung beliebt, bei niedriger Bewertung ist die Verbindung unbeliebter.
+\\
+Damit können auch die vorher beschriebenen bipartiten Graphen simuliert werden. Dazu setzt man die
+Bewertung zu Knoten mit denen im bipartiten Graphen eine Kante besteht auf den Wert 1 und die Bewertung
+zu allen anderen Knoten auf den Wert 0. Ein Beispiel für diese Methode kann in Abbildung \ref{fig:bipundbewertung} betrachtet werden.
+
+
+
+\begin{figure}[h]
+%bipartiter graph
+\centering
+
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (0, 0)     (1)     {$v_3$};
+\node[node style] at (0, 1.5)   (2)     {$v_2$};
+\node[node style] at (0, 3)     (3)     {$v_1$};
+
+\node[node style] at (3, 0)     (5)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (7)     {$k_1$};
+
+   
+\draw[line width=0.1mm, >=latex]
+            (1)     edge[right]    node {} (5)
+            (1)     edge[right]    node {} (6)
+            (1)     edge[right]    node {} (7)
+            (2)     edge[right]    node {} (5)
+            (2)     edge[right]    node {} (6)
+            (3)     edge[right]    node {} (6)
+            %(2)     edge[right]    node {} (3)
+
+;
+\end{tikzpicture}
+\end{subfigure}
+~~~~~~~~~~~~~~~~~~~~~
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (1)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (3)     {$v_1$};
+
+\node[node style] at (3, 0)     (5)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (7)     {$k_1$};
+
+\node[] at (5, 3)   (8)      {(0,0,1)};
+
+\node[] at (5, 1.5)  (9)     {(1,1,1)};
+\node[] at (5, 0)   (10)     {(0,1,1)};
+
+\end{tikzpicture}
+
+\end{subfigure}
+
+\caption{Bipartiter Graph und die entsprechende Repräsentation mit Bewertungen}
+\label{fig:bipundbewertung}
+\end{figure}
+
+
+\noindent
+Als nächste Erweiterung werden den Knoten $i \in V_1$ (ab jetzt ''\textbf{Verkäufer}'' genannt) ganzzahlige 
+\textbf{Preise} $p_i\ge0$.
+zugeordnet. Die bevorzugten Verbindungen hängen jetzt von den Bewertungen und den Preisen ab. Hierfür
+definieren wir den Begriff \textbf{Payoff}, mit dessen Hilfe man die einzelnen Zuordnungen beurteilen kann.
+
+\begin{definition}[Payoff]
+~ \\
+Ein Verkäufer $i$ habe einen Preis $p_i$ und ein Käufer $j$ habe für $i$ eine Bewertung von $b_{i,j}$.
+Der \textbf{Payoff} beträgt dann: $P_{i,j} = b_{i,j} - p_i$
+\end{definition}
+\noindent
+Der Payoff ist also die Differenz der Bewertung und des Preises. Die Käufer versuchen ihren eigenen Payoff zu maximieren.
+Ein Verkäufer $v$, der den Payoff eines bestimmten Käufers $k$ maximiert, wird demnach als \textbf{bevorzugter Verkäufer} von $k$ bezeichnet.
+Dies führt uns zu folgender Definition:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+
+\begin{definition}[preferred-seller-Graph]  ~\\
+Der \textbf{preferred-seller-Graph} (kurz \textbf{p-s-Graph}) entsteht, indem zwischen jedem Käufer und 
+seinem bevorzugten Verkäufer eine Kante gezogen wird.
+\end{definition}
+
+\newpage
+\noindent
+In Abbildung \ref{fig:preferredseller} ist ein Beispiel dazu gegeben. Dabei ist
+auf der linken Seite ein Graph mit Bewertungen und Preisen und auf der rechten Seite
+der dazugehörige p-s-Graph. Um dies zu erstellen wurde für jeden Käufer $k_i$
+der Verkäufer $v_j$ gesucht, welcher den Payoff maximiert. Für $k_1$ ist das beispielsweise $v_1$ mit dem
+Payoff $P = 1$. In diesem Beispiel wird deutlich, dass ein Käufer durchaus mehrere bevorzugte Verkäufer haben kann
+und dass ein Verkäufer von mehreren Käufern als bevorzugt bestimmt werden kann.
+
+
+
+\begin{figure}[h]
+\begin{subfigure}
+~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%%%%%% IGIIIIIITT
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (1)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (3)     {$v_1$};
+
+\node[node style] at (3, 0)     (5)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (7)     {$k_1$};
+
+\node[] at (5, 3)   (8)      {(7,1,5)};
+\node[] at (5, 1.5)  (9)     {(8,6,9)};
+\node[] at (5, 0)   (10)     {(5,8,15)};
+
+\node[] at (0, 3)   (8)      {6};
+\node[] at (0, 1.5)  (9)     {3};
+\node[] at (0, 0)   (10)     {10};
+
+\end{tikzpicture}
+\end{subfigure}
+~~~~~~~~~~~~~~~~~~~~~~~~
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (3)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (1)     {$v_1$};
+
+\node[node style] at (3, 0)     (7)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (5)     {$k_1$};
+
+\draw[line width=0.1mm, >=latex]
+            (5)     edge[right]    node {} (1)
+            (6)     edge[right]    node {} (2)
+            (7)     edge[right]    node {} (2)
+            (7)     edge[right]    node {} (3)
+;
+
+\end{tikzpicture}
+
+\end{subfigure}
+
+\caption{Beispiel für einen p-s-Graph}
+\label{fig:preferredseller}
+\end{figure}
+
+
+\noindent
+In einem weiteren Beispiel (Abbildung \ref{fig:preferredseller2}) ist der gleiche Graph mit denselben
+ Gewichten wie zuvor gegeben, lediglich die Preise wurden verändert. Dabei sieht man, dass
+man bei unterschiedlichen Preisen auch unterschiedliche p-s-Graphen erhält.
+
+
+\begin{figure}[h]
+\begin{subfigure}
+~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%%%%%% IGIIIIIITT
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (1)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (3)     {$v_1$};
+
+\node[node style] at (3, 0)     (5)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (7)     {$k_1$};
+
+\node[] at (5, 3)   (8)      {(7,1,5)};
+\node[] at (5, 1.5)  (9)     {(8,6,9)};
+\node[] at (5, 0)   (10)     {(5,8,15)};
+
+\node[] at (0, 3)   (8)      {6};
+\node[] at (0, 1.5)  (9)     {3};
+\node[] at (0, 0)   (10)     {7};
+
+\end{tikzpicture}
+\end{subfigure}
+~~~~~~~~~~~~~~~~~~~~~~~~
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (3)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (1)     {$v_1$};
+
+\node[node style] at (3, 0)     (7)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (5)     {$k_1$};
+
+\draw[line width=0.1mm, >=latex]
+            (5)     edge[right]    node {} (1)
+            (6)     edge[right]    node {} (2)
+            (7)     edge[right]    node {} (3)
+;
+
+\end{tikzpicture}
+
+\end{subfigure}
+
+\caption{Analoges Beispiel zu Abbildung \ref{fig:preferredseller} mit anderen Preisen}
+\label{fig:preferredseller2}
+\end{figure}
+
+
+
+
+
+\chapter{Markträumende Preise}
+Im vorherigen Kapitel haben wir gesehen, wie die Preise den p-s-Graphen 
+beeinflussen. Dies lässt den Schluss zu, dass man die
+Preise auf irgendeine Art und Weise anpassen kann, sodass man am Ende einen p-s-Graphen erhält, 
+auf dem es ein perfektes Matching gibt.
+
+
+\begin{definition}[Marktäumende Preise] ~\\
+Preise werden \textbf{markträumend} genannt, wenn es auf dem resultierenden p-s-Graphen
+ein perfektes Matching gibt.
+\end{definition}
+
+\noindent
+Hat man also markträumende Preise, kann jeder Käufer einen seiner bevorzugten Verkäufer auswählen,
+sodass keine Konflikte entstehen und damit jeder Verkäufer zu genau einem Käufer zugeordnet ist.
+
+
+\begin{theorem}[Existenz markträumender Preise] ~\\
+Für beliebige Bewertungen der verschiedenen Käufer existieren markträumende Preise. 
+\label{theo:existprice}
+\end{theorem}
+
+\noindent
+Um diesen Satz zu beweisen wird ein Algorithmus beschrieben, der zu einem gegebenen Graphen
+mit Bewertungen markträumende Preise für die Verkäufer berechnet. Dieser Algorithmus wird mit ''\texttt{Auktion}''
+bezeichnet.
+\\
+\\
+Am Anfang hat jeder Verkäufer den Preis 0.
+Der Algorithmus läuft solange in Runden, bis er ein ''\texttt{BREAK}'' erreicht und damit abbricht.
+Zu Beginn jeder Runde hat jeder Verkäufer einen Preis, wobei der kleinste Preis den Wert 0 hat.
+(Hat man Preise, deren kleinster Wert nicht 0 ist, muss man lediglich von jedem Preis
+den Wert des kleinsten Preises abziehen)
+\\
+\\
+Der Algorithmus sieht wie folgt aus:
+\begin{lstlisting}[numbers=left,xleftmargin=15mm]
+Erstelle den p-s-Graph
+IF (der p-s-Graph hat ein perfektes Matching)
+    THEN: BREAK, markträumende Preise gefunden.
+    ELSE: Finde eine blockierende Menge $S$ an Käufern
+          jeder Verkäufer aus $N(S)$ erhöht den Preis um 1
+          reduziere die Preise, sodass der kleinste Preis 0 beträgt
+          starte nächste Runde
+\end{lstlisting}
+\noindent
+Ein Beispiel für diesen Algorithmus wird in Abbildung 4.1 gegeben.
+\begin{figure}[h]
+\begin{subfigure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%% IGIIIIIITT
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (1)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (3)     {$v_1$};
+
+\node[node style] at (2.5, 0)     (5)     {$k_3$};
+\node[node style] at (2.5, 1.5)   (6)     {$k_2$};
+\node[node style] at (2.5, 3)   (7)     {$k_1$};
+
+\node[] at (4, 3)   (8)      {(10,4,2)};
+\node[] at (4, 1.5)  (9)     {(8,6,5)};
+\node[] at (4, 0)   (10)     {(7,3,6)};
+
+\node[] at (0, 3)   (8)      {0};
+\node[] at (0, 1.5)  (9)     {0};
+\node[] at (0, 0)   (10)     {0};
+\draw[line width=0.1mm, >=latex]
+            (5)     edge[right]    node {} (3)
+            (6)     edge[right]    node {} (3) %guut
+            (7)     edge[right]    node {} (3)
+;
+
+\end{tikzpicture}
+\end{subfigure}
+~~~
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (3)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (1)     {$v_1$};
+
+\node[node style] at (2.5, 0)     (7)     {$k_3$};
+\node[node style] at (2.5, 1.5)   (6)     {$k_2$};
+\node[node style] at (2.5, 3)   (5)     {$k_1$};
+
+\node[] at (0, 3)   (8)      {1};
+\node[] at (0, 1.5)  (9)     {0};
+\node[] at (0, 0)   (10)     {0};
+
+\node[] at (4, 3)   (8)      {(10,4,2)};
+\node[] at (4, 1.5)  (9)     {(8,6,5)};
+\node[] at (4, 0)   (10)     {(7,3,6)};
+
+
+\draw[line width=0.1mm, >=latex]
+            (5)     edge[right]    node {} (1)
+            (6)     edge[right]    node {} (1) %guut
+            (7)     edge[right]    node {} (1)
+            (7)     edge[right]    node {} (3)
+
+;
+
+
+\end{tikzpicture}
+\end{subfigure}
+~~~
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (3)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (1)     {$v_1$};
+
+\node[node style] at (2.5, 0)     (7)     {$k_3$};
+\node[node style] at (2.5, 1.5)   (6)     {$k_2$};
+\node[node style] at (2.5, 3)   (5)     {$k_1$};
+
+\node[] at (0, 3)   (8)      {2};
+\node[] at (0, 1.5)  (9)     {0};
+\node[] at (0, 0)   (10)     {1};
+
+\node[] at (4, 3)   (8)      {(10,4,2)};
+\node[] at (4, 1.5)  (9)     {(8,6,5)};
+\node[] at (4, 0)   (10)     {(7,3,6)};
+
+\draw[line width=0.1mm, >=latex]
+            (5)     edge[right]    node {} (1)
+            (6)     edge[right]    node {} (1) %guut
+            (7)     edge[right]    node {} (1)
+            (7)     edge[right]    node {} (3)
+            (6)     edge[right]    node {} (2)
+
+
+;
+
+\end{tikzpicture}
+
+\end{subfigure}
+\label{fig:algo_auk}
+\caption{Beispiel für den \texttt{Auktion}-Algorithmus}
+\end{figure}
+
+\noindent
+\texttt{Auktion} bricht offensichtlich nur dann ab, wenn der p-s-Graph
+ein perfektes Matching besitzt. Dann sind die Preise per Definition markträumend. Dies wird
+im folgenden Lemma festgehalten.
+
+\begin{lemma}
+Wenn \texttt{Auktion} terminiert, dann sind die berechneten Preise markträumend.
+\label{lem:auktionkorr}
+\end{lemma}
+
+
+\noindent
+Nun bleibt nur noch zu zeigen, dass \texttt{Auktion} für jede Eingabe terminiert.
+
+
+%\newpage
+
+\begin{lemma}
+\texttt{Auktion} terminiert für jede Eingabe.
+\label{lem:auktionterm}
+\end{lemma}
+
+
+\begin{proof}[Beweis zu Lemma \ref{lem:auktionterm}]
+Hierfür definieren wir für gegebene Preise $p_i$ und Bewertungen $b_{i,j}$ die potentielle Energie $E(v)$ für jeden Knoten $v$ des Graphen. Die potentielle
+Energie eines Käufers ist dabei sein maximaler Payoff.
+Für einen Verkäufer ist die potentielle Energie sein aktueller Preis. Die potentielle
+Energie des gesamten Graphen ergibt sich dann als Summe der potentiellen Energien aller Knoten: 
+\begin{align*}
+E(G) = \sum_{v\in V} E(v)
+\end{align*}
+Zu Beginn des \texttt{Auktion} Algorithmus hat jeder Verkäufer den
+Preis 0. Damit gilt $E (v) = 0$ für alle Verkäufer $v$. Dementsprechend ist die potentielle
+Energie eines Käufers gleich dem Wert seiner größten Bewertung. Für die gesamte potentielle Energie
+gilt zu Beginn also: $E(G) \ge 0$.
+\\
+\\
+Da für die Preise $p_v$ per Definition $p_v \ge 0$ gilt, ist die potentielle Energie der Verkäufer immer
+positiv. Zu Beginn jeder Runde von \texttt{Auktion} hat der kleinste Preis immer den Wert 0. Auch für alle
+Bewertungen $b_{i,j}$ gilt laut Definition $b_{i,j} \ge 0$. Damit ist der maximale Payoff eines jeden Käufers
+auch nicht negativ. Also gilt für das gesamte Potential vor jeder Runde:
+$E(G)\ge 0$.
+\\
+\\
+Im Verlauf des Algorithmus werden die Bewertungen nicht verändert. Demnach ändert sich die potentielle Energie nur,
+wenn die Preise verändert werden. Dies passiert lediglich in den Zeilen 5 und 6.
+\begin{itemize}
+\item
+In Zeile 5 werden die Preise von jedem Knoten der Nachbarschaft $N(S)$ einer blockierenden Menge $S$ um 1 erhöht.
+Somit steigt die potentielle Energie aller Verkäufer aus $N(S)$ jeweils um den Wert 1. Die 
+potentielle Energie der Käufer aus $S$ sinkt jedoch um jeweils 1, da der bevorzugte Verkäufer jedes Käufers aus
+$S$ in $N(S)$ liegt. Da $S$ eine blockierende Menge ist, gilt $|S| > |N(S)|$. Damit
+wird der gesamten potentiellen Energie in diesem Schritt mindestens eine Einheit mehr abgezogen als addiert.
+$E(G)$ wird also um mindestens 1 kleiner. 
+\item
+In Zeile 6 werden die Preise reduziert, sodass der kleinste Preis den Wert 0 hat. Dabei wird
+von jedem Preis der Wert $p$ des kleinsten Preises abgezogen. Somit sinkt die potentielle Energie eines
+jeden Verkäufers um $p$. Dabei steigt jedoch der Payoff (und damit auch die potentielle Energie)
+eines jeden Käufers genau um den Wert $p$.
+Da die Anzahl der Verkäufer gleich der Anzahl der Käufer ist, ändert sich die gesamte potentielle Energie nicht.
+\end{itemize}
+
+\noindent
+Damit wird in jeder Runde von \texttt{Auktion} die gesamte potentielle Energie um mindestens 1 verringert.
+Da zu Beginn $E(G) \ge 0$ gilt und die potentielle Energie nicht negativ werden kann, 
+terminiert \texttt{Auktion} also nach einer endlichen Anzahl an Schritten.
+\end{proof}
+
+
+
+\noindent
+Mit diesem Wissen kann nun der Beweis zum vorherigen Satz formuliert werden:
+
+\begin{proof}[Beweis von Satz \ref{theo:existprice}]
+Lemma \ref{lem:auktionkorr} besagt, dass die von \texttt{Auktion} erstellten Preise markträumend sind und Lemma 
+\ref{lem:auktionterm} besagt, dass \texttt{Auktion} auf jeder Eingabe terminiert. Folglich erstellt
+\texttt{Auktion} zu jeder Eingabe markträumende Preise. Dadurch ist die Existenz von markträumenden Preisen 
+ gezeigt.
+\end{proof}
+
+%\newpage
+
+\noindent
+Nun stellt sich die Frage, ob diese Preise auch dazu führen, dass die Gemeinschaft der Käufer mit dieser Zuteilung 
+ ''zufrieden'' ist. In diesem Zusammenhang nennt man eine Zuteilung sozial optimal, wenn die Summe
+der Bewertungen, welche ausgewählt wurden, maximiert wird.
+
+
+\begin{theorem}[Optimalität markträumender Preise] ~\\
+Für beliebige markträumende Preise $p_i$ und ein beliebiges perfektes Matching auf
+dem p-s-Graphen ist die Summe aller ausgewählten Bewertungen maximal. \label{optmarkt}
+\end{theorem}
+
+
+\begin{proof}[Beweis von Satz \ref{optmarkt}]
+Gegeben seien markträumende Preise und ein perfektes Matching $M$ auf dem entsprechenden
+p-s-Graphen. Die Preise und Bewertungen seien fixiert.
+\\
+Der gesamte Payoff $P_{\text{ges}}$ sei die Summe der Payoffs über alle Käufer im Bezug zu den jeweiligen Verkäufern, 
+die im Matching zugeordnet sind. Da im p-s-Graph jeder Käufer seinen
+eigenen Payoff maximiert, wird also auch $P_{ges}$ über alle im p-s-Graph mögliche Zuteilungen maximiert.
+\\
+Sei $v$ die bijektive Funktion, welche jedem Käufer
+den nach $M$ zugehörigen Verkäufer zuordnet.
+Weiterhin sei $b_k$ die Bewertung von Käufer $k$ zu $v(k)$ und $p_i$ der Preis von Verkäufer i. 
+Dann gilt: 
+\begin{align*}
+P_{\text{ges}} &= \sum_{k \in\text{ Käufer}} P_{v(k),k} = \sum_{k\in \text{ Käufer}} (b_k -p_{v(k)})
+= \sum_{k \in \text{ Käufer}} b_k - \sum_{k \in \text{ Käufer}} p_{v(k)}\\
+&\overset{*}{=} \sum_{k \in \text{ Käufer}} b_k - \sum_{i \in \text{ Verkäufer}} p_{i}
+\\
+&\ \text{$^*$ Dies ist möglich, wegen der Bijektivität von $v$.}
+\end{align*}
+Demnach ist der gesamte Payoff gleich der Summe aller ausgewählten Bewertungen minus der Summe aller Preise.
+Die Summe aller Preise ist unabhängig vom Matching immer gleich, sie kann also als konstant angenommen werden.
+Damit folgt, dass wenn eine Auswahl den gesamten Payoff $P_{\text{ges}}$ maximiert, dann maximiert sie auch die
+Summe aller ausgewählten Bewertungen. 
+\\
+Damit folgt die Behauptung.
+\end{proof}
+
+\noindent
+Zusammenfassend gibt es also zu beliebigen Bewertungen Preise, 
+welche zu einer sozial optimalen Zuteilung führen. Dies sind genau die markträumenden Preise.
+
+
+~\\
+%\chapter{Anwendung: Single item auction }
+Mit Hilfe dieses Modells lässt sich nun auch ein Markt modellieren, bei dem es nur einen einzigen Verkäufer
+gibt. Dazu werden so viele  virtuelle Verkäufer erstellt bis die Anzahl an Verkäufern gleich der Anzahl an Käufern ist.
+Zu diesen virtuellen Verkäufern hat jeder Käufer die Bewertung 0. Auf dieser Eingabe kann jetzt der 
+\texttt{Auktion}-Algorithmus durchgeführt werden. Dabei wird der Käufer dem einzigen ''realen'' Verkäufer
+zugeordnet, welcher die höchste Bewertung für ihn hat. Dieser Käufer muss jedoch nicht den Wert seiner
+Bewertung als Preis bezahlen, sondern lediglich den Wert der zweithöchsten Bewertung. 
+Somit entspricht der \texttt{Auktion}-Algorithmus
+in dieser Anwendung der so genannten Zweitpreisauktion. Ein Beispiel hierfür ist in Abbildung \ref{fig:single_item}
+gegeben. Dabei ist $v_1$ der einzige ''reale'' Verkäufer. 
+%Nach Abschluss von \texttt{Auktion}, hat $v_1$ einen
+%Preis von 7 und der Käufer $k_2$ hat für $v_1$ den größten Payoff und wird mit diesem verbunden. 
+
+
+
+\begin{figure}[h]
+\begin{subfigure}
+~~~~~~~~
+%%%%%%%%%%%%%%%%%%%%%%%%% IGIIIIIITT
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (1)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (3)     {$v_1$};
+
+\node[node style] at (3, 0)     (5)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (7)     {$k_1$};
+
+\node[] at (5, 3)   (8)      {(7,0,0)};
+\node[] at (5, 1.5)  (9)     {(8,0,0)};
+\node[] at (5, 0)   (10)     {(5,0,0)};
+
+
+\end{tikzpicture}
+\end{subfigure}
+~~~~~~~~~~~~~~~~~~~~~~~~
+\begin{subfigure}
+
+\begin{tikzpicture}
+\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
+                                
+\node[node style] at (1, 0)     (3)     {$v_3$};
+\node[node style] at (1, 1.5)   (2)     {$v_2$};
+\node[node style] at (1, 3)     (1)     {$v_1$};
+
+\node[node style] at (3, 0)     (7)     {$k_3$};
+\node[node style] at (3, 1.5)   (6)     {$k_2$};
+\node[node style] at (3, 3)   (5)     {$k_1$};
+
+\node[] at (0, 3)   (8)      {7};
+\node[] at (0, 1.5)  (9)     {0};
+\node[] at (0, 0)   (10)     {0};
+
+\node[] at (5, 3)   (8)      {(7,0,0)};
+\node[] at (5, 1.5)  (9)     {(8,0,0)};
+\node[] at (5, 0)   (10)     {(5,0,0)};
+
+\draw[line width=0.1mm, >=latex]
+            (5)     edge[right]    node {} (2)
+            (6)     edge[right]    node {} (1) %guut
+            (7)     edge[right]    node {} (3)
+
+            (5)     edge[right]    node {} (3)
+            (7)     edge[right]    node {} (2)
+            (1)     edge[right]    node {} (5)
+;
+
+\end{tikzpicture}
+
+\end{subfigure}
+
+\caption{Beispiel für einen Markt mit einem einzelnem Verkäufer}
+\label{fig:single_item}
+\end{figure}
+
+
+%\chapter{Zusammenfassung?}
+
+\begin{thebibliography}{2}
+\bibitem{alles} \url{https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book.pdf}, abgerufem am 27.11.2018
+\bibitem{schnittger} \url{http://www.thi.cs.uni-frankfurt.de/lehre/dismod/ws1617/dismod_ws1617_skript.pdf}, abgerufen am 11.12.2018
+\bibitem{heirat} \url{https://www.math.uni-frankfurt.de/~dmst/teaching/lecture_notes/diskmathAlt/skriptTheobaldWS07.pdf}, abgerufen am 11.12.2018
+\end{thebibliography}
+
+
+\end{document} 
