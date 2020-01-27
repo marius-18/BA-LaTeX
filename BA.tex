@@ -1,0 +1,313 @@
+\documentclass[a4paper]{scrreprt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some common includes. Add additional includes you need.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{ngerman}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[margin=23mm,bottom=30mm]{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath,amsfonts,amssymb,amsthm}
+\RequirePackage{listingsutf8}
+\RequirePackage{textcomp}
+\RequirePackage{tikz}
+\RequirePackage{eurosym}
+\usetikzlibrary{snakes}
+
+\usepackage{fancyvrb}
+
+\usepackage{subfigure}
+
+\usepackage{url}
+
+\usepackage{pdfpages}
+
+%\usepackage{subcaption}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defines for mathematical notation. Add additional defines as needed.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\O{\mathcal{O}}
+\def\sort{\mathrm{sort}}
+\def\scan{\mathrm{scan}}
+\def\dist{\mathrm{dist}}
+
+%% Theorem, Lemma undso
+\theoremstyle{plain} %Text ist Kursiv
+\newtheorem{theorem}{Satz}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Korollar}
+
+\theoremstyle{definition} %Text ist \"upright"
+\newtheorem{remark}[theorem]{Bemerkung}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Beispiel}
+
+
+%% wozu das ?! 
+\usepackage{listings}% http://ctan.org/pkg/listings
+\lstset{
+  basicstyle=\ttfamily,
+  mathescape,
+    showspaces=false,
+  showstringspaces=false
+}
+
+\lstset{
+   basicstyle=\fontsize{10}{13}\selectfont\ttfamily
+}
+
+\lstset{literate=%
+  {Ö}{{\"O}}1
+  {Ä}{{\"A}}1
+  {Ü}{{\"U}}1
+  {ß}{{\ss}}1
+  {ü}{{\"u}}1
+  {ä}{{\"a}}1
+  {ö}{{\"o}}1
+}
+
+\newcommand{\tomorrow}{{\AdvanceDate[1]\today}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel DEFINITION!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\titlehead{\centering Bachelorarbeit mit dem Thema}
+
+\title{Bachelorarbeit mit dem Thema \\ ~}
+
+\subtitle{ Implementierung und experimentelle Untersuchung von Parallelem Global-Curveball zur Randomisierung
+Massiver Bipartiter Graphen\\ ~}
+\author{Marius Hagemann \\ 5732742 \\ s2486252@stud.uni-frankfurt.de \\~}
+%\date{\tomorrow}
+\publishers{Betreuer: Prof. Dr. Ulrich Meyer \\ ~ \\ Goethe-Universität Frankfurt am Main \\ Fachbereich Informatik }
+
+%\swapnumbers
+
+
+
+
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	{\LARGE Bachelorarbeit mit dem Thema\par}
+	%\vspace{1.5cm}
+	\vfill
+	{\huge\bfseries Implementierung und experimentelle Untersuchung von Parallelem Global-Curveball zur Randomisierung
+Massiver Bipartiter Graphen\par}
+	\vspace{2.5cm}
+	{\Large verfasst von: \par}
+	\vspace{1cm}
+	{\LARGE \scshape Marius Hagemann\par}
+	\vspace{0.5cm}
+	{\large Matrikelnummer 5732742 \\ s2486252@stud.uni-frankfurt.de}
+	\vfill
+	{\Large \today}
+	\vfill
+	{\LARGE Betreuer: Prof. Dr. Ulrich Meyer\par}
+	\vspace{1.5cm}
+	{\LARGE Goethe-Universität Frankfurt am Main \\ ~\\ Fachbereich Informatik}
+\end{titlepage}
+
+%\maketitle
+
+
+%\begin{abstract}
+%Eine kurze Zusammenfassung des Inhaltes.
+%blasbaslabsllasblasblbas
+%\end{abstract}
+
+\cleardoublepage 
+
+\includepdf[pages=1]{erkabschlbachelorinf}
+
+\newpage
+
+\tableofcontents
+
+
+
+\chapter{Einleitung}
+
+
+
+wozu Randomisierung?
+-- Als (zufällige) Eingabe um Algorithmen zu testen?
+-- Zum Analysieren von Netzwerken?
+
+
+
+es gibt auch andere Methoden um zufällige Graphen zu erstellen (zufällige Kanten zwischen Knoten)
+aber dann bleibt die gewollte Struktur nicht erhalten
+
+also Global Curveball (, bei dem Kanten getauscht werden)
+
+
+
+wir beschränken uns hier nur auf den Spezialfall der bipartiten Graphen wodurch es einfacher wird 
+
+
+wozu GlobalCurveball?
+warum macht man das?
+
+-- Zufällige Graphen, wobei die Grade aller Knoten erhalten bleiben
+
+Was ist networkit? +  Quelle
+
+
+was heißt massiver graph ? 
+hoher Knotengrad??
+
+
+
+
+\chapter{Grundlagen}
+
+Notation, Graph, bipartitheit, randomisierung, ...? 
+
+Kanten tauschen, globaler Tausch, 
+
+
+
+Parallelität?
+
+
+%\section{Curveball}
+
+\chapter{Beschreibung blabla?}
+
+
+\section{Bestimmung der gemeinsamen Nachbarschaft}
+\textcolor{red}{Wie bereits erwähnt} müssen um einen \textcolor{red}{Curveball-Tausch} auf den Knoten $u$ und $v$
+auszuführen die Nachbarschaften der beiden Knoten bekannt sein. Dabei sind die Knoten gesucht, 
+welche jeweils nur entweder $u$ oder $v$ als Nachbarn haben, also in der \textcolor{red}{disjunkten Nachbarschaft (kann man das sagen?)} liegen.
+Um diese Knoten zu finden, kann man jedoch einfach die gemeinsame Nachbarschaft bestimmen. Die Knoten
+in der disjunkten Nachbarschaft sind dann alle Nachbarn von $u$ und $v$, welche\textcolor{red}{VORSORTIERT}
+ nicht in der gemeinsamen
+Nachbarschaft liegen. 
+\\
+Als Datenstruktur liegen uns die Nachbarschaften in einer Art \textcolor{red}{Adjazenzliste (naja eine Liste ist es ja nicht wirklich)}
+vor, sodass es für jeden Knoten des Graphen einen Vektor gibt, indem die Nachbarn gespeichert sind.
+Um nun gemeinsame Nachbarn
+zweier Knoten zu bestimmen, muss man also nur herausfinden, welche Einträge in beiden Vektoren gemeinsam
+vorkommen. Dafür gibt es verschiedene Varianten, die 
+im Folgenden erklärt werden.
+\\
+\\
+Als ersten ''naiven'' Ansatz könnte man für jedes Element des Vektors $u$ den gesamten anderen 
+Vektors $v$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
+$\O(|u|\cdot|v|)$, was aber natürlich nicht sehr sinnvoll ist, da der Vektor $v$ ziemlich oft 
+durchlaufen werden muss und wir 
+im Falle von massiven Graphen davon ausgehen können, dass die Vektoren (also die Nachbarschaften)
+ziemlich groß werden. 
+\\
+Um dieses Problem zu verhindern kann man beide Vektoren aufsteigend sortieren. Um nun zu herauszufinden,
+welche Werte in beiden Vektoren vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
+und testen, ob die Werte gleich sind. Somit muss man jedes Element der beiden Vektoren - nach dem Sortieren - 
+nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum ''naiven''
+Ansatz führt. Man erhält damit eine Laufzeit von $\O(|u|\cdot \log (|u|)  + |v|\cdot\log(|v|))$. 
+Diese Variante wird im Folgenden als \textbf{SortSort} \textcolor{red}{(darf ich das in
+englisch lassen?)} bezeichnet.
+\\
+Dies kann man leicht abwandeln zur Variante \textbf{SortSearch}. Dabei wird nur der größere Vektor (z.B. $u$)
+sortiert.
+Für jedes Element des kleineren Vektors wird nun per binärer Suche geprüft, ob das Element auch im 
+größeren Vorhanden ist. Analog zu dieser Variante gibt es noch \textbf{SearchSort}, bei welcher 
+der kleinere Vektor sortiert wird. \textcolor{red}{LZ?}
+\\
+Eine weitere Methode um  viele Werte schnell zu durchsuchen, bietet die Datenstruktur \textit{Set}.
+Dabei wird jedes Element des einen Vektors (z.B. $u$) in das Set eingefügt. Die Datenstruktur
+baut aus diesen Elementen dann einen Binären Suchbaum. Für jedes Element aus $v$ kann nun in logarithmischer
+Zeit bestimmt werden, ob es im Set und somit auch in $u$ vorhanden ist. Auch hier gibt es zwei
+analoge Varianten, nämlich \textbf{SetSearch}, bei der der größere Vektor in das Set eingefügt wird
+und \textbf{SearchSet}, bei der der kleinere Vektor zum Set hinzugefügt wird.
+\\
+Die letzte Methode, die \textcolor{red}{wir (darf ich ''wir'' sagen?!)} an dieser Stelle betrachten,
+ist die Verwendung der Datenstruktur \textit{unordered\_set}. Diese ist sehr ähnlich wie Set, mit
+dem Unterschied, dass die Werte nicht in geordneter Reihenfolge gespeichert werden, sondern
+in einer \textcolor{red}{Hash-Tabelle?}. Ebenfalls gibt es hierbei wieder die Varianten, 
+in denen der größere Vektor in das unordered\_set eingefügt wird (\textbf{USetSearch}) 
+oder der kleinere (\textbf{SearchUSet}).
+\\
+\\
+Wir haben also insgesamt sieben verschiedene Möglichkeiten, die alle eine ähnliche Laufzeit \textcolor{red}{(wirklich?!)}
+haben. Somit muss experimentell herausgefunden werden, welche dieser Varianten für welche Instanzen am
+schnellsten sind. Weiterhin testen wir noch, ob die Invariante, dass die Vektoren bereits 
+sortiert sind, zu einer besseren Laufzeit führt.
+
+
+
+\textcolor{red}{LAUFZEIT $\O\Big((|u|+|v|) \log (|u|+|v|)\Big)$ ?? }
+
+
+
+
+
+\section{Tauschen der Nachbarn}
+Im vorherigen Teil wurde beschrieben, wie man die gemeinsame und die disjunkte Nachbarschaft zweier Knoten
+bestimmt. Nun beschäftigen wir uns damit, wie man die Knoten aus der disjunkten
+Nachbarschaft zufällig auf tauscht. Dafür unterscheiden wir zwei Möglichkeiten.
+\\
+\\
+Die erste Methode nennen wir \textbf{Permutation}. Dabei werden 
+
+
+
+
+
+
+
+
+
+
+
+\section{Globaler Tausch}
+
+
+
+
+
+
+
+
+
+
+\chapter{Implementierung}
+hier dann nur code ?! 
+
+\section{Networkit}
+
+
+\chapter{experimentelle Untersuchung}
+google Test/ google benchmark
+
+
+bestimmung der schnellsten Varianten..
+-- disjoint neighbors
+-- trade
+plots
+
+
+WO WIRD DIE BIPARTITHEIT AUSGENUTZT?
+--> parallele Trades
+
+\chapter{Zusammenfassung?}
+was hat das alles gebracht?
+ausblick?
+was könnte man verbessern?
+
+
+\begin{thebibliography}{2}
+\bibitem{paper} \url{https://arxiv.org/pdf/1804.08487.pdf}, abgerufen ?!
+%\bibitem{schnittger} \url{http://www.thi.cs.uni-frankfurt.de/lehre/dismod/ws1617/dismod_ws1617_skript.pdf}, abgerufen am 11.12.2018
+
+\end{thebibliography}
+
+
+\end{document} 
