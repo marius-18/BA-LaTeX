@@ -15,7 +15,8 @@
 \RequirePackage{eurosym}
 \usetikzlibrary{snakes}
 
-\usepackage{fancyvrb}
+%% wozu das ?!
+%\usepackage{fancyvrb}
 
 \usepackage{subfigure}
 
@@ -70,7 +71,7 @@
   {ö}{{\"o}}1
 }
 
-\newcommand{\tomorrow}{{\AdvanceDate[1]\today}}
+%\newcommand{\tomorrow}{{\AdvanceDate[1]\today}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -135,47 +136,58 @@ Massiver Bipartiter Graphen\par}
 
 \chapter{Einleitung}
 
+\begin{itemize}
 
-
+\item
 wozu Randomisierung?
 -- Als (zufällige) Eingabe um Algorithmen zu testen?
 -- Zum Analysieren von Netzwerken?
 
 
-
+\item
 es gibt auch andere Methoden um zufällige Graphen zu erstellen (zufällige Kanten zwischen Knoten)
 aber dann bleibt die gewollte Struktur nicht erhalten
 
 also Global Curveball (, bei dem Kanten getauscht werden)
 
 
+\item
+wir beschränken uns hier nur auf den Spezialfall der bipartiten Graphen wodurch es einfacher wird ...?
 
-wir beschränken uns hier nur auf den Spezialfall der bipartiten Graphen wodurch es einfacher wird 
-
-
+\item
 wozu GlobalCurveball?
+
+\item
 warum macht man das?
 
--- Zufällige Graphen, wobei die Grade aller Knoten erhalten bleiben
+\item-- Zufällige Graphen, wobei die Grade aller Knoten erhalten bleiben
 
+\item
 Was ist networkit? +  Quelle
 
-
+\item
 was heißt massiver graph ? 
 hoher Knotengrad??
 
-
+\end{itemize}
 
 
 \chapter{Grundlagen}
 
-Notation, Graph, bipartitheit, randomisierung, ...? 
+\begin{itemize}
+\item \textbf{Notation}, Graph, bipartitheit, randomisierung, ...? 
 
-Kanten tauschen, globaler Tausch, 
+\item Kanten tauschen, globaler Tausch, zufall
+
+
+\item Parallelität (OpenMP)?
+
+
+\end{itemize}
 
 
 
-Parallelität?
+
 
 
 %\section{Curveball}
@@ -242,8 +254,8 @@ schnellsten sind. Weiterhin testen wir noch, ob die Invariante, dass die Vektore
 sortiert sind, zu einer besseren Laufzeit führt.
 
 
-
-\textcolor{red}{LAUFZEIT $\O\Big((|u|+|v|) \log (|u|+|v|)\Big)$ ?? }
+\textcolor{red}{Pseudocode zu den einzelnen Varianten?}\\
+\textcolor{red}{LAUFZEIT ??}
 
 
 
@@ -251,25 +263,111 @@ sortiert sind, zu einer besseren Laufzeit führt.
 
 \section{Tauschen der Nachbarn}
 Im vorherigen Teil wurde beschrieben, wie man die gemeinsame und die disjunkte Nachbarschaft zweier Knoten
-bestimmt. Nun beschäftigen wir uns damit, wie man die Knoten aus der disjunkten
-Nachbarschaft zufällig auf tauscht. Dafür unterscheiden wir zwei Möglichkeiten.
+$u$ und $v$ bestimmt. Nun beschäftigen wir uns damit, wie man diese Knoten zufällig tauscht. Als Eingabe 
+stehen die Vektoren $d$, welcher alle Knoten aus der disjunkten Nachbarschaft enthält
+und $c$, der die gemeinsamen Nachbarn enthält, zur Verfügung. Weiterhin seien $\text{deg}(u)$ und
+ $\text{deg}(v)$ die ursprünglichen Knotengrade. 
+Wir betrachten hierfür zwei Möglichkeiten.
 \\
 \\
-Die erste Methode nennen wir \textbf{Permutation}. Dabei werden 
+Die erste Idee besteht darin,  
+den Vektor der disjunkten Nachbarn zufällig zu permutieren, sodass jedes Element an 
+einer zufälligen Position steht. Um nun die beide ''neuen'' Nachbarschaften von $u$ und $v$ zu erstellen,
+werden zuerst die Knoten aus der gemeinsamen Nachbarschaft in die \textcolor{red}{(leeren)} Vektoren von $u$ und $v$ kopiert.
+Dann werden die ersten Elemente aus dem permutierten Vektor in den kleineren aus $u$ und $v$ kopiert.
+Dabei werden genau so viele Elemente kopiert, dass dieser wieder die gleiche Größe hat wie vor dem Beginn
+des Tausches. Die restlichen Elemente aus dem disjunkten Vektor werden schließlich in den anderen Vektor kopiert.
+Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beispiel zu sehen.
+\begin{figure}[h]
+\centering
+  \begin{tikzpicture}[decoration=brace]
+    % Die Grundlinie:
+    \draw(0,0)--(10,0);
+    \draw(0,1)--(10,1);
+
+    % Striche und Beschriftung in Abständen 0, 2, 4, 6, ...
+    \foreach \x/\xtext in {0,1,2,3,4,5,6,7,8,9,10}
+      \draw(\x,0)--(\x,1) node[below] {};
+      
+    % untere geschweifte Klammer mit Text darunter:
+    \draw[decorate, yshift=-1ex] (3.8,0) -- node[below=0.4ex] {$\text{deg}(u) - |c|$} (0.2,0);
+
+    \draw[decorate, yshift=-1ex] (9.8,0) -- node[below=0.4ex] {$\text{deg}(v) - |c|$} (4.2,0);
+
+  \end{tikzpicture}
+  \caption{\textcolor{red}{ist das Beispiel unnötig?}}
+  \label{fig:trade_shuffle}
+\end{figure}
+Die Kästchen stellen die Elemente des permutierten Vektors $d$ dar. Ohne Beschränkung der
+Allgemeinheit betrachten wir den Fall, dass die Nachbarschaft von $u$ die kleinere ist, also dass 
+$\text{deg}(u) \le \text{deg}(v)$ gilt. Somit werden die ersten $\text{deg}(u)-|c|$ Elemente zum 
+Vektor $u$ hinzugefügt. Die restlichen
+Elemente werden folglich in $v$ kopiert.
+Die Größen von $u$ und $v$ - also dementsprechend die Knotengrade der beiden Knoten - haben sich durch das
+zufällige Tauschen der disjunkten Nachbarn offensichtlich
+nicht verändert.
+\\
+Bei die diesem Verfahren fällt  jedoch auf, dass einige Elemente beim Permutieren unnötig vertauscht werden.
+Für jedes Element ist es eigentlich nur entscheidend, ob es unter den ersten $\text{deg}(u)$  liegt (also zum Vektor
+$u$ hinzugefügt wird) oder nicht. Auf welcher Position genau es in diesen Bereichen liegt, ist egal. Man
+kann also die Laufzeit dieser Variante verbessern, indem nicht der ganze Vektor zufällig permutiert 
+wird, sondern nur die ersten $\text{deg}(u)$ Elemente zufällig gewählt werden. Dies macht die Funktion 
+\textcolor{red}{\textit{random\_bipartition\_shuffle}}.
+\\
+Ein Nachteil bei dieser Methode ist, dass durch das zufällige Vertauschen die beiden Vektoren
+$u$ und $v$ nicht mehr sortiert sind. Damit wird die im vorherigen \textcolor{red}{kapitel?} beschriebene
+Invariante eventuell verletzt. Um die Invariante aufrecht zu halten muss man also als letzten Schritt
+die beiden Vektoren nochmals sortieren.
+Wir nennen diese Variante \textbf{Permutation}.
+\\
+\\
+Die zweite Möglichkeit die wir betrachten heißt \textbf{Distribution}.
+\\
+Die Idee besteht dabei, dass wir über jedes Element des Vektors $d$ iterieren und eine Wahrscheinlichkeit
+berechnen, mit
+der das Element in den Vektor $u$ (beziehungsweise $v$) eingefügt werden soll. Dann wird in einem 
+Bernoulli Experiment mit genau dieser Wahrscheinlichkeit ein Zufallsbit gezogen. Je nachdem, welchen
+Wert das Zufallsbit hat, wird das Element dann entweder in $u$ oder in $v$ kopiert. Dies wird so lange
+wiederholt, bis einer der beiden Vektoren seine maximale Kapazität erreicht hat. 
+\\
+Um die Wahrscheinlichkeit zu berechnen werden am Anfang zwei Variablen $n_v$ und $n_u$ initialisiert, 
+welche den Kapazitäten der beiden Vektoren $u$ und $v$ entsprechen, wenn die Elemente aus der 
+gemeinsamen Nachbarschaft nicht berücksichtigt werden. Es gilt also $n_v = \text{deg}(v) - |c|$ und
+$n_u= \text{deg}(u) - |c|$.
+Damit hat das erste Element des Vektors $d$ eine Wahrscheinlichkeit von $p_u = \frac{n_u}{n_u+n_v}$, dem
+Vektor $u$ hinzugefügt zu werden und analog eine Wahrscheinlichkeit $p_v = \frac{n_v}{n_u+n_v}$, um
+in $v$ zu gelangen. Offensichtlich gilt $p_u + p_v = 1$. Dann wird mit einer der beiden
+Wahrscheinlichkeiten das Bernoulli Experiment durchgeführt, wobei es egal ist, welche Wahrscheinlichkeit
+man dazu wählt, da $p_u$ genau die Gegenwahrscheinlichkeit von $p_v$ ist und umgekehrt. 
+Wählt man beispielsweise $p_u$ und das Experiment liefert eine eins, dann wird das aktuelle Element
+in den Vektor $u$ kopiert. Dabei
+hat sich aber offensichtlich die verbleibende Kapazität des Vektors $u$ verringert. Also muss
+der Wert $n_u$ dekrementiert werden. Analoges gilt, falls das Element in den Vektor $v$ kopiert wird.
+Somit ändern sich nach jeder Iteration die Wahrscheinlichkeiten $p_u$ beziehungsweise $p_v$.
+Gilt nach irgendeinem Zeitpunkt entweder $n_u = 0$ oder $n_v = 0$, ist offenbar einer der Vektoren 
+keine Kapazität mehr frei. Somit werden die übrigen Elemente, die noch in $d$ vorhanden sind, 
+einfach dem anderen Vektor hinzugefügt.
+\\
+Ein Vorteil dieser Methode ist, dass die beschriebene Invariante aufrecht erhalten werden kann.
+War der Vektor der disjunkten Nachbarschaft vor Beginn dieser Methode aufsteigend sortiert,
+dann sind auch die bisherigen Elemente der Vektoren $u$ und $v$ aufsteigend sortiert, da für jedes
+Element nacheinander entschieden wurde, ob es zu $u$ oder zu $v$ hinzugefügt wird und dabei die
+Reihenfolge der Elemente untereinander nicht verändert wurde.
+\\
+Zum Schluss müssen noch die die gemeinsamen Nachbarn zu den Vektoren $u$ und $v$ hinzugefügt werden.
+Möchte man die Invariante aufrecht erhalten, dann sind die beiden Vektoren wie beschrieben schon
+aufsteigend sortiert. Da auch die Elemente aus $c$ aufsteigend sortiert sind, erhält man
+die endgültigen Vektoren von $u$ und $v$ durch ein Mergen mit $c$. Soll die Invariante jedoch
+nicht aufrecht erhalten werden, reicht es aus, die Elemente aus $c$ an das Ende der beiden Vektoren
+zu kopieren.
 
 
-
-
-
-
-
-
-
-
-
-\section{Globaler Tausch}
-
-
+\section{Globaler Curveball Tausch}
+Wie in den beiden vorherigen \textcolor{red}{Abschnitten} beschrieben, besteht ein Curveball Tausch auf zwei Knoten $u$ und $v$ daraus, die gemeinsame und disjunkte Nachbarschaft der beiden Vektoren zu bestimmen
+und schließlich die Knoten aus der disjunkten Nachbarschaft zufällig zu tauschen.
+\\
+Bei einem Globalen Curveball Tausch, werden mehrere Curveball-Tausche gleichzeitig ausgeführt.
+Hierbei wird ausgenutzt, dass wir ausschließlich bipartite Graphen betrachten \textcolor{red}{echt?}
 
 
 
@@ -280,22 +378,31 @@ Die erste Methode nennen wir \textbf{Permutation}. Dabei werden
 
 \chapter{Implementierung}
 hier dann nur code ?! 
-
+\\
+welche latex umgebung für den code ?!
 \section{Networkit}
 
 
 \chapter{experimentelle Untersuchung}
+
+\begin{itemize}
+\item
 google Test/ google benchmark
 
+\item
+bestimmung der schnellsten Varianten..\\
+-- disjoint neighbors\\
+-- trade\\
+-- auf welcher Maschine? gluten\\
+plots\\
 
-bestimmung der schnellsten Varianten..
--- disjoint neighbors
--- trade
-plots
-
-
+\item
 WO WIRD DIE BIPARTITHEIT AUSGENUTZT?
 --> parallele Trades
+
+
+\end{itemize}
+
 
 \chapter{Zusammenfassung?}
 was hat das alles gebracht?
@@ -303,11 +410,16 @@ ausblick?
 was könnte man verbessern?
 
 
+
+
 \begin{thebibliography}{2}
 \bibitem{paper} \url{https://arxiv.org/pdf/1804.08487.pdf}, abgerufen ?!
 %\bibitem{schnittger} \url{http://www.thi.cs.uni-frankfurt.de/lehre/dismod/ws1617/dismod_ws1617_skript.pdf}, abgerufen am 11.12.2018
 
 \end{thebibliography}
+
+
+%\listoffigures
 
 
 \end{document} 
