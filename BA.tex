@@ -20,6 +20,9 @@
 \usepackage{url}
 \usepackage{pdfpages}
 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
 %\usepackage{subcaption}
 
 
@@ -103,8 +106,18 @@ Massiver Bipartiter Graphen\\ ~}
 
 \newcommand{\gc}{Global Curveball }
 \newcommand{\ct}{Curveball-Tausch }
+\newcommand{\cb}{Curveball }
+
+\newcommand{\partvek}{Partitions-Vektor }
+
+
+\newcommand{\la}{large }
+\newcommand{\sm}{small }
+\newcommand{\fr}{fraction }
+
 
 \newcommand{\nk}{NetworKit }
+\newcommand{\cpp}{C++ }
 
 \newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
@@ -196,6 +209,8 @@ hoher Knotengrad??
 
 \end{itemize}
 
+\input{include/01_Einleitung.tex}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%   Grundlagen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -237,7 +252,7 @@ Arbeit benötigt werden, ein.
 %%%%%   Experimentelle Untersuchung
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{experimentelle Untersuchung}
+\chapter{Experimentelle Untersuchung}
 
 \begin{itemize}
 
@@ -256,9 +271,6 @@ bestimmung der schnellsten Varianten..\\
 -- auf welcher Maschine? gluten\\
 plots\\
 
-\item
-WO WIRD DIE BIPARTITHEIT AUSGENUTZT?
---> parallele Trades
 
 
 \end{itemize}
@@ -273,9 +285,11 @@ WO WIRD DIE BIPARTITHEIT AUSGENUTZT?
 \chapter{Implementierung}
 hier dann nur code ?! 
 \\
+pseudocode für alles so
+\\
 welche latex umgebung für den code ?!
 \section{Networkit}
-
+google test?!
 
 
 
@@ -287,9 +301,11 @@ welche latex umgebung für den code ?!
 \chapter{Zusammenfassung?}
 was hat das alles gebracht?
 ausblick?
-was könnte man verbessern?
-
-
+was könnte man verbessern? mehre tests, andere maschinen
+\\
+was ist die Laufzeit von einem \gc tausch im mittel? für große graphen?
+\\
+\red{\Large \cb bezeichnungen undso einheitlich?!}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%   bibliography
@@ -300,7 +316,7 @@ was könnte man verbessern?
 \bibitem{paper} \url{https://arxiv.org/pdf/1804.08487.pdf}, abgerufen ?!
 \bibitem{nk} \url{https://networkit.github.io/}
 %\bibitem{schnitger} \url{http://www.thi.cs.uni-frankfurt.de/lehre/dismod/ws1617/dismod_ws1617_skript.pdf}, abgerufen am 11.12.2018
-
+\bibitem{benchmark} \url{https://github.com/google/benchmark}
 \end{thebibliography}
 
 

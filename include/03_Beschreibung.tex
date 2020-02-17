@@ -1,5 +1,7 @@
  
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% COMMON NEIGHBORS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Bestimmung der gemeinsamen Nachbarschaft}
 
@@ -66,7 +68,9 @@ sortiert sind, zu einer besseren Laufzeit führt.
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Nachbarn Tauschen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Tauschen der Nachbarn}
 Im vorherigen Teil wurde beschrieben, wie man die gemeinsame und die disjunkte Nachbarschaft zweier Knoten
@@ -169,6 +173,11 @@ nicht aufrecht erhalten werden, reicht es aus, die Elemente aus $c$ an das Ende 
 zu kopieren.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Global Curveball Tausch
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \section{Globaler Curveball Tausch}
 Wie in den beiden vorherigen \textcolor{red}{Abschnitten} beschrieben, besteht ein Curveball Tausch auf zwei Knoten $u$ und $v$ daraus, die gemeinsame und disjunkte Nachbarschaft der beiden Vektoren zu bestimmen
 und schließlich die Knoten aus der disjunkten Nachbarschaft zufällig zu tauschen.
@@ -177,8 +186,49 @@ Bei einem Globalen Curveball Tausch, werden mehrere Curveball-Tausche gleichzeit
 Hierbei wird ausgenutzt, dass wir ausschließlich bipartite Graphen betrachten \textcolor{red}{echt?}
 
 
-
+\red{INVRIANTE NAME?!}
 
 
 \textcolor{red}{wie wir in kapitel xxx sehen, sind die varianten blblal am schnellsten. daher gehen wir 
 an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode beschreiben}
+
+
+
+%\begin{algorithm}
+%\caption{My algorithm}\label{euclid}
+%\begin{algorithmic}[1]
+%\Procedure{MyProcedure}{}
+%\State $\textit{stringlen} \gets \text{length of }\textit{string}$
+%\State $i \gets \textit{patlen}$
+%\If {$i > \textit{stringlen}$} \Return false
+%\EndIf
+%\State $j \gets \textit{patlen}$
+%\If {$\textit{string}(i) = \textit{path}(j)$}
+%\State $j \gets j-1$.
+%\State $i \gets i-1$.
+%\State \textbf{goto} \emph{loop}.
+%\State \textbf{close};
+%\EndIf
+%\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+%\State \textbf{goto} \emph{top}.
+%\EndProcedure
+%\end{algorithmic}
+%\end{algorithm}
+
+%\begin{algorithm}
+%  \caption{Euclid’s algorithm}\label{euclid}
+%  \begin{algorithmic}[1]
+%    \Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+%      \State $r\gets a\bmod b$
+%      \While{$r\not=0$}\Comment{We have the answer if r is 0}
+%        \State $a\gets b$
+%        \State $b\gets r$
+%        \State $r\gets a\bmod b$
+%      \EndWhile\label{euclidendwhile}
+%      \For{\texttt{<some condition>}}
+%        \State \texttt{<do stuff>}
+%      \EndFor
+%      \State \textbf{return} $b$\Comment{The gcd is b}
+% %   \EndProcedure
+%  \end{algorithmic}
+%\end{algorithm}
