@@ -23,6 +23,9 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
+
+\usepackage{cite}
+%\usepackage{multirow, tabularx}
 %\usepackage{subcaption}
 
 
@@ -98,11 +101,13 @@ Massiver Bipartiter Graphen\\ ~}
 \newcommand{\SorSea}{\textbf{SortSearch}}
 \newcommand{\SeaSor}{\textbf{SearchSort}}
 \newcommand{\SetSea}{\textbf{SetSearch}}
-\newcommand{\SeaSet}{\textbf{SeachSet}}
+\newcommand{\SeaSet}{\textbf{SearchSet}}
 \newcommand{\USetSea}{\textbf{USetSearch}}
-\newcommand{\SeaUSet}{\textbf{SeachUSet}}
+\newcommand{\SeaUSet}{\textbf{SearchUSet}}
 \newcommand{\perm}{\textbf{Permutation}}
 \newcommand{\distr}{\textbf{Distribution}}
+\newcommand{\true}{\textbf{true}}
+\newcommand{\false}{\textbf{false}}
 
 \newcommand{\gc}{Global Curveball }
 \newcommand{\ct}{Curveball-Tausch }
@@ -306,18 +311,24 @@ was könnte man verbessern? mehre tests, andere maschinen
 was ist die Laufzeit von einem \gc tausch im mittel? für große graphen?
 \\
 \red{\Large \cb bezeichnungen undso einheitlich?!}
-
+\\
+\\
+\\
+\red{\Large Anführungszeichen suchen!!}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%   bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\bibliography{quellen}
+\bibliographystyle{plain}
+  
 
-\begin{thebibliography}{2}
-\bibitem{paper} \url{https://arxiv.org/pdf/1804.08487.pdf}, abgerufen ?!
-\bibitem{nk} \url{https://networkit.github.io/}
+%\begin{thebibliography}{2}
+%\bibitem{paper} \url{https://arxiv.org/pdf/1804.08487.pdf}, abgerufen ?!
+%\bibitem{nk} \url{https://networkit.github.io/}
 %\bibitem{schnitger} \url{http://www.thi.cs.uni-frankfurt.de/lehre/dismod/ws1617/dismod_ws1617_skript.pdf}, abgerufen am 11.12.2018
-\bibitem{benchmark} \url{https://github.com/google/benchmark}
-\end{thebibliography}
+%\bibitem{benchmark} \url{https://github.com/google/benchmark}
+%\end{thebibliography}
 
 
 \listoffigures
