@@ -7,28 +7,35 @@
 
 \section{Mathematische Definitionen}
 Zu Beginn definieren wir die grundlegenden mathematischen Begriffe. Als wichtigste Grundlage dient 
-hierbei das Konstrukt des \red{ungerichteten} Graphen.
+hierbei das Konstrukt des ungerichteten Graphen.
 \begin{definition}[Graph] ~\\
 Ein (ungerichteter) \textbf{Graph} $G = (V,E)$ ist ein Tupel bestehend aus einer Knotenmenge $V$ und einer Kantenmenge
  $E$. Eine Kante verbindet zwei Knoten miteinander und ist damit eine Menge, aus zwei Knoten.
- Es gilt: $E \subseteq \{ \{u,v\} |\ u,v \in V, u \neq v \}$.  
+ Es gilt $E \subseteq \{ \{u,v\} |\ u,v \in V, u \neq v \}$.  
+\end{definition}
+\begin{definition}[Multigraph] ~\\
+\red{Ein \fett{Multigraph} $G$ ist ein Graph, in dem zwischen zwei Knoten mehrere Kanten existieren 
+können.}\\
+\\
+\\
+\red{Multikanten}
 \end{definition}
 \red{In dieser Arbeit} spielt eine spezielle Klasse von Graphen, bipartite Graphen, eine zentrale Rolle.
-Bei einem bipartiten Graphen kann man die Knoten in zwei Mengen teilen, sodass alle Kanten nur zwischen den 
+Bei einem bipartiten Graphen kann man die Knotenmenge in zwei Teilmengen teilen, sodass alle Kanten nur zwischen den 
 beiden Mengen verlaufen und nicht innerhalb einer Menge. Formal bedeutet dies:
 \begin{definition}[bipartiter Graph] ~\\
 Ein Graph $G=(V,E)$ heißt \textbf{bipartit}, wenn es Teilmengen $V_1 \subset V$ und $V_2 \subset V$ gibt, für die 
 $V_1 \cup V_2 = V$ und $V_1 \cap V_2 = \emptyset$ gilt,
  sodass für jede Kante $e \in E$ ein $u \in V_1$ und ein $v \in V_2$ existiert, sodass $e = \{u,v\}$ gilt.
-Die Knotenmengen $V_1$ und $V_2$ werden auch als Partitionen bezeichnet.
+Die Knotenmengen $V_1$ und $V_2$ werden auch als Partitionsklassen bezeichnet.
 \end{definition}
 
 \noindent
 Ein Beispiel für einen bipartiten Graphen sieht man in Abbildung \ref{fig:beispiel_bipartit}. Dabei gilt für die Partitionen:
 $V_1 = \{v_1,v_2,v_3,v_4\}$ und $V_2 = \{v_5,v_6,v_7,v_8\}$. Man sieht deutlich, dass alle Kanten die Partitionen
-$V_1$ und $V_2$ ''kreuzen''.
+$V_1$ und $V_2$ \glqq kreuzen\grqq.
 
-\begin{figure}[h]
+\begin{figure}
 %bipartiter graph
 \centering
 \begin{tikzpicture}
@@ -60,8 +67,8 @@ $V_1$ und $V_2$ ''kreuzen''.
 \caption{Beispiel eines bipartiten Graphen}
 \label{fig:beispiel_bipartit}
 \end{figure}
-\red{überleitung}
-Für einen \ct ist vor allem der Begriff der Nachbarschaft, genauer der gemeinsamen und disjunkten 
+\red{überleitung
+Für einen \ct} ist vor allem der Begriff der Nachbarschaft, genauer der gemeinsamen und disjunkten 
 Nachbarschaft, entscheidend.
 \begin{definition}[Nachbarschaft]~\\
 Ein Knoten $u \in V$ heißt \textbf{benachbart} (oder \fett{adjazent}) zu einem 
@@ -72,15 +79,15 @@ von $u$ nennt man \fett{Nachbarschaft}.
 	Die \fett{gemeinsame} Nachbarschaft $N_{c}(u,v)$ zweier Knoten $u$ und $v$ ist die Menge aller Knoten, die sowohl
 	zu $u$ als auch zu $v$ adjazent sind. In der \fett{disjunkten} Nachbarschaft $N_{d}(u,v)$ von $u$ und $v$ sind dagegen 
 	alle Knoten die nur zu einem der beiden Knoten adjazent sind. \\
-	Es gilt also $N_{c}(u,v) = N(u) \cap N(v)$ und $N_{d}(u,v) = \big(N(u) \cup N(v)\big)\setminus \big(N(u) \cap N(v) \big)$
+	Es gilt also $N_{c}(u,v) = N(u) \cap N(v)$ und $N_{d}(u,v) = \big[N(u) \cup N(v)\big]\setminus \big[N(u) \cap N(v) \big]$
 \end{definition}
+\noindent
+Dabei bemerken wir, dass in einem bipartiten Graphen zwei Knoten aus einer Partitionsklasse nie
+in der gegenseitigen Nachbarschaft liegen können. Diesen Fakt werden wir beim Bipartiten \gc ausnutzen.
 
-\red{Dabei bemerken wir, dass in einem bipartiten Graphen zwei Knoten aus einer Partitionsklasse nie
-in der gegenseitigen Nachbarschaft liegen können. Dieser Fakt wird beim Bipartiten \gc ausgenutzt.
-}
 \blue{Zuletzt} sind noch die Begriffe Knotengrad und Gradsequenz relevant.
 \begin{definition}[Knotengrad]~\\
-Der \fett{Grad} eines Knotens $v \in V$ wird mit $\deg(v)$ bezeichnet und entspricht die Anzahl
+Der \fett{Grad} eines Knotens $v \in V$ wird mit $\deg(v)$ bezeichnet und entspricht der Anzahl
 der adjazenten Knoten von $v$. Es gilt also $\deg(v) = |N(v)|$ für alle Knoten $v\in V$.
 \end{definition}
 \begin{definition}[Gradsequenz]~\\
@@ -89,8 +96,8 @@ $D = (d_{1}, \dots, d_{n})$, wobei $d_{i} = \deg(v_{i})$ der Grad des Knotens $v
 \end{definition}
 \noindent
 Im bipartiten Graph aus Abbildung \ref{fig:beispiel_bipartit} hat beispielsweise
-der Knoten $v_{1}$ dem Grad $\deg(v_{1}) = 3$. Für die Gradsequenz des Graphen gilt: 
-$D = (3,2,2,2,3,2)$. \red{kann man das so lassen?}
+der Knoten $v_{1}$ den Grad $\deg(v_{1}) = 3$. Für die Gradsequenz des Graphen gilt: 
+$D = (3,2,2,2,3,2)$.
 
 
 
@@ -124,17 +131,15 @@ Diese Datenstruktur muss so aufgebaut sein, dass man damit effizient zwei zufäl
 Knoten auswählen, die (disjunkten und gemeinsamen) Nachbarschaften berechnen und Knoten aus der
 disjunkten Nachbarschaft tauschen kann. Dafür eignet sich am Besten  
 eine Art Adjazenzlistendarstellung des Graphen, wobei jedoch keine echten verketteten
-Listen verwendet werden, sondern lediglich Vektoren. 
+Listen verwendet werden, sondern lediglich Arrays. 
 Es wird also für einen Knoten
 $v \in V$ ein Vektor erstellt, indem alle adjazenten Knoten gespeichert sind.
 Da wir ausschließlich bipartite Graphen betrachten werden, speichern wir noch in 
 einem weiteren Vektor die Knoten von einer der beiden Bipartitionsklassen \red{die größere? oder egal? }. Diesen
 werden wir als \red{\fett{\partvek}} bezeichnen.
-\\
-Die Vektoren sind dabei vom \cpp \red{Datentyp   (falsches wort/was ist richtig? container?)} \texttt{std::vector}.
-\red{Dieser Container unterstützt random access in $\O(1)$}
 
-\red{KNOTEN ENTSPRECHEN INTS!?}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Global Curveball
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,9 +147,9 @@ Die Vektoren sind dabei vom \cpp \red{Datentyp   (falsches wort/was ist richtig?
 \section{Global Curveball \red{(auf bipartiten Graphen)}}
 Wie \red{in der Einleitung beschrieben}, ist \gc ein Verfahren zum Randomisieren von Graphen.
 Dabei ist als Eingabe ein beliebiger bipartiter Graph gegeben, der in einen \red{anderen/zufälligen}
-Graph mit äquivalenter Gradsequenz transformiert werden soll.
+Graph mit identischer Gradsequenz transformiert werden soll.
 \\
-Die Aufgabe ist also, bei einer gegebenen Gradsequenz $D$, eine uniform verteilte \red{Stichprobe???}
+Die Aufgabe ist also, bei einer gegebenen Gradsequenz $D$, eine uniform verteilte Stichprobe
 aus der Menge aller Graphen mit Gradsequenz $D$ zurückzugeben. Durch das Ausführen von \gc 
 bleibt also für jeden Knoten $v\in V$ sein Grad $\deg(v)$ erhalten. \red{(aus survey übernommen)}
 \\
@@ -158,21 +163,21 @@ Was soll da dazu??}
 \\
 \fett{\cb} ist \red{nun} ein Prozess, der ähnlich zum Kanten Tauschen ist. Bei einem \ct werden
 zwei verschiedene Knoten $u$ und $v$ ($u\neq v$) zufällig uniform verteilt ausgewählt, deren Nachbarschaft
-zufällig \red{durchmischt (oder lieber shuffle?)} wird. Da bei der \red{bipartiten Version}  von \cb{}
+zufällig durchmischt wird. Da bei der \red{bipartiten Version}  von \cb{}
 die Knoten $u$ und $v$ beide aus der gleichen Partitionsklasse gezogen werden, ist sichergestellt, dass
 es keine Kante zwischen $u$ und $v$ gibt. \red{Somit sind die beiden Knoten nicht in der jeweils anderen Nachbarschaft
 enthalten, es gilt folglich $u\notin N(v)$ und $v\notin N(u)$}.
 Wird die komplette Nachbarschaft $N(u) \cup N(v)$ durchmischt könnte es \red{passieren}, 
-dass dadurch \red{Multikanten} (mehrere Kanten zwischen zwei Knoten) entstehen,  
+dass dadurch \red{Multikanten} entstehen,  
 nämlich genau dann, wenn ein Knoten aus der gemeinsamen Nachbarschaft getauscht wird, sodass er dann in 
 einer der Nachbarschaften doppelt vorkommt.
-Um dies zu Vermeiden werden ausschließlich die Knoten aus der disjunkten Nachbarschaft $N_{d}(u,v)$ getauscht.
+Um dies zu vermeiden werden ausschließlich die Knoten aus der disjunkten Nachbarschaft $N_{d}(u,v)$ getauscht.
 Ein Beispiel für solch einen Tausch ist in Abbildung \ref{fig:curveball_trade_graph} gegeben.
 %
 %
 %
 %%%%% CURVEBALL TRADE auf graph
-\begin{figure}[h]
+\begin{figure}
 \centering
 \begin{tikzpicture}
 		\tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
@@ -215,7 +220,12 @@ Ein Beispiel für solch einen Tausch ist in Abbildung \ref{fig:curveball_trade_g
 
 ;
 \end{tikzpicture}
-\caption{Beispiel eines Curveball-Tausches}
+\caption{Dabei wird der \ct auf den Knoten $v_{1}$ und $v_{2}$ ausgeführt. 
+Für die \red{(grau markierte)} gemeinsame Nachbarschaft gilt $N_{c}(v_{1},v_{2}) = \{v_{3}\}$, 
+die disjunkte Nachbarschaft $N_{d}(v_{1},v_{2}) = \{v_{4},v_{5}\}$ ist in gelber Farbe gekennzeichnet.
+In diesem Beispiel gibt es nur die zwei gegeben Graphen, die durch Tauschen der disjunkten 
+Nachbarschaft entstehen können. \red{Ein \ct würde dann jeweils mit Wahrscheinlichkeit 0.5 einen der beiden 
+Graphen zurückgeben.}}
 \label{fig:curveball_trade_graph}
 	
 \end{figure}
@@ -224,12 +234,7 @@ Ein Beispiel für solch einen Tausch ist in Abbildung \ref{fig:curveball_trade_g
 %
 %
 %
-Dabei wird der \ct auf den Knoten $v_{1}$ und $v_{2}$ ausgeführt. 
-Für die \red{(grau markierte)} gemeinsame Nachbarschaft gilt $N_{c}(v_{1},v_{2}) = \{v_{3}\}$, 
-die disjunkte Nachbarschaft $N_{d}(v_{1},v_{2}) = \{v_{4},v_{5}\}$ ist in gelber Farbe gekennzeichnet.
-In diesem Beispiel gibt es nur die zwei gegeben Graphen, die durch Tauschen der disjunkten 
-Nachbarschaft entstehen können. \red{Ein \ct würde dann jeweils mit Wahrscheinlichkeit 0.5 einen der beiden 
-Graphen zurückgeben.}
+
 %
 %
 %
@@ -305,8 +310,14 @@ Teil eines Curveball-Tausches sein soll.
 \node[] at (-1.8, 0.5)     (5)     {\partvek};
     
     % untere geschweifte Klammer mit Text darunter:
-    \foreach \x in {0,2,4,6,8}
-		\draw[bend angle=60,bend right,  <->,>=latex, very thick] (\x+0.5,0) to  node[below= 1ex] {\cb} (\x+1.5,0) ;
+    \foreach \x in {0,2,4,6,8} 
+ 		\draw[bend angle=60,bend right,  <->,>=latex, very thick] (\x+0.5,0) to  node[below= 1ex] {\cb} (\x+1.5,0) ;
+	
+	
+	\draw[bend angle=60,bend right,  <->,>=latex, very thick, color=white] (10.5,0) to  node[below= 1ex] {\textcolor{black}{kein Tausch}} (11.5,0) ;
+
+	\draw[<-,>=latex, very thick] (10.5,0) to  node[below= 1ex] {} (11.0,-0.5) ;
+%\node[] at (11.0, -0.7)     (5)     {kein Tausch};
 
   \end{tikzpicture}
   \caption{\gc auf dem Partitions Vektor}
@@ -317,7 +328,7 @@ Teil eines Curveball-Tausches sein soll.
 %
 %
 In Abbildung \ref{fig:global_curveball_trade_vector} ist eine Skizze des Partitionsvektors gegeben.
-Für einen \gc Tausch wird dieser Vektor zuerst \red{geshuffelt (zufällig permutiert)}, sodass jedes Element an einer zufälligen
+Für einen \gc Tausch wird dieser Vektor zuerst zufällig permutiert, sodass jedes Element an einer zufälligen
 Position steht. Dann wird jeweils parallel ein \ct auf den Elementen eins und zwei, drei und vier, usw. ausgeführt.
 Durch das zufällige Permutieren des Vektors zu Beginn, wird also jeder der Curveball-Tausche auf zwei zufälligen
 Knoten ausgeführt. Hat der \partvek eine ungerade Anzahl an Elementen, bleibt am Ende ein Element übrig, 

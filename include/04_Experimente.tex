@@ -54,7 +54,7 @@ Eine einzelne Test Messung sich also durch das Tupel \fett{(large, small, fracti
 Um eventuelle Messfehler zu minimieren, wird jeder Durchlauf durch Google Benchmark 5 mal wiederholt.
 \\
 \\
-Alle Messungen wurden \red{auf einem Rechner} mit \red{63GB} Arbeitsspeicher und 16 Prozessoren vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
+Alle Messungen wurden \red{auf einem Rechner} mit \red{64GB} Arbeitsspeicher und 16 Prozessoren vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
 welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
 \
 \\
@@ -66,36 +66,10 @@ welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
 \\
 \red{mit hilfe von Jupyter notebook ausgewertet... daten aus json file }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% Global Curveball
+%%%%%% Messung
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Messung}
-
-Insgesamt wurde für 672 Instanzen die Laufzeit der einzelnen Methoden gemessen. Die gesamte Dauer
-hat dabei  ungefähr 19 Stunden betragen. Die Varianten werden mit einem Tripel bezeichnet,
-wobei 
-\begin{figure}[h]
-\centering
-	\includegraphics[width = \textwidth]{figures/counting.pdf}
-	\caption{\red{Häufigkeit}}
-	\label{fig:messung_counting}
-\end{figure}
-In Abbildung \ref{fig:messung_counting} ist ein Balkendiagramm gegeben, was anzeigt, welche Methoden
-pro Instanz am häufigsten die schnellsten sind. Dabei sieht man eindeutig, dass die Variante (\SeaUSet,
-false,\perm) mit Abstand auf den meisten Instanzen die schnellste Laufzeit aller Methoden hat. Die
-430 Instanzen, auf denen (\SeaUSet,false,\perm) die schnellste Methode ist, entsprechen einem Anteil von rund
-64\%. Mit 179 ''gewonnenen'' Instanzen folgt die Variante (\SorSor,true,\distr), was einem Anteil von
-27\% entspricht. Zusammen ist somit in etwa 91\% aller getesteter Instanzen eine dieser beiden Methoden
-die schnellste gewesen.
-
-
-\red{\Large wie ist die laufzeit von sortsort, in den instanzen wo das andere gewinnt?? vielleicht ist es ja nicht viel langsamer....}
-\begin{figure}[h]
-\centering
-	\includegraphics[width = 0.8\textwidth]{figures/slowdown.pdf}
-	\caption{Slowdown}
-	\label{fig:messung_slowdown}
-\end{figure}
+%\section{Messung}
 
 
 
@@ -104,3 +78,94 @@ die schnellste gewesen.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Auswertung}
+Insgesamt wurde für 672 Instanzen die Laufzeit der einzelnen Methoden gemessen. Die Dauer für alle 28 
+Varianten hat dabei insgesamt ungefähr 19 Stunden betragen. \red{Die Varianten werden mit einem Tripel bezeichnet,
+wobei }
+\begin{figure}[h]
+\centering
+	\includegraphics[width = 0.5\textwidth]{figures/counting.pdf}
+	\caption{\red{Häufigkeit} \red{HIER KEIN FLOAT?}}
+	\label{fig:messung_counting}
+\end{figure}
+Zuerst betrachten wir für jede Instanz, welche Methode am schnellsten war, also für welche die geringste
+Laufzeit gemessen wurde. Interessant sind dann jeweils die Methoden, die häufig am schnellsten waren.
+In Abbildung \ref{fig:messung_counting} ist dazu ein Balkendiagramm gegeben.
+Dabei sieht man eindeutig, dass die Variante (\SeaUSet,\false,\perm) mit Abstand 
+auf den meisten Instanzen die schnellste Laufzeit aller Methoden hat. Die
+430 Instanzen, auf denen (\SeaUSet,\false,\perm) die schnellste Methode ist, entsprechen einem Anteil von rund
+64\%. Mit 179 \glqq gewonnenen\grqq Instanzen folgt die Variante (\SorSor,\true,\distr), was einem Anteil von
+27\% entspricht. Zusammen ist somit in etwa 91\% aller getesteter Instanzen eine dieser beiden Methoden
+die schnellste gewesen. Daher liegt der Schluss nahe, sich beim Suchen der \glqq besten\grqq{} Variante,
+auf diese beiden Methoden zu beschränken. Um nicht fälschlicherweise \glqq gute\grqq{} Methoden auszuschließen
+betrachten wir einen weiteren Plot in Abbildung \ref{fig:messung_slowdown}. 
+\begin{figure}[h]
+\centering
+	\includegraphics[width = 0.8\textwidth]{figures/slowdown.pdf}
+	\caption{\red{Slowdown}}
+	\label{fig:messung_slowdown}
+\end{figure}
+Um diesen Plot zu erstellen wurde jede Variante einzeln betrachtet.
+Dann wird für jede Instanz bestimmt, welche Variante die kürzeste Laufzeit hat und der Quotient
+aus dieser Laufzeit und der Laufzeit der betrachteten Variante berechnet. Dieses Verhältnis wird als \red{Slowdown}
+bezeichnet und gibt an, um welchen Faktor die Variante langsamer als die schnellste ist. Die Slowdowns
+zu jeder Instanz werden schließlich aufsteigend sortiert und als \red{Kurve} in den Plot eingefügt.
+
+
+
+\red{Durch das sortieren geht die ordnung verloren}
+
+
+
+Dieser Plot legt ebenfalls nahe, sich auf die beiden Varianten (\SeaUSet, \false, \perm) und 
+(\SorSor, \true, \distr) zu konzentrieren, da die beiden Kurven am wenigsten stark \red{wachsen} und damit 
+die Slowdowns vergleichsweise klein sind. Jedoch lässt sich auch hier nicht bestimmen, welche der beiden
+Varianten die bessere ist. Ein Vorteil von (\SeaUSet, \false, \perm) ist, 
+dass die Methode auf den meisten Instanzen einen Slowdown
+von eins hat -- was wir ja auch schon in Abbildung \ref{fig:messung_counting} gesehen haben --
+und damit langsamer anwächst. Ein Nachteil liegt aber darin, dass der Slowdown für manche Instanzen
+eine Größe von bis zu 10.0 erreicht, während der Slowdown von  (\SorSor, \true, \distr) durch den maximalen
+Wert von 3.5 beschränkt ist (in Abbildung \ref{fig:messung_slowdown} als gestrichelte Linie eingezeichnet).
+\\
+Dieser Nachteil spiegelt sich ebenfalls in Abbildung \ref{fig:messung_mean} wieder. In diesem Plot
+wurden über alle Instanzen für jede Variante jeweils die mittlere Laufzeit bestimmt. Obwohl
+es nicht in den meisten Fällen die schnellste Variante ist, hat (\SorSor, \true, \distr) die 
+kleinste mittlere Laufzeit mit rund 0.0387 Sekunden. Auf Platz zwei folgt
+(\SeaUSet, \false, \perm) mit etwa 0.0640 Sekunden, was schon einer Abweichung von ungefähr 60\% entspricht.
+Auch in diesem Plot sieht man deutlich, dass es sich nicht lohnt noch weiter Varianten zu betrachten. Zwar hat 
+auch (\SorSor, \true, \perm) eine mittlere Laufzeit, die annähernd so groß ist wie (\SeaUSet, \false, \perm),{}
+die aber \red{nicht an die schnellste herankommt}. Alle anderen Varianten haben eine deutlich größere mittlere
+Laufzeit.
+\begin{figure}[h]
+\centering
+	\includegraphics[width = \textwidth]{figures/mean.pdf}
+	\caption{Mittlere Laufzeiten der Varianten über allen Instanzen}
+	\label{fig:messung_mean}
+\end{figure}
+Abschließend betrachten wir noch die zwei ausgewählten Varianten im direkten Vergleich. Dazu wurden
+in Abbildung \ref{fig:messung_small} auf der horizontalen Achse die getesteten Instanzen aufgetragen
+und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \perm) und (\SeaUSet, \false, \perm) als Kreuze
+eingezeichnet. Die Instanzen sind nach aufsteigenden Werten für \sm{} sortiert. Aus Gründen der Übersichtlichkeit
+wird bei  der Beschriftung der Instanzen der Teil \fr weggelassen, die Instanzen werden 
+nur mit \la, \sm{} bezeichnet. Weiterhin wurden der
+Übersichtlichkeit wegen die Instanzen aus dem Bereich $32 < \text{\sm}  <32768$ ausgelassen, da sie das gleiche
+Bild wie die üblichen Instanzen zeigen.
+Man sieht dabei, dass sich die Laufzeiten in den meisten Instanzen nicht so stark unterscheiden. In
+den Instanzen, in denen sich die Werte für \sm{} und \la{} stark unterscheiden, sieht man jedoch einen 
+deutlichen Vorteil (\SorSor, \true, \perm).
+
+
+\begin{figure}[h]
+\centering
+	\includegraphics[width = \textwidth]{figures/small_aufsteigend.pdf}
+	\caption{\red{kleines aufsteigend}}
+	\label{fig:messung_small}
+\end{figure}
+
+
+
+\red{zusammenfassend.... vllt caption}
+\red{kompromiss}
+
+
+
+

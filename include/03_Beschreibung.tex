@@ -193,42 +193,92 @@ Hierbei wird ausgenutzt, dass wir ausschließlich bipartite Graphen betrachten \
 an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode beschreiben}
 
 
+\begin{table}
+	\centering
+	\begin{tabular}{c||c|c||c|c}
+		 & \multicolumn{2}{c||}{\distr} & \multicolumn{2}{c}{\perm} \\
+		 & \true & \false & \true & \false
+		\\ \hline\hline
+		\SorSor & & & & \\ \hline\hline
+		\SeaSor & & & &\\ \hline\hline
+		\SorSea & & & &\\ \hline\hline
+		\SeaSet & & & &\\ \hline\hline
+		\SetSea & & & &\\ \hline\hline
+		\SeaUSet & & & &\\ \hline\hline
+		\USetSea& & & &
+	\end{tabular}
+	\label{tab:varianten_curveball_tausch}
+	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct}
+\end{table}
 
-%\begin{algorithm}
-%\caption{My algorithm}\label{euclid}
-%\begin{algorithmic}[1]
-%\Procedure{MyProcedure}{}
-%\State $\textit{stringlen} \gets \text{length of }\textit{string}$
-%\State $i \gets \textit{patlen}$
-%\If {$i > \textit{stringlen}$} \Return false
-%\EndIf
-%\State $j \gets \textit{patlen}$
-%\If {$\textit{string}(i) = \textit{path}(j)$}
-%\State $j \gets j-1$.
-%\State $i \gets i-1$.
-%\State \textbf{goto} \emph{loop}.
-%\State \textbf{close};
-%\EndIf
-%\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
-%\State \textbf{goto} \emph{top}.
-%\EndProcedure
-%\end{algorithmic}
-%\end{algorithm}
+%\section{\red{Pseudocode}}
 
-%\begin{algorithm}
-%  \caption{Euclid’s algorithm}\label{euclid}
-%  \begin{algorithmic}[1]
-%    \Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
-%      \State $r\gets a\bmod b$
-%      \While{$r\not=0$}\Comment{We have the answer if r is 0}
-%        \State $a\gets b$
-%        \State $b\gets r$
-%        \State $r\gets a\bmod b$
-%      \EndWhile\label{euclidendwhile}
-%      \For{\texttt{<some condition>}}
-%        \State \texttt{<do stuff>}
-%      \EndFor
-%      \State \textbf{return} $b$\Comment{The gcd is b}
-% %   \EndProcedure
-%  \end{algorithmic}
-%\end{algorithm}
+\begin{algorithm}
+  \caption{SortSort}\label{algo:sortsort}
+  \begin{algorithmic}[1]
+    \Procedure{SortSort}{$u,v$}%\Comment{The g.c.d. of a and b}
+	  \State U $ \gets N(u)$ \Comment{Nachbarschaft von u}
+	  \State V $ \gets N(v)$ \Comment{Nachbarschaft von v}
+	  %\State
+	  \State \texttt{sort(}U\texttt{)} \label{algo:inv1} \Comment{Sortiere beide Vektoren}
+	  \State \texttt{sort(}V\texttt{)} \label{algo:inv2}
+	  %\State
+	  \State nu $\gets 0$ \Comment{Zähler für U}
+	  \State nv $\gets 0$ \Comment{Zähler für V}
+	  
+      \While{(nu < U.\texttt{size()}) and (nv < V.\texttt{size()})}
+        \If{U[nu] < V[nv]}
+			\State disjoint.\texttt{append(}U[nu]\texttt{)}
+			\State nu ++
+			\ElsIf{U[nu] > V[nv]}
+				\State disjoint.\texttt{append(}V[nv]\texttt{)}
+				\State nv ++
+			\ElsIf{U[nu] == V[nv]}
+				\State common.\texttt{append(}U[nu]\texttt{)}
+				\State nu ++
+				\State nv ++
+        \EndIf
+      \EndWhile\label{euclidendwhile}
+      \If{nu $\neq$ U.\texttt{size()}}
+			\State disjoint.\texttt{append(} U[nu], U[nu+1], \dots\texttt{)}
+			\Else{}
+			\State disjoint.\texttt{append(} V[nv], V[nv+1], \dots\texttt{)}
+      \EndIf
+      \State \textbf{return} common, disjoint
+   \EndProcedure
+  \end{algorithmic}
+\end{algorithm}
+
+
+%\red{bei vorsortiert fällt Zeile \ref{algo:inv1} und \ref{algo:inv2} raus!!}
+%\\
+%\\
+%\red{Distribution}
+
+\begin{algorithm}[h]
+\begin{algorithmic}[1]
+\Procedure{Distribution}{common, disjoint}
+	\State nu $\gets$ U.\texttt{size()} - common.\texttt{size()}
+	\State nv $\gets$ V.\texttt{size()} - common.\texttt{size()}
+	\State i = 0
+	\While{i < disjoint.\texttt{size()}}
+		\State X $\sim \mathcal{B}(\frac{\text{nu}}{\text{nu}+\text{nv}})$  \Comment{ziehe ein Zufallsbit Bernoulli verteilt mit Wahrscheinlichkeit $\frac{nu}{nu+nv}$}
+
+		\If{X==1}
+			\State U.\texttt{append(}disjoint[i]\texttt{)}
+			\State i++
+			\State nu- -
+		\Else{} 
+			\State V.\texttt{append(}disjoint[i]\texttt{)}
+			\State i++
+			\State nv- -
+		\EndIf{}
+	\EndWhile{}	
+	\State U.\texttt{insert(}common\texttt{)}
+	\State V.\texttt{insert(}common\texttt{)}
+	\State \textbf{return} U, V
+\EndProcedure
+\end{algorithmic}
+	\caption{Distribution}
+\end{algorithm}
+
