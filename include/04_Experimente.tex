@@ -49,28 +49,30 @@ dass die gemeinsamen Nachbarschaft nicht leer ist, müssen somit Elemente des ei
 in den anderen hineinkopiert werden. Damit die Größe der gemeinsamen Nachbarschaft
 variiert wird, werden zuerst 10, dann 25, 50 und 75 Prozent der Elemente kopiert. 
 \\
-Eine einzelne Test Messung sich also durch das Tupel \fett{(large, small, fraction)} beschreiben, wobei
+Eine einzelne Test Messung lässt sich somit durch ein Tripel \fett{(\la, \sm, \fr)} beschreiben, wobei
 \fett{\la} die Größe von $u$ ist, \fett{\sm} die Größe von $v$ und \fett{\fr} der Anteil der gemeinsamen Elemente.
-Um eventuelle Messfehler zu minimieren, wird jeder Durchlauf durch Google Benchmark 5 mal wiederholt.
-\\
-\\
-Alle Messungen wurden \red{auf einem Rechner} mit \red{64GB} Arbeitsspeicher und 16 Prozessoren vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
-welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
-\
-\\
-\\
-\red{benchmark mintime..?}
-\\
-\red{WIE WERDEN DIE Varianten BEZEICHNET..?}
-\\
-\\
-\red{mit hilfe von Jupyter notebook ausgewertet... daten aus json file }
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Messung
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\section{Messung}
-
+\section{Messung}
+Auf die im vorherigen Abschnitt beschriebene Weise, werden die verschiedenen Instanzen erstellt und
+mittels Google Benchmark die Zeit gemessen. Aus Zeitgründen werden jedoch nicht alle Werte 
+für \la{} und \sm{} erstellt. Deshalb verdoppeln wir in jedem Schritt die Werte von \la{} und \sm{}
+anstatt sie um eins zu inkrementieren. Somit wurde für insgesamt 672 Instanzen die Laufzeit der 
+einzelnen Methoden gemessen. Die Dauer für alle 28 Varianten hat dabei in Summe ungefähr 19 Stunden betragen.          
+\\
+\red{benchmark mintime..?}
+\red{Um eventuelle Messfehler zu minimieren, wird jeder Durchlauf durch Google Benchmark 5 mal wiederholt.
+}
+\\
+Alle Messungen wurden \red{auf einem Rechner} mit \red{64GB} Arbeitsspeicher und 16 Prozessoren vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
+welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,9 +80,12 @@ welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Auswertung}
-Insgesamt wurde für 672 Instanzen die Laufzeit der einzelnen Methoden gemessen. Die Dauer für alle 28 
-Varianten hat dabei insgesamt ungefähr 19 Stunden betragen. \red{Die Varianten werden mit einem Tripel bezeichnet,
-wobei }
+\red{mit hilfe von Jupyter notebook ausgewertet... daten aus json file }
+
+Die erhaltenen Messdaten werden schließlich mit dem \red{Tool} Jupyter Notebook ausgewertet.
+\\
+\\
+\\
 \begin{figure}[h]
 \centering
 	\includegraphics[width = 0.5\textwidth]{figures/counting.pdf}
@@ -143,17 +148,20 @@ Laufzeit.
 \end{figure}
 Abschließend betrachten wir noch die zwei ausgewählten Varianten im direkten Vergleich. Dazu wurden
 in Abbildung \ref{fig:messung_small} auf der horizontalen Achse die getesteten Instanzen aufgetragen
-und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \perm) und (\SeaUSet, \false, \perm) als Kreuze
+und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) als Kreuze
 eingezeichnet. Die Instanzen sind nach aufsteigenden Werten für \sm{} sortiert. Aus Gründen der Übersichtlichkeit
 wird bei  der Beschriftung der Instanzen der Teil \fr weggelassen, die Instanzen werden 
 nur mit \la, \sm{} bezeichnet. Weiterhin wurden der
 Übersichtlichkeit wegen die Instanzen aus dem Bereich $32 < \text{\sm}  <32768$ ausgelassen, da sie das gleiche
 Bild wie die üblichen Instanzen zeigen.
-Man sieht dabei, dass sich die Laufzeiten in den meisten Instanzen nicht so stark unterscheiden. In
-den Instanzen, in denen sich die Werte für \sm{} und \la{} stark unterscheiden, sieht man jedoch einen 
-deutlichen Vorteil (\SorSor, \true, \perm).
-
-
+Man sieht dabei, dass sich die Laufzeiten in den meisten Instanzen nicht so stark unterscheiden.
+Dies sind vor allem die Instanzen, bei denen der Unterschied zwischen \la{} und \sm{} nicht so groß ist.
+In den Instanzen, in denen sich die Werte für \sm{} und \la{} stark unterscheiden, ist jedoch ein 
+deutlicher Vorteil von (\SorSor, \true, \distr) zu erkennen. Auch bei den \glqq großen\grqq{} Instanzen
+mit Werten von $\text{\sm{}}> 500.000$ hat diese Variante einen deutlichen Laufzeitvorteil.
+Auf der Instanz (4.194.304, 4.194.304, 75) beispielsweise hat (\SeaUSet, \false, \perm) eine Laufzeit
+von circa 1.628 Sekunden, während (\SorSor, \true, \distr) nur etwa 0.146 Sekunden benötigt. Der Slowdown
+beträgt für diese Instanz also in etwa 11. 
 \begin{figure}[h]
 \centering
 	\includegraphics[width = \textwidth]{figures/small_aufsteigend.pdf}
@@ -162,10 +170,41 @@ deutlichen Vorteil (\SorSor, \true, \perm).
 \end{figure}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Fazit
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\red{zusammenfassend.... vllt caption}
-\red{kompromiss}
-
-
-
+\section{\red{Fazit}}
+Abschließend muss an Hand der Messdaten entschieden werden, welche Variante zum Einsatz für
+einen \ct am Besten geeignet ist.
+Zusammenfassend haben wir im vorherigen Abschnitt festgestellt, 
+dass nur die Varianten (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) zur Auswahl stehen.
+Während die eine Variante am häufigsten die geringste Laufzeit hat, liegt die andere 
+bei der durchschnittlichen Laufzeit weiter vorne. Dies liegt vor allem daran, dass sich 
+die Laufzeiten bei den Instanzen auf denen (\SeaUSet, \false, \perm) \glqq gewinnt\grqq{} kaum unterscheiden.
+Unter den anderen Instanzen gibt es jedoch welche, bei denen (\SorSor, \true, \distr) bis auf einen
+Faktor von circa 11 schneller ist.
+\\
+Um ein bestmögliches Laufzeitverhalten für einen \ct zu erreichen, könnte man auf die Idee kommen, 
+beide Varianten zusammen zu nutzen. Man könnte sich eine \red{Heuristik} überlegen, die jeweils angibt, 
+auf welcher Instanz man welche Variante verwenden sollte. Somit würde bei jedem \ct abhängig von 
+der Eingabe, also den Nachbarschaften, entschieden werden, welche der beiden Instanzen man benutzt. 
+Das Problem dabei liegt jedoch darin, dass bei diesen Varianten einmal die Vorsortiert-Invariante
+genutzt wird und einmal nicht. Dies ist natürlich nicht beides gemeinsam möglich. Entweder man hält die
+Nachbarschaften immer sortiert, oder eben nicht. Man muss sich also für eine Möglichkeit der
+Invariante entscheiden. Dadurch ändert sich dann aber zwangsläufig  eine der beiden Varianten. 
+Entscheidet man sich, die Nachbarschaften sortiert zu halten, würde (\SeaUSet, \false, \perm) zu (\SeaUSet, \true, \perm){}
+werden, andernfalls würde sich (\SorSor, \true, \distr) zu (\SorSor, \false, \distr) verändern.
+Diese beiden \glqq veränderten \grqq{} Varianten haben aber jeweils deutlich schlechtere Laufzeiten
+als die ursprünglichen.
+\\
+Es ist also nicht sinnvoll möglich, die beiden Varianten miteinander zu kombinieren. Wir müssen uns
+also auf eine Variante festlegen. Dies ist die Variante (\SorSor, \true, \distr), da sie im Vergleich zur
+Alternative -- wie schon beschrieben --
+in kaum einer Instanz eine wesentlich schlechtere Laufzeit hatte, jedoch auf manchen Instanzen wesentlich
+bessere Laufzeiten. Außerdem ist es die Variante mit der geringsten mittleren Laufzeit. 
+Ein Vorteil dieser Variante neben der Laufzeit liegt noch in der Einfachheit. So werden
+lediglich die beiden Arrays sortiert und linear durchlaufen. Es muss keine weitere Datenstruktur
+erstellt werden -- wie bei der anderen Variante das \texttt{unordered\_set} -- und damit wird
+auch kein zusätzlicher Speicherplatz verbraucht.
 
