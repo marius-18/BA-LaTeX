@@ -1,9 +1,9 @@
 
-Wie im vorherigen Kapitel beschrieben, existieren verschiedene Varianten, einen \gc Tausch 
+Wie im vorherigen Kapitel beschrieben, existieren verschiedene Varianten, einen \gc{} Tausch 
 durchzuführen. Für das Finden der gemeinsamen Nachbarschaft betrachten wir sieben verschiedene Methoden, 
 für das Tauschen der Nachbarschaft zwei und weiterhin prüfen wir noch, ob es sinnvoll ist, 
 die \red{vorsortiert} Invariante zu nutzen oder nicht, was ebenfalls zwei Möglichkeiten entspricht.
-Kombiniert man all diese Möglichkeiten erhält man also insgesamt 28 verschiedene Varianten für einen \gc 
+Kombiniert man all diese Möglichkeiten erhält man also insgesamt 28 verschiedene Varianten für einen \gc{} 
 Tausch.
 In diesem Kapitel diskutieren wir, welche der Varianten ausgewählt wurde.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +43,7 @@ Elementen auf bis zu 4.000.000 Elementen vergrößert wird. Innerhalb jeder Rund
 durchgeführt, bei denen der Vektor $u$ eine Größe zwischen 32 Elementen und der jeweiligen Größe von $v$ hat.
 Für jeden dieser Durchgänge werden die beiden Vektoren mit zufälligen, aber paarweise verschiedenen,
 Werten befüllt, bis sie die entsprechende Größe haben. 
-Dabei haben die Vektoren aber offensichtlich keine Elemente gemeinsam, was dazu führen würde, dass ein \gc 
+Dabei haben die Vektoren aber offensichtlich keine Elemente gemeinsam, was dazu führen würde, dass ein \gc{} 
 Tausch nichts verändern würde. Um sicherzugehen,
 dass die gemeinsamen Nachbarschaft nicht leer ist, müssen somit Elemente des einen Vektors 
 in den anderen hineinkopiert werden. Damit die Größe der gemeinsamen Nachbarschaft
@@ -64,15 +64,16 @@ Eine einzelne Test Messung lässt sich somit durch ein Tripel \fett{(\la, \sm, \
 Auf die im vorherigen Abschnitt beschriebene Weise, werden die verschiedenen Instanzen erstellt und
 mittels Google Benchmark die Zeit gemessen. Aus Zeitgründen werden jedoch nicht alle Werte 
 für \la{} und \sm{} erstellt. Deshalb verdoppeln wir in jedem Schritt die Werte von \la{} und \sm{}
-anstatt sie um eins zu inkrementieren. Somit wurde für insgesamt 672 Instanzen die Laufzeit der 
-einzelnen Methoden gemessen. Die Dauer für alle 28 Varianten hat dabei in Summe ungefähr 19 Stunden betragen.          
-\\
-\red{benchmark mintime..?}
-\red{Um eventuelle Messfehler zu minimieren, wird jeder Durchlauf durch Google Benchmark 5 mal wiederholt.
-}
-\\
+anstatt sie um eins zu inkrementieren. Somit ergeben sich insgesamt 672 Instanzen, auf denen die Laufzeiten der 
+einzelnen Methoden gemessen werden. Um eventuelle Messfehler zu minimieren, wird
+jeder Durchlauf durch den Google Benchmark Parameter \texttt{benchmark\_repetitions} 5 mal wiederholt.
+Mit dem Parameter \texttt{benchmark\_min\_time} wird noch festgelegt, dass jede Variante so oft getestet
+wird, bis mindestens eine Gesamtlaufzeit von 0.1 Sekunden \red{erreicht} wird. 
 Alle Messungen wurden \red{auf einem Rechner} mit \red{64GB} Arbeitsspeicher und 16 Prozessoren vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
 welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
+Mit dieser Konfiguration hat die Dauer für alle 28 Varianten in Summe ungefähr 19 Stunden betragen.
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,33 +81,34 @@ welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Auswertung}
-\red{mit hilfe von Jupyter notebook ausgewertet... daten aus json file }
-
-Die erhaltenen Messdaten werden schließlich mit dem \red{Tool} Jupyter Notebook ausgewertet.
-\\
-\\
-\\
-\begin{figure}[h]
+Die ermittelten Messdaten werden schließlich als \texttt{json}-Datei gespeichert. Mit Hilfe von 
+Jupyter Notebook lassen sie sich auswerten. Dabei
+handelt es sich um ein \red{Tool}, mit dem man Python-Programme auf einfache Art und Weise erstellen und 
+ausführen kann.
+Innerhalb von Python werden wir die Bibliotheken \fett{Matplotlib} und \fett{pandas} nutzen, um die Daten
+zu analysieren und grafisch aufzuarbeiten.
+\begin{figure}
 \centering
 	\includegraphics[width = 0.5\textwidth]{figures/counting.pdf}
-	\caption{\red{Häufigkeit} \red{HIER KEIN FLOAT?}}
+	\caption{Welche Variante ist am häufigsten die schnellste?}
 	\label{fig:messung_counting}
 \end{figure}
+\\
 Zuerst betrachten wir für jede Instanz, welche Methode am schnellsten war, also für welche die geringste
 Laufzeit gemessen wurde. Interessant sind dann jeweils die Methoden, die häufig am schnellsten waren.
 In Abbildung \ref{fig:messung_counting} ist dazu ein Balkendiagramm gegeben.
-Dabei sieht man eindeutig, dass die Variante (\SeaUSet,\false,\perm) mit Abstand 
+Dabei sieht man eindeutig, dass die Variante (\SeaUSet, \false, \perm) mit Abstand 
 auf den meisten Instanzen die schnellste Laufzeit aller Methoden hat. Die
-430 Instanzen, auf denen (\SeaUSet,\false,\perm) die schnellste Methode ist, entsprechen einem Anteil von rund
-64\%. Mit 179 \glqq gewonnenen\grqq Instanzen folgt die Variante (\SorSor,\true,\distr), was einem Anteil von
+430 Instanzen, auf denen (\SeaUSet, \false, \perm) die schnellste Methode ist, entsprechen einem Anteil von rund
+64\%. Mit 179 \glqq gewonnenen\grqq{} Instanzen folgt die Variante (\SorSor, \true, \distr), was einem Anteil von
 27\% entspricht. Zusammen ist somit in etwa 91\% aller getesteter Instanzen eine dieser beiden Methoden
 die schnellste gewesen. Daher liegt der Schluss nahe, sich beim Suchen der \glqq besten\grqq{} Variante,
 auf diese beiden Methoden zu beschränken. Um nicht fälschlicherweise \glqq gute\grqq{} Methoden auszuschließen
 betrachten wir einen weiteren Plot in Abbildung \ref{fig:messung_slowdown}. 
-\begin{figure}[h]
+\begin{figure}
 \centering
 	\includegraphics[width = 0.8\textwidth]{figures/slowdown.pdf}
-	\caption{\red{Slowdown}}
+	\caption{\red{Slowdown im Vergleich zur schnellsten Variante}}
 	\label{fig:messung_slowdown}
 \end{figure}
 Um diesen Plot zu erstellen wurde jede Variante einzeln betrachtet.
@@ -114,13 +116,9 @@ Dann wird für jede Instanz bestimmt, welche Variante die kürzeste Laufzeit hat
 aus dieser Laufzeit und der Laufzeit der betrachteten Variante berechnet. Dieses Verhältnis wird als \red{Slowdown}
 bezeichnet und gibt an, um welchen Faktor die Variante langsamer als die schnellste ist. Die Slowdowns
 zu jeder Instanz werden schließlich aufsteigend sortiert und als \red{Kurve} in den Plot eingefügt.
-
-
-
-\red{Durch das sortieren geht die ordnung verloren}
-
-
-
+Da die Slowdowns jedoch für jede Variante unabhängig voneinader sortiert werden, geht dadurch 
+die Ordnung über die Instanzen verloren. Somit entspricht eine Stelle auf der horizontalen Achse 
+nicht für jede Variante der gleichen Instanz.
 Dieser Plot legt ebenfalls nahe, sich auf die beiden Varianten (\SeaUSet, \false, \perm) und 
 (\SorSor, \true, \distr) zu konzentrieren, da die beiden Kurven am wenigsten stark \red{wachsen} und damit 
 die Slowdowns vergleichsweise klein sind. Jedoch lässt sich auch hier nicht bestimmen, welche der beiden
@@ -140,7 +138,7 @@ Auch in diesem Plot sieht man deutlich, dass es sich nicht lohnt noch weiter Var
 auch (\SorSor, \true, \perm) eine mittlere Laufzeit, die annähernd so groß ist wie (\SeaUSet, \false, \perm),{}
 die aber \red{nicht an die schnellste herankommt}. Alle anderen Varianten haben eine deutlich größere mittlere
 Laufzeit.
-\begin{figure}[h]
+\begin{figure}
 \centering
 	\includegraphics[width = \textwidth]{figures/mean.pdf}
 	\caption{Mittlere Laufzeiten der Varianten über allen Instanzen}
@@ -150,8 +148,8 @@ Abschließend betrachten wir noch die zwei ausgewählten Varianten im direkten V
 in Abbildung \ref{fig:messung_small} auf der horizontalen Achse die getesteten Instanzen aufgetragen
 und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) als Kreuze
 eingezeichnet. Die Instanzen sind nach aufsteigenden Werten für \sm{} sortiert. Aus Gründen der Übersichtlichkeit
-wird bei  der Beschriftung der Instanzen der Teil \fr weggelassen, die Instanzen werden 
-nur mit \la, \sm{} bezeichnet. Weiterhin wurden der
+wird bei  der Beschriftung der Instanzen der Teil \fr{} weggelassen, die Instanzen werden 
+nur mit \la{}, \sm{} bezeichnet. Weiterhin wurden der
 Übersichtlichkeit wegen die Instanzen aus dem Bereich $32 < \text{\sm}  <32768$ ausgelassen, da sie das gleiche
 Bild wie die üblichen Instanzen zeigen.
 Man sieht dabei, dass sich die Laufzeiten in den meisten Instanzen nicht so stark unterscheiden.
@@ -162,10 +160,10 @@ mit Werten von $\text{\sm{}}> 500.000$ hat diese Variante einen deutlichen Laufz
 Auf der Instanz (4.194.304, 4.194.304, 75) beispielsweise hat (\SeaUSet, \false, \perm) eine Laufzeit
 von circa 1.628 Sekunden, während (\SorSor, \true, \distr) nur etwa 0.146 Sekunden benötigt. Der Slowdown
 beträgt für diese Instanz also in etwa 11. 
-\begin{figure}[h]
+\begin{figure}
 \centering
 	\includegraphics[width = \textwidth]{figures/small_aufsteigend.pdf}
-	\caption{\red{kleines aufsteigend}}
+	\caption{Vergleich der Laufzeiten zweier Varianten auf ausgewählten Instanzen}
 	\label{fig:messung_small}
 \end{figure}
 
@@ -176,7 +174,7 @@ beträgt für diese Instanz also in etwa 11.
 
 \section{\red{Fazit}}
 Abschließend muss an Hand der Messdaten entschieden werden, welche Variante zum Einsatz für
-einen \ct am Besten geeignet ist.
+einen \ct{} am Besten geeignet ist.
 Zusammenfassend haben wir im vorherigen Abschnitt festgestellt, 
 dass nur die Varianten (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) zur Auswahl stehen.
 Während die eine Variante am häufigsten die geringste Laufzeit hat, liegt die andere 
@@ -185,9 +183,9 @@ die Laufzeiten bei den Instanzen auf denen (\SeaUSet, \false, \perm) \glqq gewin
 Unter den anderen Instanzen gibt es jedoch welche, bei denen (\SorSor, \true, \distr) bis auf einen
 Faktor von circa 11 schneller ist.
 \\
-Um ein bestmögliches Laufzeitverhalten für einen \ct zu erreichen, könnte man auf die Idee kommen, 
+Um ein bestmögliches Laufzeitverhalten für einen \ct{} zu erreichen, könnte man auf die Idee kommen, 
 beide Varianten zusammen zu nutzen. Man könnte sich eine \red{Heuristik} überlegen, die jeweils angibt, 
-auf welcher Instanz man welche Variante verwenden sollte. Somit würde bei jedem \ct abhängig von 
+auf welcher Instanz man welche Variante verwenden sollte. Somit würde bei jedem \ct{} abhängig von 
 der Eingabe, also den Nachbarschaften, entschieden werden, welche der beiden Instanzen man benutzt. 
 Das Problem dabei liegt jedoch darin, dass bei diesen Varianten einmal die Vorsortiert-Invariante
 genutzt wird und einmal nicht. Dies ist natürlich nicht beides gemeinsam möglich. Entweder man hält die
@@ -208,3 +206,6 @@ lediglich die beiden Arrays sortiert und linear durchlaufen. Es muss keine weite
 erstellt werden -- wie bei der anderen Variante das \texttt{unordered\_set} -- und damit wird
 auch kein zusätzlicher Speicherplatz verbraucht.
 
+
+
+\section{\red{Einordnung?! passen die ergebnisse zu erwartungen?!}}

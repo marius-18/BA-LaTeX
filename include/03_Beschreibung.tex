@@ -5,8 +5,14 @@
 
 \section{Bestimmung der gemeinsamen Nachbarschaft}
 
-\textcolor{red}{Wie bereits erwähnt} müssen um einen \textcolor{red}{Curveball-Tausch} auf den Knoten $u$ und $v$
-auszuführen die Nachbarschaften der beiden Knoten bekannt sein. Dabei sind die Knoten gesucht, 
+Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt muss die disjunkte Nachbarschaft
+der beiden Knoten $u$ und $v$ bekannt sein, um einen \ct{} auf diesen Knoten $u$ und $v$
+auszuführen. Der \ct{} besteht dann darin, diese Knoten aus $N_{d}(u,v)$ zu durchmischen.
+
+~\\
+\\
+\\
+Dabei sind die Knoten gesucht, 
 welche jeweils nur entweder $u$ oder $v$ als Nachbarn haben, also in der \textcolor{red}{disjunkten Nachbarschaft (kann man das sagen?)} liegen.
 Um diese Knoten zu finden, kann man jedoch einfach die gemeinsame Nachbarschaft bestimmen. Die Knoten
 in der disjunkten Nachbarschaft sind dann alle Nachbarn von $u$ und $v$, welche\textcolor{red}{VORSORTIERT}
@@ -21,7 +27,7 @@ vorkommen. Dafür gibt es verschiedene Varianten, die
 im Folgenden erklärt werden.
 \\
 \\
-Als ersten ''naiven'' Ansatz könnte man für jedes Element des Vektors $u$ den gesamten anderen 
+Als ersten \glqq naiven\grqq{} Ansatz könnte man für jedes Element des Vektors $u$ den gesamten anderen 
 Vektors $v$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
 $\O(|u|\cdot|v|)$, was aber natürlich nicht sehr sinnvoll ist, da der Vektor $v$ ziemlich oft 
 durchlaufen werden muss und wir 
@@ -31,7 +37,7 @@ ziemlich groß werden.
 Um dieses Problem zu verhindern kann man beide Vektoren aufsteigend sortieren. Um nun zu herauszufinden,
 welche Werte in beiden Vektoren vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
 und testen, ob die Werte gleich sind. Somit muss man jedes Element der beiden Vektoren - nach dem Sortieren - 
-nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum ''naiven''
+nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum \glqq naiven\grqq{}
 Ansatz führt. Man erhält damit eine Laufzeit von $\O(|u|\cdot \log (|u|)  + |v|\cdot\log(|v|))$. 
 Diese Variante wird im Folgenden als \SorSor \textcolor{red}{(darf ich das in
 englisch lassen?)} bezeichnet.
@@ -83,7 +89,7 @@ Wir betrachten hierfür zwei Möglichkeiten.
 \\
 Die erste Idee besteht darin,  
 den Vektor der disjunkten Nachbarn zufällig zu permutieren, sodass jedes Element an 
-einer zufälligen Position steht. Um nun die beide ''neuen'' Nachbarschaften von $u$ und $v$ zu erstellen,
+einer zufälligen Position steht. Um nun die beide \glqq neuen\grqq{} Nachbarschaften von $u$ und $v$ zu erstellen,
 werden zuerst die Knoten aus der gemeinsamen Nachbarschaft in die \textcolor{red}{(leeren)} Vektoren von $u$ und $v$ kopiert.
 Dann werden die ersten Elemente aus dem permutierten Vektor in den kleineren aus $u$ und $v$ kopiert.
 Dabei werden genau so viele Elemente kopiert, dass dieser wieder die gleiche Größe hat wie vor dem Beginn
@@ -208,7 +214,7 @@ an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode bes
 		\USetSea& & & &
 	\end{tabular}
 	\label{tab:varianten_curveball_tausch}
-	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct}
+	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct{}}
 \end{table}
 
 %\section{\red{Pseudocode}}
