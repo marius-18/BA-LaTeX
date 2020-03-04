@@ -76,10 +76,14 @@ anderen Knoten $v \in V$, wenn es eine Kante $\{u,v\} \in E $ gibt. Die Menge $N
 von $u$ nennt man \fett{Nachbarschaft}.
 \end{definition}
 \begin{definition}[gemeinsame und disjunkte Nachbarschaft]~\\
+\label{def:common_disjoint}
 	Die \fett{gemeinsame} Nachbarschaft $N_{c}(u,v)$ zweier Knoten $u$ und $v$ ist die Menge aller Knoten, die sowohl
 	zu $u$ als auch zu $v$ adjazent sind. In der \fett{disjunkten} Nachbarschaft $N_{d}(u,v)$ von $u$ und $v$ sind dagegen 
 	alle Knoten die nur zu einem der beiden Knoten adjazent sind. \\
-	Es gilt also $N_{c}(u,v) = N(u) \cap N(v)$ und $N_{d}(u,v) = \big[N(u) \cup N(v)\big]\setminus \big[N(u) \cap N(v) \big]$
+	Es gilt also $N_{c}(u,v) = N(u) \cap N(v)$ und $N_{d}(u,v) = \big[N(u) \cup N(v)\big]\setminus \big[N(u) \cap N(v) \big]$.{}
+	\red{Weiterhin gilt $N_{c}(u,v) \cap N_{d}(u,v) = \emptyset$ und $N_{c}(u,v) \cup N_{d}(u,v) = N(u) \cup N(v)$.
+	Jeder Knoten $x\in N(u) \cup N(v)$ aus den beiden Nachbarschaften liegt also entweder
+	in der gemeinsamen oder in der disjunkten Nachbarschaft. }
 \end{definition}
 \noindent
 Dabei bemerken wir, dass in einem bipartiten Graphen zwei Knoten aus einer Partitionsklasse nie
@@ -124,6 +128,7 @@ Man kann es mit python nutzen \red{blabla}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Datenstruktur}
+\label{sec:datenstruktur}
 In \nk werden Graphen in einer eigenen Datenstruktur gespeichert.
 Dabei handelt es sich um eine Art Adjazenzlistendarstellung, bei der für jeden Knoten 
 in einem Array die Nachbarn gespeichert sind. Die einzelnen Knoten sind ebenfalls in

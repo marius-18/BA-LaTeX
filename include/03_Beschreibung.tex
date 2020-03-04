@@ -1,77 +1,95 @@
- 
+Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt muss die disjunkte Nachbarschaft
+der beiden Knoten $u$ und $v$ bekannt sein, um einen \ct{} auf diesen Knoten $u$ und $v$
+auszuführen. Der \ct{} besteht dann darin, diese Knoten aus $N_{d}(u,v)$ zu durchmischen.
+Deshalb beschäftigen wir uns zuerst damit, wie man die disjunkte Nachbarschaft bestimmt.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% COMMON NEIGHBORS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Bestimmung der gemeinsamen Nachbarschaft}
-
-Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt muss die disjunkte Nachbarschaft
-der beiden Knoten $u$ und $v$ bekannt sein, um einen \ct{} auf diesen Knoten $u$ und $v$
-auszuführen. Der \ct{} besteht dann darin, diese Knoten aus $N_{d}(u,v)$ zu durchmischen.
-
-~\\
+\section{Bestimmung der disjunkten Nachbarschaft}
+\label{sec:common}
+Gesucht sind alle Knoten aus der disjunkten Nachbarschaft der Knoten $u$ und $v$.
+Nach der Definition \ref{def:common_disjoint} liegt jeder Knoten aus den Nachbarschaften $N(u)$ und $N(v)$ 
+entweder in der disjunkten oder in der gemeinsamen Nachbarschaft. Das Ziel besteht also darin, 
+für jeden Knoten aus $N(u) \cup N(v)$ zu entscheiden, ob er zu $N_{d}(u,v)$ oder $N_{c}(u,v)$ gehört.
+\\
+Die Nachbarschaften $N(u)$ und $N(v)$ liegen wie in Abschnitt \ref{sec:datenstruktur} beschrieben jeweils
+in einem Array vor. Der Übersichtlichkeit wegen, werden wir die beiden
+Arrays ebenfalls mit $N(u)$ und $N(v)$ bezeichnen. Die Aufgabe ist es also,
+ für jedes Element aus den beiden Arrays zu entscheiden,
+ob es entweder in beiden Arrays vorkommt, oder nur in einem von den beiden. Dafür 
+gibt es verschiedene Möglichkeiten, dies umzusetzen.
 \\
 \\
-Dabei sind die Knoten gesucht, 
-welche jeweils nur entweder $u$ oder $v$ als Nachbarn haben, also in der \textcolor{red}{disjunkten Nachbarschaft (kann man das sagen?)} liegen.
-Um diese Knoten zu finden, kann man jedoch einfach die gemeinsame Nachbarschaft bestimmen. Die Knoten
-in der disjunkten Nachbarschaft sind dann alle Nachbarn von $u$ und $v$, welche\textcolor{red}{VORSORTIERT}
- nicht in der gemeinsamen
-Nachbarschaft liegen. 
-\\
-Als Datenstruktur liegen uns die Nachbarschaften in einer Art \textcolor{red}{Adjazenzliste (naja eine Liste ist es ja nicht wirklich)}
-vor, sodass es für jeden Knoten des Graphen einen Vektor gibt, indem die Nachbarn gespeichert sind.
-Um nun gemeinsame Nachbarn
-zweier Knoten zu bestimmen, muss man also nur herausfinden, welche Einträge in beiden Vektoren gemeinsam
-vorkommen. Dafür gibt es verschiedene Varianten, die 
-im Folgenden erklärt werden.
-\\
-\\
-Als ersten \glqq naiven\grqq{} Ansatz könnte man für jedes Element des Vektors $u$ den gesamten anderen 
-Vektors $v$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
-$\O(|u|\cdot|v|)$, was aber natürlich nicht sehr sinnvoll ist, da der Vektor $v$ ziemlich oft 
+Als ersten naiven Ansatz könnte man für jedes Element des Arrays $N(u)$ das gesamte andere 
+Array $N(v)$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
+$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber natürlich nicht sinnvoll ist, da das Array $N(v)$ ziemlich oft 
 durchlaufen werden muss und wir 
-im Falle von massiven Graphen davon ausgehen können, dass die Vektoren (also die Nachbarschaften)
-ziemlich groß werden. 
+im Falle von massiven Graphen davon ausgehen können, dass die Arrays (also die Nachbarschaften)
+ groß werden. 
 \\
-Um dieses Problem zu verhindern kann man beide Vektoren aufsteigend sortieren. Um nun zu herauszufinden,
-welche Werte in beiden Vektoren vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
-und testen, ob die Werte gleich sind. Somit muss man jedes Element der beiden Vektoren - nach dem Sortieren - 
-nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum \glqq naiven\grqq{}
-Ansatz führt. Man erhält damit eine Laufzeit von $\O(|u|\cdot \log (|u|)  + |v|\cdot\log(|v|))$. 
-Diese Variante wird im Folgenden als \SorSor \textcolor{red}{(darf ich das in
-englisch lassen?)} bezeichnet.
+Dieses Problem kann man beispielsweise verhindern, indem man beide Arrays aufsteigend sortiert. 
+Um nun zu herauszufinden,
+welche Werte in beiden Arrays vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
+und testen, ob die Werte gleich sind, oder nicht. Somit muss man jedes Element der beiden Arrays -- nach dem Sortieren -- 
+nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum naiven
+Ansatz führt. Man erhält damit eine Laufzeit von $\O(|N(u)|\cdot \log (|N(u)|)  + |N(v)|\cdot\log(|N(v)|))$. 
+Diese Variante wird im Folgenden als \SorSor{} bezeichnet. 
 \\
-Dies kann man leicht abwandeln zur Variante \SorSea. Dabei wird nur der größere Vektor (z.B. $u$)
-sortiert.
-Für jedes Element des kleineren Vektors wird nun per binärer Suche geprüft, ob das Element auch im 
-größeren Vorhanden ist. Analog zu dieser Variante gibt es noch \SeaSor, bei welcher 
-der kleinere Vektor sortiert wird. \textcolor{red}{LZ?}
+Die Laufzeit hängt dabei im Wesentlichen vom Sortieren ab. Daher führen wir eine Invariante ein, 
+die wir \fett{vorsortiert} nennen. Bei dieser Invariante nehmen wir an, dass
+die Arrays immer im sortierten Zustand vorliegen. Somit würde bei \SorSor{} das Sortieren wegfallen
+und man müsste die beiden Arrays nur noch linear durchlaufen, was zu einer Laufzeit von $\O(|N(u)| + |N(v)|)$
+führen würde. 
+Es ist jedoch nicht offensichtlich, dass die Invariante zu einer insgesamt besseren Laufzeit eines
+\ct{es} führt, da ein \ct{} schließlich auch noch aus dem Durchmischen der disjunkten Nachbarschaft besteht.
+Dadurch könnte die Invariante verletzt werden, weshalb man am Ende des \ct{es} nochmal sortieren
+muss, um sie wieder aufrecht zu erhalten. Ob die Invariante zu einem Vorteil führt, wird im Kapitel 
+\ref{cap:tests} anhand von Laufzeitmessungen geklärt.
 \\
-Eine weitere Methode um  viele Werte schnell zu durchsuchen, bietet die Datenstruktur \textit{Set}.
-Dabei wird jedes Element des einen Vektors (z.B. $u$) in das Set eingefügt. Die Datenstruktur
-baut aus diesen Elementen dann einen Binären Suchbaum. Für jedes Element aus $v$ kann nun in logarithmischer
-Zeit bestimmt werden, ob es im Set und somit auch in $u$ vorhanden ist. Auch hier gibt es zwei
-analoge Varianten, nämlich \SetSea, bei der der größere Vektor in das Set eingefügt wird
-und \SeaSet, bei der der kleinere Vektor zum Set hinzugefügt wird.
 \\
-Die letzte Methode, die \textcolor{red}{wir (darf ich ''wir'' sagen?!)} an dieser Stelle betrachten,
+Die Variante \SorSor{} lässt sich leicht abwandeln, indem wir nur eines der beiden Arrays sortieren.
+Auf diese Weise können wir die Laufzeit des einen Sortiervorgangs sparen. Sortieren
+wir das größere Array (ohne Beschränkung der Allgemeinheit $N(u)$), bezeichnen wir die Variante als \SorSea{}. Um zu erkennen, 
+welche Elemente zur gemeinsamen und welche zur disjunkten Nachbarschaft gehören, kann man für jedes
+Knoten aus $N(v)$ per binärer Suche in logarithmischer Zeit prüfen, ob der Knoten auch in $N(u)$ vorhanden ist, oder nicht.
+Damit ergibt sich eine Laufzeit von $\O(|N(u)| \cdot \log(|N(u)|) + |N(v)| \cdot \log(|N(u)|)$. Analog dazu
+nennen wir die Variante, in der das kleinere Array sortiert wird, \SeaSor. 
+Auch hier könnte die vorsortiert Invariante einen Vorteil bringen.
+\\
+Eine weitere Methode um viele Werte schnell zu durchsuchen, bietet die Datenstruktur \texttt{set}, welche
+eines binären Suchbaums entspricht, beispielsweise eines Rot-Schwarz-Baums.
+Dabei wird jedes Element des einen Arrays in den Suchbaum eingefügt. 
+Für jedes Element des anderen Arrays kann nun in logarithmischer
+Zeit bestimmt werden, ob es im Set und somit auch im ursprünglichen Array vorhanden ist.
+\\ 
+\red{Ein Vorteil dieser Variante könnte darin liegen...? amortisierte laufzeiten? }
+\\
+Für diese Möglichkeit gibt es ebenfalls zwei 
+analoge Varianten, nämlich \SetSea, bei der die Elemente des größeren Arrays in das Set eingefügt werden
+und \SeaSet, bei der das kleinere Array zum Set hinzugefügt wird.
+Auch bei den beiden Optionen kann es sinnvoll sein, wenn die vorsortiert Invariante aufrecht erhalten wird. Je
+nachdem, wie die interne Implementierung des Suchbaums aussieht, könnte es einen Laufzeitvorteil beim Einfügen
+der Werte geben, wenn
+diese bereits sortiert sind.
+\\
+Die letzte Methode, die wir an dieser Stelle betrachten werden,
 ist die Verwendung der Datenstruktur \textit{unordered\_set}. Diese ist sehr ähnlich wie Set, mit
 dem Unterschied, dass die Werte nicht in geordneter Reihenfolge gespeichert werden, sondern
-in einer \textcolor{red}{Hash-Tabelle?}. Ebenfalls gibt es hierbei wieder die Varianten, 
-in denen der größere Vektor in das unordered\_set eingefügt wird (\USetSea) 
-oder der kleinere (\SeaUSet).
+in einer Hash-Tabelle. Ein Vorteil einer Hash-Tabelle liegt darin, dass das Suchen von Elementen
+\red{erwartet in konstanter} Zeit erfolgt.
+Ebenfalls gibt es hierbei wieder die Varianten, 
+in denen das größere Array in das unordered\_set eingefügt wird (\USetSea) 
+oder das kleinere (\SeaUSet).{}
+Schließlich werden wir auch bei den letzten beiden Methoden prüfen,
+ ob die Invariante eventuell zu einer besseren Laufzeit führt.
 \\
 \\
-Wir haben also insgesamt sieben verschiedene Möglichkeiten, die alle eine ähnliche Laufzeit \textcolor{red}{(wirklich?!)}
-haben. Somit muss experimentell herausgefunden werden, welche dieser Varianten für welche Instanzen am
-schnellsten sind. Weiterhin testen wir noch, ob die Invariante, dass die Vektoren bereits 
-sortiert sind, zu einer besseren Laufzeit führt.
-
-
-\textcolor{red}{Pseudocode zu den einzelnen Varianten?}\\
-\textcolor{red}{LAUFZEIT ??}
-
+Zusammenfassend betrachten wir also insgesamt sieben verschiedene Möglichkeiten um die disjunkte
+und gemeinsame Nachbarschaft zu berechnen. Für jede dieser Varianten prüfen wir zusätzlich,
+ob die vorsortiert Invariante zu einem Laufzeittechnischen Vorteil führt oder ob es sich
+nicht lohnt, diese aufrechtzuerhalten.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,23 +97,28 @@ sortiert sind, zu einer besseren Laufzeit führt.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Tauschen der Nachbarn}
+\label{sec:trade}
 Im vorherigen Teil wurde beschrieben, wie man die gemeinsame und die disjunkte Nachbarschaft zweier Knoten
-$u$ und $v$ bestimmt. Nun beschäftigen wir uns damit, wie man diese Knoten zufällig tauscht. Als Eingabe 
-stehen die Vektoren $d$, welcher alle Knoten aus der disjunkten Nachbarschaft enthält
-und $c$, der die gemeinsamen Nachbarn enthält, zur Verfügung. Weiterhin seien $\text{deg}(u)$ und
- $\text{deg}(v)$ die ursprünglichen Knotengrade. 
-Wir betrachten hierfür zwei Möglichkeiten.
+$u$ und $v$ bestimmt. Nun beschäftigen wir uns damit, wie man die Knoten der disjunkten Nachbarschaft zufällig tauscht. Als Eingabe 
+stehen die Arrays $N_{d}(u,v)$, welches alle Knoten aus der disjunkten Nachbarschaft enthält
+und $N_{c}(u,v)$, das die gemeinsamen Nachbarn enthält, zur Verfügung. Weiterhin seien $\text{deg}(u)$ und
+$\text{deg}(v)$ die ursprünglichen Knotengrade. Zusätzlich definieren wir uns die Mengen
+$D_{u} = N_{d}(u,v) \cap N(u)$, in der die disjunkten Nachbarn von Knoten $u$ liegen, 
+und $D_{v} = N_{d}(u,v) \cap N(v)$, in der die disjunkten Nachbarn von $v$ liegen. Die anfänglich
+leeren Arrays, in denen die Ausgabe -- also die neuen Nachbarschaften von $u$ und $v$ -- zurückgegeben 
+werden soll, bezeichnen wir wieder als $N(u)$ und $N(v)$.
+Wir betrachten zwei unterchiedliche Möglichkeiten.
 \\
 \\
 Die erste Idee besteht darin,  
-den Vektor der disjunkten Nachbarn zufällig zu permutieren, sodass jedes Element an 
+das Array der disjunkten Nachbarschaft zufällig zu permutieren, sodass jedes Element an 
 einer zufälligen Position steht. Um nun die beide \glqq neuen\grqq{} Nachbarschaften von $u$ und $v$ zu erstellen,
-werden zuerst die Knoten aus der gemeinsamen Nachbarschaft in die \textcolor{red}{(leeren)} Vektoren von $u$ und $v$ kopiert.
-Dann werden die ersten Elemente aus dem permutierten Vektor in den kleineren aus $u$ und $v$ kopiert.
-Dabei werden genau so viele Elemente kopiert, dass dieser wieder die gleiche Größe hat wie vor dem Beginn
-des Tausches. Die restlichen Elemente aus dem disjunkten Vektor werden schließlich in den anderen Vektor kopiert.
+werden zuerst die Knoten aus der gemeinsamen Nachbarschaft in die leeren Arrays $N(u)$ und $N(v)$ kopiert.
+Dann werden die ersten $D_{u}$ Elemente aus dem permutierten Array in $N(u)$ kopiert, die restlichen
+in $N(v)$. Somit haben die Nachbarschaften durch den Tausch ihre ursprüngliche Größe nicht verändert, es gilt $|N(u)| = \deg(u)$ und
+$|N(v)| = \deg(v)$.
 Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beispiel zu sehen.
-\begin{figure}[h]
+\begin{figure}
 \centering
   \begin{tikzpicture}[decoration=brace]
     % Die Grundlinie:
@@ -107,75 +130,75 @@ Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beis
       \draw(\x,0)--(\x,1) node[below] {};
       
     % untere geschweifte Klammer mit Text darunter:
-    \draw[decorate, yshift=-1ex] (3.8,0) -- node[below=0.4ex] {$\text{deg}(u) - |c|$} (0.2,0);
+    \draw[decorate, yshift=-1ex] (3.8,0) -- node[below=0.4ex] {$D_{u}$} (0.2,0);
 
-    \draw[decorate, yshift=-1ex] (9.8,0) -- node[below=0.4ex] {$\text{deg}(v) - |c|$} (4.2,0);
+    \draw[decorate, yshift=-1ex] (9.8,0) -- node[below=0.4ex] {$D_{v}$} (4.2,0);
+
+\node[] at (-1.2, 0.5)     (5)     {$N_{d}(u,v):$};
 
   \end{tikzpicture}
-  \caption{\textcolor{red}{ist das Beispiel unnötig?}}
+  \caption{Beispiel für einen Tausch mit der Variante \perm. Dabei wird das Array der 
+  disjunkten Nachbarschaft $N_{d}(u,v)$ zufällig permutiert. Die ersten $D_{u}$ Elemente werden der Nachbarschaft
+  von $u$ zugeordnet, die restlichen $D_{v}$ zur Nachbarschaft von $v$. }
   \label{fig:trade_shuffle}
 \end{figure}
-Die Kästchen stellen die Elemente des permutierten Vektors $d$ dar. Ohne Beschränkung der
-Allgemeinheit betrachten wir den Fall, dass die Nachbarschaft von $u$ die kleinere ist, also dass 
-$\text{deg}(u) \le \text{deg}(v)$ gilt. Somit werden die ersten $\text{deg}(u)-|c|$ Elemente zum 
-Vektor $u$ hinzugefügt. Die restlichen
-Elemente werden folglich in $v$ kopiert.
-Die Größen von $u$ und $v$ - also dementsprechend die Knotengrade der beiden Knoten - haben sich durch das
-zufällige Tauschen der disjunkten Nachbarn offensichtlich
-nicht verändert.
-\\
 Bei die diesem Verfahren fällt  jedoch auf, dass einige Elemente beim Permutieren unnötig vertauscht werden.
-Für jedes Element ist es eigentlich nur entscheidend, ob es unter den ersten $\text{deg}(u)$  liegt (also zum Vektor
-$u$ hinzugefügt wird) oder nicht. Auf welcher Position genau es in diesen Bereichen liegt, ist egal. Man
-kann also die Laufzeit dieser Variante verbessern, indem nicht der ganze Vektor zufällig permutiert 
-wird, sondern nur die ersten $\text{deg}(u)$ Elemente zufällig gewählt werden. Dies macht die Funktion 
-\textcolor{red}{\textit{random\_bipartition\_shuffle}}.
+Für jedes Element ist es eigentlich nur entscheidend, ob es unter den ersten $D_{u}$  liegt (also zum Array
+$N(u)$ hinzugefügt wird) oder nicht. Auf welcher Position genau es in 
+diesen Bereichen liegt, ist nicht von Relevanz. Ohne Beschränkung der Allgemeinheit gelte 
+$N(u) \le N(v)$. Dann kann man
+also die Laufzeit dieser Variante verbessern, indem nicht das ganze Array der disjunkten Nachbarschaft zufällig permutiert 
+wird, sondern nur die ersten $D_{u}$ \red{vielen} Elemente zufällig gewählt werden.
+ Dies setzt die Funktion 
+\textit{random\_bipartition\_shuffle} um.
 \\
-Ein Nachteil bei dieser Methode ist, dass durch das zufällige Vertauschen die beiden Vektoren
-$u$ und $v$ nicht mehr sortiert sind. Damit wird die im vorherigen \textcolor{red}{kapitel?} beschriebene
-Invariante eventuell verletzt. Um die Invariante aufrecht zu halten muss man also als letzten Schritt
-die beiden Vektoren nochmals sortieren.
-Wir nennen diese Variante \perm
+Ein Nachteil dieser Methode besteht jedoch darin, dass durch das zufällige Vertauschen die beiden resultierenden Arrays
+$N(u)$ und $N(v)$ nicht mehr unbedingt sortiert sind. Damit wird die im Abschnitt \ref{sec:common} beschriebene
+Invariante eventuell verletzt. Möchte man die Invariante aufrecht erhalten, müssen somit die beiden Arrays
+in einem letzten Schritt nochmals sortiert werden.
+Wir nennen diese Variante \perm.
 \\
 \\
-Die zweite Möglichkeit die wir betrachten heißt \distr.
+Die zweite Möglichkeit, die wir betrachten, werden wir als \distr{} bezeichnen.
 \\
-Die Idee besteht dabei, dass wir über jedes Element des Vektors $d$ iterieren und eine Wahrscheinlichkeit
+Die Idee besteht dabei, dass wir über jedes Element des Arrays $N_{d}(u,v)$ iterieren und eine Wahrscheinlichkeit
 berechnen, mit
-der das Element in den Vektor $u$ (beziehungsweise $v$) eingefügt werden soll. Dann wird in einem 
+der das Element in die Nachbarschaft von $u$ (beziehungsweise $v$) eingefügt werden soll. Dann wird in einem 
 Bernoulli Experiment mit genau dieser Wahrscheinlichkeit ein Zufallsbit gezogen. Je nachdem, welchen
-Wert das Zufallsbit hat, wird das Element dann entweder in $u$ oder in $v$ kopiert. Dies wird so lange
-wiederholt, bis einer der beiden Vektoren seine maximale Kapazität erreicht hat. 
+Wert das Zufallsbit hat, wird das Element dann entweder in $N(u)$ oder in $N(v)$ kopiert. Dies wird so lange
+wiederholt, bis eines der beiden Arrays seine maximale Kapazität erreicht hat. 
 \\
 Um die Wahrscheinlichkeit zu berechnen werden am Anfang zwei Variablen $n_v$ und $n_u$ initialisiert, 
-welche den Kapazitäten der beiden Vektoren $u$ und $v$ entsprechen, wenn die Elemente aus der 
-gemeinsamen Nachbarschaft nicht berücksichtigt werden. Es gilt also $n_v = \text{deg}(v) - |c|$ und
-$n_u= \text{deg}(u) - |c|$.
-Damit hat das erste Element des Vektors $d$ eine Wahrscheinlichkeit von $p_u = \frac{n_u}{n_u+n_v}$, dem
-Vektor $u$ hinzugefügt zu werden und analog eine Wahrscheinlichkeit $p_v = \frac{n_v}{n_u+n_v}$, um
-in $v$ zu gelangen. Offensichtlich gilt $p_u + p_v = 1$. Dann wird mit einer der beiden
+welche den Kapazitäten der beiden Arrays $u$ und $v$ entsprechen, wenn die Elemente aus der 
+gemeinsamen Nachbarschaft nicht berücksichtigt werden. \red{Es gilt also $n_v = |D_{v}|$ und
+$n_u= |D_{u}|$.}
+Damit hat das erste Element des Arrays $N_{d}(u,v)$ eine Wahrscheinlichkeit von $p_u = \frac{n_u}{n_u+n_v}$, dem
+Array $N(u)$ hinzugefügt zu werden und analog eine Wahrscheinlichkeit $p_v = \frac{n_v}{n_u+n_v}$, um
+in $N(v)$ zu gelangen. Offensichtlich gilt $p_u + p_v = 1$. Dann wird mit einer der beiden
 Wahrscheinlichkeiten das Bernoulli Experiment durchgeführt, wobei es egal ist, welche Wahrscheinlichkeit
 man dazu wählt, da $p_u$ genau die Gegenwahrscheinlichkeit von $p_v$ ist und umgekehrt. 
 Wählt man beispielsweise $p_u$ und das Experiment liefert eine eins, dann wird das aktuelle Element
-in den Vektor $u$ kopiert. Dabei
-hat sich aber offensichtlich die verbleibende Kapazität des Vektors $u$ verringert. Also muss
-der Wert $n_u$ dekrementiert werden. Analoges gilt, falls das Element in den Vektor $v$ kopiert wird.
+in $N(u)$ kopiert. Dabei
+hat sich aber offensichtlich die verbleibende Kapazität des Arrays $N(u)$ verringert. Also muss
+der Wert $n_u$ dekrementiert werden. Analoges gilt, falls das Element in die Nachbarschaft von $v$ kopiert wird.
 Somit ändern sich nach jeder Iteration die Wahrscheinlichkeiten $p_u$ beziehungsweise $p_v$.
-Gilt nach irgendeinem Zeitpunkt entweder $n_u = 0$ oder $n_v = 0$, ist offenbar einer der Vektoren 
-keine Kapazität mehr frei. Somit werden die übrigen Elemente, die noch in $d$ vorhanden sind, 
-einfach dem anderen Vektor hinzugefügt.
+Gilt nach irgendeinem Zeitpunkt entweder $n_u = 0$ oder $n_v = 0$, steht offenbar in einem der Arrays 
+keine freie Kapazität mehr zur Verfügung. Somit werden die übrigen Elemente, die noch in $N_{d}(u,v)$ vorhanden sind, 
+einfach dem anderen Array hinzugefügt.
 \\
-Ein Vorteil dieser Methode ist, dass die beschriebene Invariante aufrecht erhalten werden kann.
-War der Vektor der disjunkten Nachbarschaft vor Beginn dieser Methode aufsteigend sortiert,
-dann sind auch die bisherigen Elemente der Vektoren $u$ und $v$ aufsteigend sortiert, da für jedes
-Element nacheinander entschieden wurde, ob es zu $u$ oder zu $v$ hinzugefügt wird und dabei die
+\red{Dieses Vorgehen ist auch als Reservoir Sampling\cite{...?} wo? bekannt.}
+\\
+Ein Vorteil dieser Methode ist, dass die in \ref{sec:common} beschriebene Invariante aufrecht erhalten werden kann.
+War das Array der disjunkten Nachbarschaft vor Beginn dieser Methode aufsteigend sortiert,
+dann sind auch die bisherigen Elemente der Arrays $N(u)$ und $N(v)$ aufsteigend sortiert, da für jedes
+Element nacheinander entschieden wurde, ob es zur Nachbarschaft von $u$ oder von $v$ hinzugefügt wird und dabei die
 Reihenfolge der Elemente untereinander nicht verändert wurde.
 \\
-Zum Schluss müssen noch die die gemeinsamen Nachbarn zu den Vektoren $u$ und $v$ hinzugefügt werden.
-Möchte man die Invariante aufrecht erhalten, dann sind die beiden Vektoren wie beschrieben schon
-aufsteigend sortiert. Da auch die Elemente aus $c$ aufsteigend sortiert sind, erhält man
-die endgültigen Vektoren von $u$ und $v$ durch ein Mergen mit $c$. Soll die Invariante jedoch
-nicht aufrecht erhalten werden, reicht es aus, die Elemente aus $c$ an das Ende der beiden Vektoren
+Zum Schluss müssen noch die die gemeinsamen Nachbarn zu den Arrays $N(u)$ und $N(v)$ hinzugefügt werden.
+Möchte man die Invariante aufrecht erhalten, dann sind die beiden Arrays wie beschrieben schon
+aufsteigend sortiert. Da auch die Elemente aus $N_{c}(u,v)$ aufsteigend sortiert sind, erhält man
+die endgültigen Arrays von $N(u)$ und $N(v)$ durch ein Mergen mit $N_{c}(u,v)$. Soll die Invariante jedoch
+nicht aufrecht erhalten werden, reicht es aus, die Elemente aus $N_{c}(u,v)$ jeweils an das Ende der beiden Arrays
 zu kopieren.
 
 
@@ -184,19 +207,15 @@ zu kopieren.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Globaler Curveball Tausch}
-Wie in den beiden vorherigen \textcolor{red}{Abschnitten} beschrieben, besteht ein Curveball Tausch auf zwei Knoten $u$ und $v$ daraus, die gemeinsame und disjunkte Nachbarschaft der beiden Vektoren zu bestimmen
+\section{\ct}
+Wie schon in Abschnitt \ref{sec:global_curveball} beschrieben, 
+besteht ein Curveball Tausch auf zwei Knoten $u$ und $v$ daraus, die 
+gemeinsame und disjunkte Nachbarschaft der beiden Vektoren zu bestimmen
 und schließlich die Knoten aus der disjunkten Nachbarschaft zufällig zu tauschen.
 \\
-Bei einem Globalen Curveball Tausch, werden mehrere Curveball-Tausche gleichzeitig ausgeführt.
-Hierbei wird ausgenutzt, dass wir ausschließlich bipartite Graphen betrachten \textcolor{red}{echt?}
-
-
-\red{INVRIANTE NAME?!}
-
-
-\textcolor{red}{wie wir in kapitel xxx sehen, sind die varianten blblal am schnellsten. daher gehen wir 
-an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode beschreiben}
+Die verschiedenen Methoden die wir hierfür untersuchen werden 
+entstehen durch Kombination aller Varianten, die in \ref{sec:common} und \ref{sec:trade} beschrieben 
+werden. Alle diese Möglichkeiten sind in der Tabelle \ref{tab:varianten} zusammengefasst.
 
 
 \begin{table}
@@ -213,39 +232,52 @@ an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode bes
 		\SeaUSet & & & &\\ \hline\hline
 		\USetSea& & & &
 	\end{tabular}
-	\label{tab:varianten_curveball_tausch}
-	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct{}}
+	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct{}. Die Werte true 
+	und false stehen jeweils dafür, ob die vorsortiert Invariante genutzt wird oder nicht.}
+	\label{tab:varianten}
 \end{table}
 
-%\section{\red{Pseudocode}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Ṕseudocode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Pseudocode}
+Wie wir in Kapitel \ref{sec:entscheidung} sehen werden, 
+hat die Variante mit den Methoden \SorSor{} und \distr{} und der genutzten vorsortiert
+Invariante das beste Laufzeitverhalten. Deswegen gehen wir an dieser Stelle 
+noch einmal genauer auf diese beiden Methoden ein, indem wir sie in Pseudocode
+beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben.
+\red{...noch was dazu schreiben...?}
 
 \begin{algorithm}
   \caption{SortSort}\label{algo:sortsort}
   \begin{algorithmic}[1]
-    \Procedure{SortSort}{$u,v$}%\Comment{The g.c.d. of a and b}
-	  \State U $ \gets N(u)$ \Comment{Nachbarschaft von u}
-	  \State V $ \gets N(v)$ \Comment{Nachbarschaft von v}
-	  %\State
-	  \State \texttt{sort(}U\texttt{)} \label{algo:inv1} \Comment{Sortiere beide Vektoren}
-	  \State \texttt{sort(}V\texttt{)} \label{algo:inv2}
+    \Procedure{SortSort}{$u,v$}
+	  \State U $ \gets N(u)$ \Comment{vorsortierte Nachbarschaft von u}
+	  \State V $ \gets N(v)$ \Comment{vorsortierte Nachbarschaft von v}
 	  %\State
 	  \State nu $\gets 0$ \Comment{Zähler für U}
 	  \State nv $\gets 0$ \Comment{Zähler für V}
-	  
+	  %\State disjoint $ \gets \emptyset$
+	  %\State common $ \gets \emptyset$
+      
       \While{(nu < U.\texttt{size()}) and (nv < V.\texttt{size()})}
         \If{U[nu] < V[nv]}
-			\State disjoint.\texttt{append(}U[nu]\texttt{)}
+			\State disjoint.\texttt{append(}U[nu]\texttt{)} \Comment{Füge das Element in disjoint ein}
 			\State nu ++
 			\ElsIf{U[nu] > V[nv]}
-				\State disjoint.\texttt{append(}V[nv]\texttt{)}
+				\State disjoint.\texttt{append(}V[nv]\texttt{)} \Comment{Füge das Element in disjoint ein}
 				\State nv ++
 			\ElsIf{U[nu] == V[nv]}
-				\State common.\texttt{append(}U[nu]\texttt{)}
+				\State common.\texttt{append(}U[nu]\texttt{)} \Comment{Füge das Element in common ein}
 				\State nu ++
 				\State nv ++
         \EndIf
-      \EndWhile\label{euclidendwhile}
-      \If{nu $\neq$ U.\texttt{size()}}
+      \EndWhile
+      \If{nu $\neq$ U.\texttt{size()}} \Comment{Die restlichen Elemente sind disjunkte Nachbarn}
 			\State disjoint.\texttt{append(} U[nu], U[nu+1], \dots\texttt{)}
 			\Else{}
 			\State disjoint.\texttt{append(} V[nv], V[nv+1], \dots\texttt{)}
@@ -253,7 +285,41 @@ an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode bes
       \State \textbf{return} common, disjoint
    \EndProcedure
   \end{algorithmic}
+  \label{algo:sortsort}
 \end{algorithm}
+
+
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\Procedure{Distribution}{common, disjoint}
+	\State nu $\gets$ U.\texttt{size()} - common.\texttt{size()} \Comment{Kapazität von $u$}
+	\State nv $\gets$ V.\texttt{size()} - common.\texttt{size()} \Comment{Kapazität von $v$}
+	\State i = 0
+	\While{i < disjoint.\texttt{size()}}
+		\State X $\sim \mathcal{B}(\frac{\text{nu}}{\text{nu}+\text{nv}})$  \Comment{ziehe ein Zufallsbit Bernoulli verteilt mit Wahrscheinlichkeit $\frac{nu}{nu+nv}$}
+
+		\If{X==1}
+			\State U.\texttt{append(}disjoint[i]\texttt{)} \Comment{Füge das Element in U ein}
+			\State i++
+			\State nu- - \Comment{aktualisiere die Kapazität}
+		\Else{} 
+			\State V.\texttt{append(}disjoint[i]\texttt{)}\Comment{Füge das Element in V ein}
+			\State i++
+			\State nv- -\Comment{aktualisiere die Kapazität}
+		\EndIf{}
+	\EndWhile{}	
+	\State U.\texttt{merge(}common\texttt{)} \Comment{Merge U mit der gemeinsame Nachbarschaft}
+	\State V.\texttt{merge(}common\texttt{)} \Comment{Merge V mit der gemeinsame Nachbarschaft}
+	\State \textbf{return} U, V
+\EndProcedure
+\end{algorithmic}
+	\caption{Distribution}
+	\label{algo:distr}
+\end{algorithm}
+
+
+
 
 
 %\red{bei vorsortiert fällt Zeile \ref{algo:inv1} und \ref{algo:inv2} raus!!}
@@ -261,30 +327,4 @@ an dieser stelle nochmals auf diese methoden ein indem wir sie im Pseudocode bes
 %\\
 %\red{Distribution}
 
-\begin{algorithm}[h]
-\begin{algorithmic}[1]
-\Procedure{Distribution}{common, disjoint}
-	\State nu $\gets$ U.\texttt{size()} - common.\texttt{size()}
-	\State nv $\gets$ V.\texttt{size()} - common.\texttt{size()}
-	\State i = 0
-	\While{i < disjoint.\texttt{size()}}
-		\State X $\sim \mathcal{B}(\frac{\text{nu}}{\text{nu}+\text{nv}})$  \Comment{ziehe ein Zufallsbit Bernoulli verteilt mit Wahrscheinlichkeit $\frac{nu}{nu+nv}$}
-
-		\If{X==1}
-			\State U.\texttt{append(}disjoint[i]\texttt{)}
-			\State i++
-			\State nu- -
-		\Else{} 
-			\State V.\texttt{append(}disjoint[i]\texttt{)}
-			\State i++
-			\State nv- -
-		\EndIf{}
-	\EndWhile{}	
-	\State U.\texttt{insert(}common\texttt{)}
-	\State V.\texttt{insert(}common\texttt{)}
-	\State \textbf{return} U, V
-\EndProcedure
-\end{algorithmic}
-	\caption{Distribution}
-\end{algorithm}
 
