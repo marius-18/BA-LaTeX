@@ -1,9 +1,9 @@
-\documentclass[a4paper]{scrreprt}
+\documentclass[a4paper, 11pt]{scrreprt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some common includes. Add additional includes you need.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\RequirePackage{ngerman}
+\RequirePackage[ngerman]{babel}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
 \RequirePackage[margin=23mm,bottom=30mm]{geometry}
@@ -14,6 +14,8 @@
 \RequirePackage{tikz}
 \RequirePackage{eurosym}
 \usetikzlibrary{snakes}
+
+\linespread{1.25}
 
 
 \usepackage{subfigure}
@@ -82,13 +84,13 @@
 
 %\titlehead{\centering Bachelorarbeit mit dem Thema}
 
-\title{Bachelorarbeit mit dem Thema \\ ~}
+%\title{Bachelorarbeit mit dem Thema \\ ~}
 
-\subtitle{ Implementierung und experimentelle Untersuchung von Parallelem Global-Curveball zur Randomisierung
-Massiver Bipartiter Graphen\\ ~}
-\author{Marius Hagemann \\ 5732742 \\ s2486252@stud.uni-frankfurt.de \\~}
+%\subtitle{ Implementierung und experimentelle Untersuchung von Parallelem Global-Curveball zur Randomisierung
+%Massiver Bipartiter Graphen\\ ~}
+%\author{Marius Hagemann \\ 5732742 \\ s2486252@stud.uni-frankfurt.de \\~}
 %\date{\tomorrow}
-\publishers{Betreuer: Prof. Dr. Ulrich Meyer \\ ~ \\ Goethe-Universität Frankfurt am Main \\ Fachbereich Informatik }
+%\publishers{Betreuer: Prof. Dr. Ulrich Meyer \\ ~ \\ Goethe-Universität Frankfurt am Main \\ Fachbereich Informatik }
 
 %\swapnumbers
 
@@ -141,14 +143,15 @@ Massiver Bipartiter Graphen\\ ~}
 	{\LARGE Bachelorarbeit mit dem Thema\par}
 	%\vspace{1.5cm}
 	\vfill
-	{\huge\bfseries Implementierung und experimentelle Untersuchung von Parallelem Global-Curveball zur Randomisierung
-Massiver Bipartiter Graphen\par}
+	{\huge\bfseries Implementierung und experimentelle Untersuchung 
+					von Parallelem Global-Curveball zur Randomisierung
+					Massiver Bipartiter Graphen\par}
 	\vspace{2.5cm}
 	{\Large verfasst von: \par}
 	\vspace{1cm}
 	{\LARGE \scshape Marius Hagemann\par}
 	\vspace{0.5cm}
-	{\large Matrikelnummer 5732742 \\ s2486252@stud.uni-frankfurt.de}
+	{\large Matrikelnummer 5732742 \\ marius@ing-hagemann.de}
 	\vfill
 	{\Large \today}
 	\vfill
@@ -158,14 +161,15 @@ Massiver Bipartiter Graphen\par}
 \end{titlepage}
 
 %\maketitle
-
-
 \cleardoublepage 
+\thispagestyle{empty}
+
+\newpage
+\section*{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%   ERKLÄRUNG + Inhaltsverzeichnis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \includepdf[pages=1]{include/erkabschlbachelorinf}
 
@@ -173,48 +177,43 @@ Massiver Bipartiter Graphen\par}
 
 \tableofcontents
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%   ABSTRACT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\input{include/00_Abstract.tex}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%   EINLEITUNG
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \chapter{Einleitung}
-
-\begin{itemize}
-
-\item
-wozu Randomisierung?
--- Als (zufällige) Eingabe um Algorithmen zu testen?
--- Zum Analysieren von Netzwerken?
-\red{bla}
-
-\item
-es gibt auch andere Methoden um zufällige Graphen zu erstellen (zufällige Kanten zwischen Knoten)
-aber dann bleibt die gewollte Struktur nicht erhalten
-
-also Global Curveball (, bei dem Kanten getauscht werden)
-
-
-\item
-wir beschränken uns hier nur auf den Spezialfall der bipartiten Graphen wodurch es einfacher wird ...?
-
-\item
-wozu GlobalCurveball?
-
-\item
-warum macht man das?
-
-\item-- Zufällige Graphen, wobei die Grade aller Knoten erhalten bleiben
-
-\item
-Was ist networkit? +  Quelle
-
-\item
-was heißt massiver graph ? 
-hoher Knotengrad??
-
-\end{itemize}
-
 \input{include/01_Einleitung.tex}
+
+%\begin{itemize}
+%\item wozu Randomisierung?
+%-- Als (zufällige) Eingabe um Algorithmen zu testen?
+%-- Zum Analysieren von Netzwerken?
+%\red{bla}
+%\item es gibt auch andere Methoden um zufällige Graphen zu erstellen (zufällige Kanten zwischen Knoten)
+%aber dann bleibt die gewollte Struktur nicht erhalten
+%also Global Curveball (, bei dem Kanten getauscht werden)
+%\item wir beschränken uns hier nur auf den Spezialfall der bipartiten Graphen wodurch es einfacher wird ...?
+%\item wozu GlobalCurveball?
+%\item warum macht man das?
+%\item-- Zufällige Graphen, wobei die Grade aller Knoten erhalten bleiben
+%\item
+%Was ist networkit? +  Quelle
+%\item
+%was heißt massiver graph ? 
+%hoher Knotengrad??
+%\end{itemize}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%   Grundlagen
@@ -222,6 +221,7 @@ hoher Knotengrad??
 
 
 \chapter{Grundlagen}
+\input{include/02_Grundlagen.tex}
 
 %\begin{itemize}
 %\item \textbf{Notation}, Graph, bipartitheit, randomisierung, ...? 
@@ -232,21 +232,15 @@ hoher Knotengrad??
 %\item networkit (was ist das, wofür braucht man das
 %\end{itemize}
 
-\input{include/02_Grundlagen.tex}
-
-
-
-
-
-%\section{Curveball}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%   Beschreibung
+%%%%%   Implementierung
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Umsetzung eines \ct{es} }
+
+\chapter{Implementierung eines \ct{es} }
 \input{include/03_Beschreibung.tex}
 
 
@@ -254,7 +248,9 @@ hoher Knotengrad??
 %%%%%   Experimentelle Untersuchung
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \chapter{Experimentelle Untersuchung}
+\input{include/04_Experimente.tex}
 
 %\begin{itemize}
 
@@ -273,24 +269,6 @@ hoher Knotengrad??
 %\end{itemize}
 
 
-\input{include/04_Experimente.tex}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%   Implementierung
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\chapter{Implementierung}
-
-\red{\huge Brauche ich das Kapitel überhaupt?}
-\\
-hier dann nur code ?! 
-\\
-pseudocode für alles so
-\\
-welche latex umgebung für den code ?!
-\section{Networkit}
-google test?!
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -298,7 +276,15 @@ google test?!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\chapter{Zusammenfassung?}
+\chapter{Zusammenfassung}
+\input{include/05_Zusammenfassung.tex}
+
+
+~\\
+\\
+\\
+\\
+\\
 was hat das alles gebracht? \\
 Algo wird Teil von networkit?\\
 ausblick?\\
@@ -318,7 +304,7 @@ was ist die Laufzeit von einem \gc{} tausch im mittel? für große graphen?
 	\item \red{\Large Anführungszeichen suchen!! + Leerzeichen dahinter}
 	\item \red{\huge Laufzeit test für das python ding.. wie schnell funktioniert der algo so?}
 	\item \red{wie siehts aus mit der anzahl an global trades?!}
-	\item \red{\Large Deckblatt?!}
+	\item \red{\Large -- Deckblatt?! \\ -- Seitenrand \\ --Zeilenabstand \\ -- Schriftgröße \\ --}
 	\item \red{noch was rotes?} \blue{oder was blaues?}
 	\item \red{vektor/array?!}
 	\item \red{\LaTeX format ?!}
@@ -332,19 +318,18 @@ was ist die Laufzeit von einem \gc{} tausch im mittel? für große graphen?
 %%%%%   bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \bibliography{quellen}
 \bibliographystyle{plain}
-  
-
-%\begin{thebibliography}{2}
-%\bibitem{paper} \url{https://arxiv.org/pdf/1804.08487.pdf}, abgerufen ?!
-%\bibitem{nk} \url{https://networkit.github.io/}
-%\bibitem{schnitger} \url{http://www.thi.cs.uni-frankfurt.de/lehre/dismod/ws1617/dismod_ws1617_skript.pdf}, abgerufen am 11.12.2018
-%\bibitem{benchmark} \url{https://github.com/google/benchmark}
-%\end{thebibliography}
 
 
-\listoffigures
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%   Abbildungsverzeichnis / Tabellenverzeichnis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\listoffigures{}
+\listoftables{}
 
 
 \end{document} 

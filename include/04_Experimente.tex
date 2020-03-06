@@ -11,15 +11,15 @@ In diesem Kapitel diskutieren wir, welche der Varianten ausgewählt wurde.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Versuchsaufbau}
-Um die einzelnen Varianten auf Ihre Laufzeit zu testen, wurde eine Art Versuch aufgebaut.
+Um die einzelnen Varianten auf Ihre Laufzeit zu testen, wurde ein Versuch aufgebaut.
 Dazu wurden alle Methoden in \cpp programmiert. Diese wurden dann auf unterschiedlichen
 Instanzen getestet und mittels Google Benchmark \cite{benchmark} wurde die Zeit gemessen, 
 die für das Ausführen benötigt wurde.
 \\
 \\
-\red{Google Benchmark ist ein \red{Framework} ...?}
-\\
-\\
+%\red{Google Benchmark ist ein \red{Framework} ...?}
+%\\
+%\\
 Wie %\red{vorher (kapitel ..?)} 
 beschrieben benötigen die Methoden als Eingabe keinen Graph, 
 sondern lediglich zwei Vektoren, welche jeweils die Nachbarschaft zweier Knoten repräsentieren. Ohne 
@@ -27,7 +27,7 @@ Beschränkung der Allgemeinheit nennen wir den größeren (sofern einer der beid
 $u$ und den kleineren $v$.
 Um möglichst gut zu erkennen, wie sich die verschiedenen Methoden bei unterschiedlichen
 Eingaben verhalten, messen wir die Laufzeiten für eine ganze Reihe an Instanzen. 
-Um ein gutes Bild zu erhalten, sollten folgende Fälle auf jeden Fall abgedeckt sein:
+Um ein gutes Bild zu erhalten, sollten folgende Fälle abgedeckt sein:
 
 \begin{itemize}
 	\item Beide Vektoren liegen in der gleichen Größenordnung
@@ -50,7 +50,8 @@ in den anderen hineinkopiert werden. Damit die Größe der gemeinsamen Nachbarsc
 variiert wird, werden zuerst 10, dann 25, 50 und 75 Prozent der Elemente kopiert. 
 \\
 Eine einzelne Test Messung lässt sich somit durch ein Tripel \fett{(\la, \sm, \fr)} beschreiben, wobei
-\fett{\la} die Größe von $u$ ist, \fett{\sm} die Größe von $v$ und \fett{\fr} der Anteil der gemeinsamen Elemente.
+\fett{\la} die Größe von $u$ ist, \fett{\sm} die 
+Größe von $v$ und \fett{\fr} der prozentuale Anteil der gemeinsamen Elemente.
 
 
 
@@ -69,8 +70,8 @@ einzelnen Methoden gemessen werden. Um eventuelle Messfehler zu minimieren, wird
 jeder Durchlauf durch den Google Benchmark Parameter \texttt{benchmark\_repetitions} 5 mal wiederholt.
 Mit dem Parameter \texttt{benchmark\_min\_time} wird noch festgelegt, dass jede Variante so oft getestet
 wird, bis mindestens eine Gesamtlaufzeit von 0.1 Sekunden \red{erreicht} wird. 
-Alle Messungen wurden \red{auf einem Rechner} mit \red{64GB} Arbeitsspeicher und 16 Prozessoren vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
-welche jeweils 8 Kerne und einen Cache von 20 MB haben, ausgeführt.
+Alle Messungen wurden auf einem Rechner mit 64GB Arbeitsspeicher und einem Prozessor vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
+mit 8 Kernen und einem Cache von 20 MB, ausgeführt.
 Mit dieser Konfiguration hat die Dauer für alle 28 Varianten in Summe ungefähr 19 Stunden betragen.
 
 
@@ -82,7 +83,7 @@ Mit dieser Konfiguration hat die Dauer für alle 28 Varianten in Summe ungefähr
 
 \section{Auswertung}
 Die ermittelten Messdaten werden schließlich als \texttt{json}-Datei gespeichert. Mit Hilfe von 
-Jupyter Notebook lassen sie sich auswerten. Dabei
+Jupyter Notebook \cite{jupyter} lassen sie sich auswerten. Dabei
 handelt es sich um ein \red{Tool}, mit dem man Python-Programme auf einfache Art und Weise erstellen und 
 ausführen kann.
 Innerhalb von Python werden wir die Bibliotheken \fett{Matplotlib} und \fett{pandas} nutzen, um die Daten
@@ -90,7 +91,7 @@ zu analysieren und grafisch aufzuarbeiten.
 \begin{figure}
 \centering
 	\includegraphics[width = 0.5\textwidth]{figures/counting.pdf}
-	\caption{Welche Variante ist am häufigsten die schnellste?}
+	\caption{Vergleich der Varianten, welche am häufigsten die geringste Laufzeit hatten}
 	\label{fig:messung_counting}
 \end{figure}
 \\
@@ -167,6 +168,49 @@ beträgt für diese Instanz also in etwa 11.
 	\label{fig:messung_small}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Diskussion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{\red{Diskussion der Ergebnisse}}
+\red{Nun} werden wir überprüfen, ob die ermittelten Ergebnisse zu erwarten waren, indem wir sie 
+mit den Asymptotischen Laufzeiten aus der Tabelle \ref{tab:varianten} vergleichen.
+Laut den Asymptotischen Laufzeiten sollte die Varianten mit \SorSor{}, \distr{} und vorsortiert am schnellsten
+sein. Dies sieht man auch bei den mittleren gemessenen Laufzeiten aus Abbildung \ref{fig:messung_mean}.
+Dabei liegt diese Varianten deutlich auf dem ersten Platz. Die dazugehörige Variante mit
+der Tausch-Methode \perm{} liegt auf dem dritten Platz, obwohl sie im Vergleich eine der
+schlechtesten asymptotischen Laufzeiten hat. Der Grund für diese Diskrepanz 
+liegt vermutlich darin, dass diese
+asymptotische Laufzeit durch das einmalige Sortieren am Ende der Methode entsteht. 
+In anderen Varianten, die die gleiche asymptotische Laufzeit haben, wird jedoch eventuell häufiger
+sortiert oder eine Datenstruktur verwendet, die eine höhere Laufzeit produziert.
+\\
+Auffällig ist, dass die Varianten mit \USetSea{} jeweils deutlich langsamer sind, als die analogen
+Varianten, welche \SeaUSet{} verwenden, obwohl die erwarteten asymptotischen Laufzeiten
+gleich sind. Dies liegt höchstwahrscheinlich an der
+Datenstruktur \texttt{unordered\_set}, einer Hash-Tabelle. Bei dieser Datenstruktur
+sind die Laufzeiten stark abhängig vom Füllgrad, also dem Anteil der 
+gespeicherten Elemente im Bezug zur Größe der Hash-Tabelle. Da bei \USetSea{} die Elemente
+des größeren Arrays in die Hash-Tabelle eingefügt werden, ist der Füllgrad dementsprechend
+auch größer, was zu der schlechteren Laufzeit führt.
+Im Gegensatz dazu, ist die Methode, welche \SeaUSet, \perm{} und keine Vorsortierung verwendet,
+die im Mittel zweitschnellste aller gemessenen Varianten, da sich hierbei
+weniger Elemente in der Hash-Tabelle befinden und der Füllgrad demnach geringer ist. 
+Somit wird auch eher die Laufzeit des Erwartungswerts erreicht.
+\\
+Mit einem ähnlichen Argument lassen sich auch die schlechten Laufzeiten 
+der Varianten, welche \SetSea{} verwenden, erklären. Hierbei wird ebenfalls das größere
+Array in die Datenstruktur eingefügt, was zu der schlechteren Laufzeit führt.  
+Dabei fällt jedoch noch auf, dass vor allem die Varianten, 
+bei welchen nicht vorsortiert wird, die mit Abstand längsten Laufzeiten besitzen. Als Begründung 
+dient hier \red{vermutlich}, dass das Erstellen eines Binärbaums bei sortierten Elementen in dieser
+Implementierung des Baumes dem Anschein nach wesentlich schneller ist, als bei beliebigen Elementen.
+\\
+\\
+Im Großen und Ganzen lassen sich also die gemessenen mittleren Laufzeiten gut erklären.
+\red{Man kann die Ergebnisse somit als vertrauenswürdig einstufen.}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Fazit
@@ -199,19 +243,13 @@ als die ursprünglichen.
 \\
 Es ist also nicht sinnvoll möglich, die beiden Varianten miteinander zu kombinieren. Wir müssen uns
 also auf eine Variante festlegen. Dies ist die Variante (\SorSor, \true, \distr), da sie im Vergleich zur
-Alternative -- wie schon beschrieben --
+Alternative --- wie schon beschrieben ---
 in kaum einer Instanz eine wesentlich schlechtere Laufzeit hatte, jedoch auf manchen Instanzen wesentlich
 bessere Laufzeiten. Außerdem ist es die Variante mit der geringsten mittleren Laufzeit. 
 Ein Vorteil dieser Variante neben der Laufzeit liegt noch in der Einfachheit. So werden
 lediglich die beiden Arrays sortiert und linear durchlaufen. Es muss keine weitere Datenstruktur
-erstellt werden -- wie bei der anderen Variante das \texttt{unordered\_set} -- und damit wird
+erstellt werden --- wie bei der anderen Variante das \texttt{unordered\_set} --- und damit wird
 auch kein zusätzlicher Speicherplatz verbraucht.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% Fazit
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\red{Einordnung?! passen die ergebnisse zu erwartungen?!}}
-\SorSor{} konnte man erwarten...
-warum der rest so schlecht? invariante ?

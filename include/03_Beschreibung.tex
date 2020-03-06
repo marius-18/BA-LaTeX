@@ -15,80 +15,81 @@ entweder in der disjunkten oder in der gemeinsamen Nachbarschaft. Das Ziel beste
 für jeden Knoten aus $N(u) \cup N(v)$ zu entscheiden, ob er zu $N_{d}(u,v)$ oder $N_{c}(u,v)$ gehört.
 \\
 Die Nachbarschaften $N(u)$ und $N(v)$ liegen wie in Abschnitt \ref{sec:datenstruktur} beschrieben jeweils
-in einem Array vor. Der Übersichtlichkeit wegen, werden wir die beiden
+in einem Array vor. Der Übersichtlichkeit \blue{wegen}, werden wir die beiden
 Arrays ebenfalls mit $N(u)$ und $N(v)$ bezeichnen. Die Aufgabe ist es also,
  für jedes Element aus den beiden Arrays zu entscheiden,
 ob es entweder in beiden Arrays vorkommt, oder nur in einem von den beiden. Dafür 
-gibt es verschiedene Möglichkeiten, dies umzusetzen.
+gibt es verschiedene algorithmische Ansätze.
 \\
 \\
 Als ersten naiven Ansatz könnte man für jedes Element des Arrays $N(u)$ das gesamte andere 
 Array $N(v)$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
-$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber natürlich nicht sinnvoll ist, da das Array $N(v)$ ziemlich oft 
-durchlaufen werden muss und wir 
+$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber nicht sinnvoll ist, da wir 
 im Falle von massiven Graphen davon ausgehen können, dass die Arrays (also die Nachbarschaften)
  groß werden. 
 \\
 Dieses Problem kann man beispielsweise verhindern, indem man beide Arrays aufsteigend sortiert. 
 Um nun zu herauszufinden,
 welche Werte in beiden Arrays vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
-und testen, ob die Werte gleich sind, oder nicht. Somit muss man jedes Element der beiden Arrays -- nach dem Sortieren -- 
+und testen, ob die Werte gleich sind, oder nicht. Somit muss man jedes 
+Element der beiden Arrays --- nach dem Sortieren --- 
 nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum naiven
 Ansatz führt. Man erhält damit eine Laufzeit von $\O(|N(u)|\cdot \log (|N(u)|)  + |N(v)|\cdot\log(|N(v)|))$. 
 Diese Variante wird im Folgenden als \SorSor{} bezeichnet. 
 \\
-Die Laufzeit hängt dabei im Wesentlichen vom Sortieren ab. Daher führen wir eine Invariante ein, 
-die wir \fett{vorsortiert} nennen. Bei dieser Invariante nehmen wir an, dass
+Die Laufzeit hängt dabei im Wesentlichen vom Sortieren ab. Daher führen wir eine Variante ein, 
+die wir \fett{vorsortiert} nennen. Bei dieser Variante nehmen wir an, dass
 die Arrays immer im sortierten Zustand vorliegen. Somit würde bei \SorSor{} das Sortieren wegfallen
 und man müsste die beiden Arrays nur noch linear durchlaufen, was zu einer Laufzeit von $\O(|N(u)| + |N(v)|)$
 führen würde. 
-Es ist jedoch nicht offensichtlich, dass die Invariante zu einer insgesamt besseren Laufzeit eines
+Es ist jedoch nicht offensichtlich, dass die Variante zu einer insgesamt besseren Laufzeit eines
 \ct{es} führt, da ein \ct{} schließlich auch noch aus dem Durchmischen der disjunkten Nachbarschaft besteht.
-Dadurch könnte die Invariante verletzt werden, weshalb man am Ende des \ct{es} nochmal sortieren
-muss, um sie wieder aufrecht zu erhalten. Ob die Invariante zu einem Vorteil führt, wird im Kapitel 
+Dadurch könnte die \red{Vorsortierheit} verletzt werden, weshalb man am Ende des \ct{es} nochmal sortieren
+muss, um sie wieder aufrecht zu erhalten. Ob das \red{Vorsortieren} zu einem Vorteil führt, wird im Kapitel 
 \ref{cap:tests} anhand von Laufzeitmessungen geklärt.
 \\
 \\
 Die Variante \SorSor{} lässt sich leicht abwandeln, indem wir nur eines der beiden Arrays sortieren.
 Auf diese Weise können wir die Laufzeit des einen Sortiervorgangs sparen. Sortieren
-wir das größere Array (ohne Beschränkung der Allgemeinheit $N(u)$), bezeichnen wir die Variante als \SorSea{}. Um zu erkennen, 
-welche Elemente zur gemeinsamen und welche zur disjunkten Nachbarschaft gehören, kann man für jedes
-Knoten aus $N(v)$ per binärer Suche in logarithmischer Zeit prüfen, ob der Knoten auch in $N(u)$ vorhanden ist, oder nicht.
-Damit ergibt sich eine Laufzeit von $\O(|N(u)| \cdot \log(|N(u)|) + |N(v)| \cdot \log(|N(u)|)$. Analog dazu
+wir das größere Array (ohne Beschränkung der Allgemeinheit $N(v)$), bezeichnen wir die Variante als \SorSea{}. Um zu erkennen, 
+welche Elemente zur gemeinsamen und welche zur disjunkten Nachbarschaft gehören, kann man für jeden
+Knoten aus $N(u)$ per binärer Suche in logarithmischer Zeit prüfen, ob der Knoten auch in $N(v)$ vorhanden ist.
+Damit ergibt sich eine Laufzeit von $\O(|N(v)| \cdot \log(|N(v)|) + |N(u)| \cdot \log(|N(v)|)$. Analog dazu
 nennen wir die Variante, in der das kleinere Array sortiert wird, \SeaSor. 
 Auch hier könnte die vorsortiert Invariante einen Vorteil bringen.
 \\
 Eine weitere Methode um viele Werte schnell zu durchsuchen, bietet die Datenstruktur \texttt{set}, welche
-eines binären Suchbaums entspricht, beispielsweise eines Rot-Schwarz-Baums.
+einem binären Suchbaums entspricht, beispielsweise eines Rot-Schwarz-Baums.
 Dabei wird jedes Element des einen Arrays in den Suchbaum eingefügt. 
 Für jedes Element des anderen Arrays kann nun in logarithmischer
 Zeit bestimmt werden, ob es im Set und somit auch im ursprünglichen Array vorhanden ist.
-\\ 
-\red{Ein Vorteil dieser Variante könnte darin liegen...? amortisierte laufzeiten? }
-\\
+Somit erhält man die identischen asymptotischen Laufzeiten wie bei der Verwendung der
+binären Suche. \red{Je nach Implementierung des Suchbaums könnte es aber auch zu einer verbesserten
+Laufzeit führen.} 
 Für diese Möglichkeit gibt es ebenfalls zwei 
-analoge Varianten, nämlich \SetSea, bei der die Elemente des größeren Arrays in das Set eingefügt werden
-und \SeaSet, bei der das kleinere Array zum Set hinzugefügt wird.
-Auch bei den beiden Optionen kann es sinnvoll sein, wenn die vorsortiert Invariante aufrecht erhalten wird. Je
-nachdem, wie die interne Implementierung des Suchbaums aussieht, könnte es einen Laufzeitvorteil beim Einfügen
-der Werte geben, wenn
-diese bereits sortiert sind.
+analoge Varianten, nämlich \SetSea, bei der die Elemente des größeren Arrays in das \texttt{set} eingefügt werden
+und \SeaSet, bei der das kleinere Array zum \texttt{set} hinzugefügt wird.
+Auch bei den beiden Optionen könnte es sinnvoll sein, wenn die vorsortiert Invariante aufrecht erhalten wird.
+Dies hängt ebenfalls von der internen Implementierung des Suchbaums ab.
 \\
 Die letzte Methode, die wir an dieser Stelle betrachten werden,
-ist die Verwendung der Datenstruktur \textit{unordered\_set}. Diese ist sehr ähnlich wie Set, mit
+ist die Verwendung der Datenstruktur \texttt{unordered\_set}. Diese ist sehr ähnlich wie \texttt{set}, mit
 dem Unterschied, dass die Werte nicht in geordneter Reihenfolge gespeichert werden, sondern
-in einer Hash-Tabelle. Ein Vorteil einer Hash-Tabelle liegt darin, dass das Suchen von Elementen
-\red{erwartet in konstanter} Zeit erfolgt.
+in einer Hash-Tabelle. Ein Vorteil einer Hash-Tabelle liegt darin, 
+dass das Einfügen und Suchen von Elementen
+erwartet in konstanter Zeit erfolgt.
 Ebenfalls gibt es hierbei wieder die Varianten, 
 in denen das größere Array in das unordered\_set eingefügt wird (\USetSea) 
 oder das kleinere (\SeaUSet).{}
+Asymptotisch ergibt sich in beiden Fällen eine \underline{erwartete} Laufzeit von $\O(|(N(u)| + |N(v)|)$.
+Diese Laufzeit hängt jedoch stark von der Implementierung und dem \red{Füllgrad}  der Hash-Tabelle ab. 
 Schließlich werden wir auch bei den letzten beiden Methoden prüfen,
  ob die Invariante eventuell zu einer besseren Laufzeit führt.
 \\
 \\
 Zusammenfassend betrachten wir also insgesamt sieben verschiedene Möglichkeiten um die disjunkte
 und gemeinsame Nachbarschaft zu berechnen. Für jede dieser Varianten prüfen wir zusätzlich,
-ob die vorsortiert Invariante zu einem Laufzeittechnischen Vorteil führt oder ob es sich
+ob die vorsortiert Invariante zu einer verbesserten Laufzeit führt oder ob es sich
 nicht lohnt, diese aufrechtzuerhalten.
 
 
@@ -105,7 +106,7 @@ und $N_{c}(u,v)$, das die gemeinsamen Nachbarn enthält, zur Verfügung. Weiterh
 $\text{deg}(v)$ die ursprünglichen Knotengrade. Zusätzlich definieren wir uns die Mengen
 $D_{u} = N_{d}(u,v) \cap N(u)$, in der die disjunkten Nachbarn von Knoten $u$ liegen, 
 und $D_{v} = N_{d}(u,v) \cap N(v)$, in der die disjunkten Nachbarn von $v$ liegen. Die anfänglich
-leeren Arrays, in denen die Ausgabe -- also die neuen Nachbarschaften von $u$ und $v$ -- zurückgegeben 
+leeren Arrays, in denen die Ausgabe --- also die neuen Nachbarschaften von $u$ und $v$ --- zurückgegeben 
 werden soll, bezeichnen wir wieder als $N(u)$ und $N(v)$.
 Wir betrachten zwei unterchiedliche Möglichkeiten.
 \\
@@ -142,7 +143,7 @@ Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beis
   von $u$ zugeordnet, die restlichen $D_{v}$ zur Nachbarschaft von $v$. }
   \label{fig:trade_shuffle}
 \end{figure}
-Bei die diesem Verfahren fällt  jedoch auf, dass einige Elemente beim Permutieren unnötig vertauscht werden.
+Bei diesem Verfahren fällt  jedoch auf, dass einige Elemente beim Permutieren unnötig vertauscht werden.
 Für jedes Element ist es eigentlich nur entscheidend, ob es unter den ersten $D_{u}$  liegt (also zum Array
 $N(u)$ hinzugefügt wird) oder nicht. Auf welcher Position genau es in 
 diesen Bereichen liegt, ist nicht von Relevanz. Ohne Beschränkung der Allgemeinheit gelte 
@@ -150,17 +151,16 @@ $N(u) \le N(v)$. Dann kann man
 also die Laufzeit dieser Variante verbessern, indem nicht das ganze Array der disjunkten Nachbarschaft zufällig permutiert 
 wird, sondern nur die ersten $D_{u}$ \red{vielen} Elemente zufällig gewählt werden.
  Dies setzt die Funktion 
-\textit{random\_bipartition\_shuffle} um.
+\texttt{random\_bipartition\_shuffle} um.
 \\
 Ein Nachteil dieser Methode besteht jedoch darin, dass durch das zufällige Vertauschen die beiden resultierenden Arrays
-$N(u)$ und $N(v)$ nicht mehr unbedingt sortiert sind. Damit wird die im Abschnitt \ref{sec:common} beschriebene
+$N(u)$ und $N(v)$ im Allgemeinen nicht mehr sortiert sind. Damit wird die im Abschnitt \ref{sec:common} beschriebene
 Invariante eventuell verletzt. Möchte man die Invariante aufrecht erhalten, müssen somit die beiden Arrays
 in einem letzten Schritt nochmals sortiert werden.
 Wir nennen diese Variante \perm.
 \\
 \\
 Die zweite Möglichkeit, die wir betrachten, werden wir als \distr{} bezeichnen.
-\\
 Die Idee besteht dabei, dass wir über jedes Element des Arrays $N_{d}(u,v)$ iterieren und eine Wahrscheinlichkeit
 berechnen, mit
 der das Element in die Nachbarschaft von $u$ (beziehungsweise $v$) eingefügt werden soll. Dann wird in einem 
@@ -185,6 +185,7 @@ Somit ändern sich nach jeder Iteration die Wahrscheinlichkeiten $p_u$ beziehung
 Gilt nach irgendeinem Zeitpunkt entweder $n_u = 0$ oder $n_v = 0$, steht offenbar in einem der Arrays 
 keine freie Kapazität mehr zur Verfügung. Somit werden die übrigen Elemente, die noch in $N_{d}(u,v)$ vorhanden sind, 
 einfach dem anderen Array hinzugefügt.
+\red{\Large Optimierung um floats zu vermeiden erwähnen}
 \\
 \red{Dieses Vorgehen ist auch als Reservoir Sampling\cite{...?} wo? bekannt.}
 \\
@@ -200,6 +201,14 @@ aufsteigend sortiert. Da auch die Elemente aus $N_{c}(u,v)$ aufsteigend sortiert
 die endgültigen Arrays von $N(u)$ und $N(v)$ durch ein Mergen mit $N_{c}(u,v)$. Soll die Invariante jedoch
 nicht aufrecht erhalten werden, reicht es aus, die Elemente aus $N_{c}(u,v)$ jeweils an das Ende der beiden Arrays
 zu kopieren.
+\\
+\\
+Wird die Variante vorsortiert nicht verwendet, ergibt sich für \perm{} und \distr{}
+die gleiche asymptotische Laufzeit von $\O(|N(u)| + |N(v)|)$. 
+Beim Verwenden der vorsortiert Variante ändert sich die asymptotische Laufzeit für \distr{}
+nicht, da das mergen ebenfalls in linearer Zeit ausgeführt werden kann. Bei \perm{}
+hingegen müssen die beiden Arrays nochmals sortiert werden. Somit entsteht
+eine Laufzeit von $\O(|N(u)| \cdot \log(|N(u)|) + |N(v)| \cdot \log(|N(v)|))$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -213,27 +222,33 @@ besteht ein Curveball Tausch auf zwei Knoten $u$ und $v$ daraus, die
 gemeinsame und disjunkte Nachbarschaft der beiden Vektoren zu bestimmen
 und schließlich die Knoten aus der disjunkten Nachbarschaft zufällig zu tauschen.
 \\
-Die verschiedenen Methoden die wir hierfür untersuchen werden 
+Die verschiedenen Methoden, die wir hierfür untersuchen werden, 
 entstehen durch Kombination aller Varianten, die in \ref{sec:common} und \ref{sec:trade} beschrieben 
-werden. Alle diese Möglichkeiten sind in der Tabelle \ref{tab:varianten} zusammengefasst.
+werden. Alle diese Möglichkeiten sind in der Tabelle \ref{tab:varianten} mit ihren jeweiligen asymptotischen
+Laufzeiten zusammengefasst.
 
 
 \begin{table}
 	\centering
 	\begin{tabular}{c||c|c||c|c}
-		 & \multicolumn{2}{c||}{\distr} & \multicolumn{2}{c}{\perm} \\
-		 & \true & \false & \true & \false
+		 & \multicolumn{2}{c||}{\distr} & \multicolumn{2}{c}{\perm} \\ \hline \hline
+		\fett{vorsortiert} & \true & \false & \true & \false
 		\\ \hline\hline
-		\SorSor & & & & \\ \hline\hline
-		\SeaSor & & & &\\ \hline\hline
-		\SorSea & & & &\\ \hline\hline
-		\SeaSet & & & &\\ \hline\hline
-		\SetSea & & & &\\ \hline\hline
-		\SeaUSet & & & &\\ \hline\hline
-		\USetSea& & & &
+		%\SorSor & $\O(|N(u)| + |N(v)|)$ & $\O(|N(u)\cdot \log(|N(u)|) + |N(v)|\cdot \log(|N(v)|))$ & $\O(|N(u)| + |N(v)|)$ & \\ \hline
+		\SorSor 	& $\O(l)$ 				& $\O(l\cdot \log(l))$ 		& $\O(l \cdot \log(l))$ 					& $\O(l\cdot \log(l))$ 	\\ \hline
+		\SeaSor 	& $\O(l\cdot \log(s))$ 	& $\O(l\cdot  \log(s))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(s))$ \\ \hline
+		\SorSea 	& $\O(s\cdot \log(l))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(l))$ \\ \hline
+		\SeaSet 	& $\O(l\cdot \log(s))$ 	& $\O(l\cdot  \log(s))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(s))$ \\ \hline
+		\SetSea 	& $\O(s\cdot \log(l))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(l))$ \\ \hline
+		\SeaUSet	& $\O(l) \dagger$		& $\O(l) \dagger$ 			& $\O(l\cdot  \log(l))$ 	& $\O(l) \dagger$		\\ \hline
+		\USetSea	& $\O(l) \dagger$ 		& $\O(l) \dagger$ 			& $\O(l\cdot  \log(l))$ 	& $\O(l) \dagger$
 	\end{tabular}
-	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct{}. Die Werte true 
-	und false stehen jeweils dafür, ob die vorsortiert Invariante genutzt wird oder nicht.}
+	\caption{Jedes Feld in der Tabelle entspricht einer Variante für einen \ct{}.
+	Dabei sind jeweils die asymptotischen Laufzeiten der Varianten gegeben. Zur besseren 
+	Übersicht sind die Laufzeiten nicht in Abhängigkeit von $|N(u)|$ und $|N(v)|$ angegeben, 
+	sondern in den Variablen $l$ und $s$, wobei $l$ der Größe des größeren Arrays entspricht und
+	$s$ der Größe des kleineren. Es gilt also $l = \max\{|N(u)|,|N(v)|\}$ und $s = \min\{|N(u)|,|N(v)|\}$ und folglich $s = \O(l)$.
+	Erwartete Laufzeiten sind dabei mit $\dagger$ markiert.}
 	\label{tab:varianten}
 \end{table}
 
@@ -264,7 +279,7 @@ beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben.
 	  %\State disjoint $ \gets \emptyset$
 	  %\State common $ \gets \emptyset$
       
-      \While{(nu < U.\texttt{size()}) and (nv < V.\texttt{size()})}
+      \While{(nu < |U|) and (nv < |V|)}
         \If{U[nu] < V[nv]}
 			\State disjoint.\texttt{append(}U[nu]\texttt{)} \Comment{Füge das Element in disjoint ein}
 			\State nu ++
