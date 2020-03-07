@@ -216,7 +216,7 @@ Im Großen und Ganzen lassen sich also die gemessenen mittleren Laufzeiten gut e
 %%%%%% Fazit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\red{Fazit}}
+\section{\red{Auswahl der besten Variante}}
 \label{sec:entscheidung}
 Abschließend muss an Hand der Messdaten entschieden werden, welche Variante zum Einsatz für
 einen \ct{} am Besten geeignet ist.
@@ -252,4 +252,54 @@ erstellt werden --- wie bei der anderen Variante das \texttt{unordered\_set} ---
 auch kein zusätzlicher Speicherplatz verbraucht.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Fazit
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\section{\red{Überschrift..?}}
+\red{In einem letzten Experiment} wird geprüft, ob das Ziel, einen Randomisierungs Algortihmus 
+für bipartite Graphen zu entwickeln, welcher eine geringere Laufzeit, als \gc{} aufweist, erreicht wurde.
+\\
+Dazu werden erstellen wir verschiedene Test-Instanzen.
+\red{Als Grundlage dient ein Netflix Datensatz, welcher Nutzer- und Film-Knoten enthält, 
+wobei eine gerichtete Kante von einem Film zu einem Nutzer gezogen wird, wenn dieser den 
+Film gut bewertet hat.} Damit liegen die Film-Knoten in einer Partitionsklasse und 
+die Nutzer-Knoten in der anderen.
+Aus diesem Graph werden drei Subgraphen erstellt, wobei jeweils 1000, 10.000 und 100.000  zufällige
+Nutzer-Knoten ausgewählt werden und deren vollständige Nachbarschaft hinzugefügt wird.
+Für jeden dieser drei Graphen gibt es zwei Varianten. Der Unterschied
+zwischen den beiden Varianten liegt darin, welche der beiden Partitionsklassen aktiv sind, 
+also auf welcher Partitionsklasse die \ct{e} ausgeführt werden.
+Somit ergeben sich sechs Instanzen. Auf diesen wird 
+\red{die in dieser Arbeit erarbeite} bipartite Version des \gc{} ausgeführt. Dazu müssen die
+einzelnen Graphen jedoch in einen ungerichteten Graph transformiert werden.
+Weiterhin wird auch der Standard \red{\cb{} Algorithmus was wurde angepasst?} 
+sowohl auf den ungerichteten als auch auf den gerichteten Graphen ausgeführt.
+\\
+In Abbildung \ref{fig:speedup_komplett} sind die gemessenen Laufzeiten grafisch dargestellt.
+Auf der horizontalen Achse sind die einzelnen Instanzen als Tripel aufgetragen.
+Die erste Stelle steht dabei für die Knotenanzahl des Graphen, 
+die zweite Stelle für die Anzahl an Kanten und die dritte für die Anzahl der Knoten aus 
+der aktiven Partition. Um eventuelle Messfehler zu verringern, wurde jede Messung zehn mal 
+wiederholt. Als Datenpunkte sind jeweils Mittelwerte der Messungen aufgetragen.
+Zusätzlich sind die jeweiligen Standardabweichungen als Fehlerbalken eingetragen. Da
+diese im Vergleich zu den Messwerten aber relativ klein sind, sind sie in der Grafik kaum zu erkennen.
+\\
+Dabei fällt auf, dass sich die Laufzeiten von \cb{} und Bipartitem \gc{} auf den
+Instanzen mit über 100.000 deutlich unterscheiden. Auf diesen Instanzen erreicht
+der bipartite \gc{} einen Speedup von bis zu 17. 
+Während die Laufzeit der angepassten \cb{} Variante auf dem gerichteten Graphen in etwa 9 Sekunden
+und auf dem ungerichteten etwa 10,5 Sekunden beträgt, liegt sie beim bipartiten \gc{} bei lediglich 
+0,6 Sekunden. Dies entspricht --- auf dieser Instanz ---  einem Speedup von ungefähr 17.
+Auf den kleineren Instanzen 
+Die Laufzeit 
+Dabei fällt auf.... deutlcih schneller... speedup auf Instanz mit 100.000 
+bis zu 17! also ist die um das 17 fache laufzeit gewinn!
+von
+\begin{figure}
+\centering
+	\includegraphics[width = 0.8\textwidth]{figures/speedup.pdf}
+	\caption{Laufzeit Vergleich von BipartiteGlobalCurveball und Originalem \cb{}}
+	\label{fig:speedup_komplett}
+\end{figure}
