@@ -1,4 +1,4 @@
-Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt muss die disjunkte Nachbarschaft
+Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt, muss die disjunkte Nachbarschaft
 der beiden Knoten $u$ und $v$ bekannt sein, um einen \ct{} auf diesen Knoten $u$ und $v$
 auszuführen. Der \ct{} besteht dann darin, diese Knoten aus $N_{d}(u,v)$ zu durchmischen.
 Deshalb beschäftigen wir uns zuerst damit, wie man die disjunkte Nachbarschaft bestimmt.
@@ -14,29 +14,32 @@ Nach der Definition \ref{def:common_disjoint} liegt jeder Knoten aus den Nachbar
 entweder in der disjunkten oder in der gemeinsamen Nachbarschaft. Das Ziel besteht also darin, 
 für jeden Knoten aus $N(u) \cup N(v)$ zu entscheiden, ob er zu $N_{d}(u,v)$ oder $N_{c}(u,v)$ gehört.
 \\
+
 Die Nachbarschaften $N(u)$ und $N(v)$ liegen wie in Abschnitt \ref{sec:datenstruktur} beschrieben jeweils
-in einem Array vor. Der Übersichtlichkeit \blue{wegen}, werden wir die beiden
-Arrays ebenfalls mit $N(u)$ und $N(v)$ bezeichnen. Die Aufgabe ist es also,
+in einem Array vor. Der Übersichtlichkeit 
+wegen werden wir die beiden
+Arrays ebenfalls mit $N(u)$ und $N(v)$ bezeichnen. Aufgabe ist es,
  für jedes Element aus den beiden Arrays zu entscheiden,
-ob es entweder in beiden Arrays vorkommt, oder nur in einem von den beiden. Dafür 
+ob es entweder in beiden Arrays vorkommt oder nur in einem von den beiden. Dafür 
 gibt es verschiedene algorithmische Ansätze.
 \\
 \\
 Als ersten naiven Ansatz könnte man für jedes Element des Arrays $N(u)$ das gesamte andere 
 Array $N(v)$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
-$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber nicht sinnvoll ist, da wir 
+$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber nicht sinnvoll, da wir 
 im Falle von massiven Graphen davon ausgehen können, dass die Arrays (also die Nachbarschaften)
  groß werden. 
 \\
 Dieses Problem kann man beispielsweise verhindern, indem man beide Arrays aufsteigend sortiert. 
-Um nun zu herauszufinden,
+Um nun herauszufinden,
 welche Werte in beiden Arrays vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
-und testen, ob die Werte gleich sind, oder nicht. Somit muss man jedes 
+und testen, ob die Werte gleich sind oder nicht. Somit muss man jedes 
 Element der beiden Arrays --- nach dem Sortieren --- 
 nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum naiven
 Ansatz führt. Man erhält damit eine Laufzeit von $\O(|N(u)|\cdot \log (|N(u)|)  + |N(v)|\cdot\log(|N(v)|))$. 
 Diese Variante wird im Folgenden als \SorSor{} bezeichnet. 
 \\
+
 Die Laufzeit hängt dabei im Wesentlichen vom Sortieren ab. Daher führen wir eine Variante ein, 
 die wir \fett{vorsortiert} nennen. Bei dieser Variante nehmen wir an, dass
 die Arrays immer im sortierten Zustand vorliegen. Somit würde bei \SorSor{} das Sortieren wegfallen
@@ -48,7 +51,7 @@ Dadurch könnte die \red{Vorsortierheit} verletzt werden, weshalb man am Ende de
 muss, um sie wieder aufrecht zu erhalten. Ob das \red{Vorsortieren} zu einem Vorteil führt, wird im Kapitel 
 \ref{cap:tests} anhand von Laufzeitmessungen geklärt.
 \\
-\\
+
 Die Variante \SorSor{} lässt sich leicht abwandeln, indem wir nur eines der beiden Arrays sortieren.
 Auf diese Weise können wir die Laufzeit des einen Sortiervorgangs sparen. Sortieren
 wir das größere Array (ohne Beschränkung der Allgemeinheit $N(v)$), bezeichnen wir die Variante als \SorSea{}. Um zu erkennen, 
@@ -58,22 +61,24 @@ Damit ergibt sich eine Laufzeit von $\O(|N(v)| \cdot \log(|N(v)|) + |N(u)| \cdot
 nennen wir die Variante, in der das kleinere Array sortiert wird, \SeaSor. 
 Auch hier könnte die vorsortiert Invariante einen Vorteil bringen.
 \\
-Eine weitere Methode um viele Werte schnell zu durchsuchen, bietet die Datenstruktur \texttt{set}, welche
+
+Eine weitere Methode, um viele Werte schnell zu durchsuchen, bietet die Datenstruktur \texttt{set}, welche
 einem binären Suchbaums entspricht, beispielsweise eines Rot-Schwarz-Baums.
 Dabei wird jedes Element des einen Arrays in den Suchbaum eingefügt. 
 Für jedes Element des anderen Arrays kann nun in logarithmischer
 Zeit bestimmt werden, ob es im Set und somit auch im ursprünglichen Array vorhanden ist.
 Somit erhält man die identischen asymptotischen Laufzeiten wie bei der Verwendung der
-binären Suche. \red{Je nach Implementierung des Suchbaums könnte es aber auch zu einer verbesserten
-Laufzeit führen.} 
+binären Suche. Je nach Implementierung des Suchbaums könnte es aber auch zu einer verbesserten
+Laufzeit führen. 
 Für diese Möglichkeit gibt es ebenfalls zwei 
 analoge Varianten, nämlich \SetSea, bei der die Elemente des größeren Arrays in das \texttt{set} eingefügt werden
 und \SeaSet, bei der das kleinere Array zum \texttt{set} hinzugefügt wird.
 Auch bei den beiden Optionen könnte es sinnvoll sein, wenn die vorsortiert Invariante aufrecht erhalten wird.
 Dies hängt ebenfalls von der internen Implementierung des Suchbaums ab.
 \\
+
 Die letzte Methode, die wir an dieser Stelle betrachten werden,
-ist die Verwendung der Datenstruktur \texttt{unordered\_set}. Diese ist sehr ähnlich wie \texttt{set}, mit
+ist die Verwendung der Datenstruktur \texttt{unordered\_set}. Diese ist \texttt{set} sehr ähnlich, jedoch mit
 dem Unterschied, dass die Werte nicht in geordneter Reihenfolge gespeichert werden, sondern
 in einer Hash-Tabelle. Ein Vorteil einer Hash-Tabelle liegt darin, 
 dass das Einfügen und Suchen von Elementen
@@ -82,11 +87,11 @@ Ebenfalls gibt es hierbei wieder die Varianten,
 in denen das größere Array in das unordered\_set eingefügt wird (\USetSea) 
 oder das kleinere (\SeaUSet).{}
 Asymptotisch ergibt sich in beiden Fällen eine \underline{erwartete} Laufzeit von $\O(|(N(u)| + |N(v)|)$.
-Diese Laufzeit hängt jedoch stark von der Implementierung und dem \red{Füllgrad}  der Hash-Tabelle ab. 
+Diese Laufzeit hängt jedoch stark von der Implementierung und dem Füllgrad  der Hash-Tabelle ab. 
 Schließlich werden wir auch bei den letzten beiden Methoden prüfen,
  ob die Invariante eventuell zu einer besseren Laufzeit führt.
 \\
-\\
+
 Zusammenfassend betrachten wir also insgesamt sieben verschiedene Möglichkeiten um die disjunkte
 und gemeinsame Nachbarschaft zu berechnen. Für jede dieser Varianten prüfen wir zusätzlich,
 ob die vorsortiert Invariante zu einer verbesserten Laufzeit führt oder ob es sich
@@ -110,7 +115,7 @@ leeren Arrays, in denen die Ausgabe --- also die neuen Nachbarschaften von $u$ u
 werden soll, bezeichnen wir wieder als $N(u)$ und $N(v)$.
 Wir betrachten zwei unterchiedliche Möglichkeiten.
 \\
-\\
+
 Die erste Idee besteht darin,  
 das Array der disjunkten Nachbarschaft zufällig zu permutieren, sodass jedes Element an 
 einer zufälligen Position steht. Um nun die beide \glqq neuen\grqq{} Nachbarschaften von $u$ und $v$ zu erstellen,
@@ -153,13 +158,15 @@ wird, sondern nur die ersten $D_{u}$ \red{vielen} Elemente zufällig gewählt we
  Dies setzt die Funktion 
 \texttt{random\_bipartition\_shuffle} um.
 \\
+\newpage{}
+
 Ein Nachteil dieser Methode besteht jedoch darin, dass durch das zufällige Vertauschen die beiden resultierenden Arrays
 $N(u)$ und $N(v)$ im Allgemeinen nicht mehr sortiert sind. Damit wird die im Abschnitt \ref{sec:common} beschriebene
 Invariante eventuell verletzt. Möchte man die Invariante aufrecht erhalten, müssen somit die beiden Arrays
 in einem letzten Schritt nochmals sortiert werden.
 Wir nennen diese Variante \perm.
 \\
-\\
+
 Die zweite Möglichkeit, die wir betrachten, werden wir als \distr{} bezeichnen.
 Die Idee besteht dabei, dass wir über jedes Element des Arrays $N_{d}(u,v)$ iterieren und eine Wahrscheinlichkeit
 berechnen, mit
@@ -168,7 +175,8 @@ Bernoulli Experiment mit genau dieser Wahrscheinlichkeit ein Zufallsbit gezogen.
 Wert das Zufallsbit hat, wird das Element dann entweder in $N(u)$ oder in $N(v)$ kopiert. Dies wird so lange
 wiederholt, bis eines der beiden Arrays seine maximale Kapazität erreicht hat. 
 \\
-Um die Wahrscheinlichkeit zu berechnen werden am Anfang zwei Variablen $n_v$ und $n_u$ initialisiert, 
+
+Um die Wahrscheinlichkeit zu berechnen werden am Anfang zwei Variablen $n_u$ und $n_v$ initialisiert, 
 welche den Kapazitäten der beiden Arrays $u$ und $v$ entsprechen, wenn die Elemente aus der 
 gemeinsamen Nachbarschaft nicht berücksichtigt werden. \red{Es gilt also $n_v = |D_{v}|$ und
 $n_u= |D_{u}|$.}
@@ -185,9 +193,22 @@ Somit ändern sich nach jeder Iteration die Wahrscheinlichkeiten $p_u$ beziehung
 Gilt nach irgendeinem Zeitpunkt entweder $n_u = 0$ oder $n_v = 0$, steht offenbar in einem der Arrays 
 keine freie Kapazität mehr zur Verfügung. Somit werden die übrigen Elemente, die noch in $N_{d}(u,v)$ vorhanden sind, 
 einfach dem anderen Array hinzugefügt.
-\red{\Large Optimierung um floats zu vermeiden erwähnen}
 \\
-\red{Dieses Vorgehen ist auch als Reservoir Sampling\cite{...?} wo? bekannt.}
+
+An dieser Stelle  kann man jedoch noch eine Optimierung vornehmen.
+Da bei dem Bernoulli Experiment die Wahrscheinlichkeit $p_{u}$ --- beziehungsweise $p_{v}$ --- eine
+Dezimalzahl ist, werden zur Berechnung laufzeitintensive Gleitkommaopertationen 
+benötigt. Um dies zu umgehen, kann man eine zufällige Ganzzahl aus dem Intervall
+$[0, n_{u} + n_{v}-1]$ ziehen. Anschließend prüft man, ob die gezogene Zahl echt kleiner als $n_{u}$ ---
+beziehungsweise $n_{v}$ ---
+ist. Wenn dies der Fall ist, fährt man genauso fort wie wenn das Bernoulli Experiment eine eins
+zurückgibt. Auf diese Weise 
+ergeben sich für ein Element die gleichen Wahrscheinlichkeiten, in das jeweilige Array zu geraten, wie
+beim Bernoulli Experiment. Dabei werden aber ausschließlich \red{Integer} Operationen verwendet, welche
+von der Recheneinheit schneller verarbeitet werden können.
+\\
+
+\red{Dieses Vorgehen ist auch als Reservoir Sampling\cite{DBLP:journals/toms/Vitter85} bekannt.}
 \\
 Ein Vorteil dieser Methode ist, dass die in \ref{sec:common} beschriebene Invariante aufrecht erhalten werden kann.
 War das Array der disjunkten Nachbarschaft vor Beginn dieser Methode aufsteigend sortiert,
@@ -264,8 +285,9 @@ Wie wir in Kapitel \ref{sec:entscheidung} sehen werden,
 hat die Variante mit den Methoden \SorSor{} und \distr{} und der genutzten vorsortiert
 Invariante das beste Laufzeitverhalten. Deswegen gehen wir an dieser Stelle 
 noch einmal genauer auf diese beiden Methoden ein, indem wir sie in Pseudocode
-beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben.
-\red{...noch was dazu schreiben...?}
+beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben, in Algorithmus \ref{algo:distr}
+\distr.
+%\red{...noch was dazu schreiben...?}
 
 \begin{algorithm}
   \caption{SortSort}\label{algo:sortsort}

@@ -1,7 +1,7 @@
 \label{cap:tests}
 Wie im vorherigen Kapitel beschrieben, existieren verschiedene Varianten, einen \gc{} Tausch 
 durchzuführen. Für das Finden der gemeinsamen Nachbarschaft betrachten wir sieben verschiedene Methoden, 
-für das Tauschen der Nachbarschaft zwei und weiterhin prüfen wir noch, ob es sinnvoll ist, 
+für das Tauschen der Nachbarschaft zwei. Weiterhin prüfen wir, ob es sinnvoll ist, 
 die vorsortiert Invariante zu nutzen oder nicht, was ebenfalls zwei Möglichkeiten entspricht.
 Kombiniert man all diese Möglichkeiten erhält man also insgesamt 28 verschiedene Varianten für einen \gc{} 
 Tausch.
@@ -16,7 +16,7 @@ Dazu wurden alle Methoden in \cpp programmiert. Diese wurden dann auf unterschie
 Instanzen getestet und mittels Google Benchmark \cite{benchmark} wurde die Zeit gemessen, 
 die für das Ausführen benötigt wurde.
 \\
-\\
+
 %\red{Google Benchmark ist ein \red{Framework} ...?}
 %\\
 %\\
@@ -38,20 +38,22 @@ Um ein gutes Bild zu erhalten, sollten folgende Fälle abgedeckt sein:
 	
 	\item Der Anteil an gemeinsame Nachbarn  ist klein
 \end{itemize}
-Um dies zu erreichen, \red{erstellen} wir mehrere Runden, in denen der Vektor $u$ von anfänglich 128
+
+Um dies zu erreichen, führen wir mehrere Runden durch, in denen der Vektor $u$ von anfänglich 128
 Elementen auf bis zu 4.000.000 Elementen vergrößert wird. Innerhalb jeder Runde werden mehrere Durchläufe 
 durchgeführt, bei denen der Vektor $u$ eine Größe zwischen 32 Elementen und der jeweiligen Größe von $v$ hat.
 Für jeden dieser Durchgänge werden die beiden Vektoren mit zufälligen, aber paarweise verschiedenen,
 Werten befüllt, bis sie die entsprechende Größe haben. 
-Dabei haben die Vektoren aber offensichtlich keine Elemente gemeinsam, was dazu führen würde, dass ein \gc{} 
+Dabei existiert jedoch kein Element, welches in beiden Vektoren enthalten ist, was dazu führen würde, dass ein \gc{} 
 Tausch nichts verändern würde. Um sicherzugehen,
 dass die gemeinsamen Nachbarschaft nicht leer ist, müssen somit Elemente des einen Vektors 
 in den anderen hineinkopiert werden. Damit die Größe der gemeinsamen Nachbarschaft
 variiert wird, werden zuerst 10, dann 25, 50 und 75 Prozent der Elemente kopiert. 
 \\
 Eine einzelne Test Messung lässt sich somit durch ein Tripel \fett{(\la, \sm, \fr)} beschreiben, wobei
-\fett{\la} die Größe von $u$ ist, \fett{\sm} die 
-Größe von $v$ und \fett{\fr} der prozentuale Anteil der gemeinsamen Elemente.
+\fett{\la} die Größe von $u$ ist und \fett{\sm} die 
+Größe von $v$.
+\red{Der Wert \fett{\fr} steht dabei für den prozentualen Anteil der gemeinsamen Elemente \red{an} $v$.}
 
 
 
@@ -62,14 +64,18 @@ Größe von $v$ und \fett{\fr} der prozentuale Anteil der gemeinsamen Elemente.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Messung}
-Auf die im vorherigen Abschnitt beschriebene Weise, werden die verschiedenen Instanzen erstellt und
+Auf die im vorherigen Abschnitt beschriebene Weise werden die verschiedenen Instanzen erstellt und
 mittels Google Benchmark die Zeit gemessen. Aus Zeitgründen werden jedoch nicht alle Werte 
 für \la{} und \sm{} erstellt. Deshalb verdoppeln wir in jedem Schritt die Werte von \la{} und \sm{}
 anstatt sie um eins zu inkrementieren. Somit ergeben sich insgesamt 672 Instanzen, auf denen die Laufzeiten der 
-einzelnen Methoden gemessen werden. Um eventuelle Messfehler zu minimieren, wird
-jeder Durchlauf durch den Google Benchmark Parameter \texttt{benchmark\_repetitions} 5 mal wiederholt.
-Mit dem Parameter \texttt{benchmark\_min\_time} wird noch festgelegt, dass jede Variante so oft getestet
-wird, bis mindestens eine Gesamtlaufzeit von 0.1 Sekunden \red{erreicht} wird. 
+einzelnen Methoden gemessen werden. Jede Variante wird dabei so oft wiederholt, bis 100ms gemessen wurden.
+Um eventuelle Messfehler zu minimieren, wird
+dieser Vorgang 
+%durch den Google Benchmark Parameter \texttt{benchmark\_repetitions} 
+jeweils fünf mal wiederholt. 
+\red{Als resultierender Messwert dient der Mittelwert dieser Wiederholungen. }
+\\
+
 Alle Messungen wurden auf einem Rechner mit 64GB Arbeitsspeicher und einem Prozessor vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
 mit 8 Kernen und einem Cache von 20 MB, ausgeführt.
 Mit dieser Konfiguration hat die Dauer für alle 28 Varianten in Summe ungefähr 19 Stunden betragen.
@@ -82,9 +88,10 @@ Mit dieser Konfiguration hat die Dauer für alle 28 Varianten in Summe ungefähr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Auswertung}
-Die ermittelten Messdaten werden schließlich als \texttt{json}-Datei gespeichert. Mit Hilfe von 
-Jupyter Notebook \cite{jupyter} lassen sie sich auswerten. Dabei
-handelt es sich um ein \red{Tool}, mit dem man Python-Programme auf einfache Art und Weise erstellen und 
+\label{ref:auswertung}
+Die ermittelten Messdaten werden schließlich mit Hilfe von 
+Jupyter Notebook \cite{jupyter} ausgewertet. Dabei
+handelt es sich um ein Tool, mit dem man Python-Programme auf einfache Art und Weise erstellen und 
 ausführen kann.
 Innerhalb von Python werden wir die Bibliotheken \fett{Matplotlib} und \fett{pandas} nutzen, um die Daten
 zu analysieren und grafisch aufzuarbeiten.
@@ -95,8 +102,9 @@ zu analysieren und grafisch aufzuarbeiten.
 	\label{fig:messung_counting}
 \end{figure}
 \\
-Zuerst betrachten wir für jede Instanz, welche Methode am schnellsten war, also für welche die geringste
-Laufzeit gemessen wurde. Interessant sind dann jeweils die Methoden, die häufig am schnellsten waren.
+
+Zuerst betrachten wir für jede Instanz, welche Methode am schnellsten war.
+Interessant sind dann jeweils die Methoden, für die häufig die geringste Laufzeit gemessen wurde.
 In Abbildung \ref{fig:messung_counting} ist dazu ein Balkendiagramm gegeben.
 Dabei sieht man eindeutig, dass die Variante (\SeaUSet, \false, \perm) mit Abstand 
 auf den meisten Instanzen die schnellste Laufzeit aller Methoden hat. Die
@@ -104,67 +112,76 @@ auf den meisten Instanzen die schnellste Laufzeit aller Methoden hat. Die
 64\%. Mit 179 \glqq gewonnenen\grqq{} Instanzen folgt die Variante (\SorSor, \true, \distr), was einem Anteil von
 27\% entspricht. Zusammen ist somit in etwa 91\% aller getesteter Instanzen eine dieser beiden Methoden
 die schnellste gewesen. Daher liegt der Schluss nahe, sich beim Suchen der \glqq besten\grqq{} Variante,
-auf diese beiden Methoden zu beschränken. Um nicht fälschlicherweise \glqq gute\grqq{} Methoden auszuschließen
+auf diese beiden Methoden zu beschränken. 
+\\
+
+Um nicht fälschlicherweise \glqq gute\grqq{} Methoden auszuschließen
 betrachten wir einen weiteren Plot in Abbildung \ref{fig:messung_slowdown}. 
 \begin{figure}
 \centering
 	\includegraphics[width = 0.8\textwidth]{figures/slowdown.pdf}
-	\caption{\red{Slowdown im Vergleich zur schnellsten Variante}}
+	\caption{\red{Slowdown der einzelnen Varianten im jeweiligen Vergleich zur Variante mit der geringsten Laufzeit}}
 	\label{fig:messung_slowdown}
 \end{figure}
 Um diesen Plot zu erstellen wurde jede Variante einzeln betrachtet.
 Dann wird für jede Instanz bestimmt, welche Variante die kürzeste Laufzeit hat und der Quotient
-aus dieser Laufzeit und der Laufzeit der betrachteten Variante berechnet. Dieses Verhältnis wird als \red{Slowdown}
+aus dieser Laufzeit und der Laufzeit der betrachteten Variante berechnet. Dieses Verhältnis wird als Slowdown
 bezeichnet und gibt an, um welchen Faktor die Variante langsamer als die schnellste ist. Die Slowdowns
-zu jeder Instanz werden schließlich aufsteigend sortiert und als \red{Kurve} in den Plot eingefügt.
+zu jeder Instanz werden schließlich aufsteigend sortiert und als Kurve in den Plot eingefügt.
 Da die Slowdowns jedoch für jede Variante unabhängig voneinader sortiert werden, geht dadurch 
 die Ordnung über die Instanzen verloren. Somit entspricht eine Stelle auf der horizontalen Achse 
 nicht für jede Variante der gleichen Instanz.
+\\
 Dieser Plot legt ebenfalls nahe, sich auf die beiden Varianten (\SeaUSet, \false, \perm) und 
-(\SorSor, \true, \distr) zu konzentrieren, da die beiden Kurven am wenigsten stark \red{wachsen} und damit 
+(\SorSor, \true, \distr) zu konzentrieren, da die beiden Kurven am wenigsten stark wachsen und damit 
 die Slowdowns vergleichsweise klein sind. Jedoch lässt sich auch hier nicht bestimmen, welche der beiden
 Varianten die bessere ist. Ein Vorteil von (\SeaUSet, \false, \perm) ist, 
 dass die Methode auf den meisten Instanzen einen Slowdown
-von eins hat -- was wir ja auch schon in Abbildung \ref{fig:messung_counting} gesehen haben --
+von eins hat --- was wir ja auch schon in Abbildung \ref{fig:messung_counting} gesehen haben ---
 und damit langsamer anwächst. Ein Nachteil liegt aber darin, dass der Slowdown für manche Instanzen
 eine Größe von bis zu 10.0 erreicht, während der Slowdown von  (\SorSor, \true, \distr) durch den maximalen
 Wert von 3.5 beschränkt ist (in Abbildung \ref{fig:messung_slowdown} als gestrichelte Linie eingezeichnet).
 \\
+
 Dieser Nachteil spiegelt sich ebenfalls in Abbildung \ref{fig:messung_mean} wieder. In diesem Plot
 wurden über alle Instanzen für jede Variante jeweils die mittlere Laufzeit bestimmt. Obwohl
 es nicht in den meisten Fällen die schnellste Variante ist, hat (\SorSor, \true, \distr) die 
-kleinste mittlere Laufzeit mit rund 0.0387 Sekunden. Auf Platz zwei folgt
-(\SeaUSet, \false, \perm) mit etwa 0.0640 Sekunden, was schon einer Abweichung von ungefähr 60\% entspricht.
-Auch in diesem Plot sieht man deutlich, dass es sich nicht lohnt noch weiter Varianten zu betrachten. Zwar hat 
-auch (\SorSor, \true, \perm) eine mittlere Laufzeit, die annähernd so groß ist wie (\SeaUSet, \false, \perm),{}
-die aber \red{nicht an die schnellste herankommt}. Alle anderen Varianten haben eine deutlich größere mittlere
-Laufzeit.
+kleinste mittlere Laufzeit mit rund 38 Millisekunden. Auf Platz zwei folgt
+(\SeaUSet, \false, \perm) mit etwa 64 Millisekunden, was schon einer Abweichung von ungefähr 60\% entspricht.
+Auch in diesem Plot sieht man deutlich, dass es sich nicht lohnt, noch weiter Varianten zu betrachten. Zwar hat 
+auch (\SorSor, \true, \perm) eine mittlere Laufzeit, 
+die annähernd so groß ist wie die Laufzeit von (\SeaUSet, \false, \perm), aber 
+auch diese kommt nicht an die schnellste heran. Alle anderen Varianten 
+haben eine deutlich größere mittlere Laufzeit.
 \begin{figure}
 \centering
 	\includegraphics[width = \textwidth]{figures/mean.pdf}
 	\caption{Mittlere Laufzeiten der Varianten über allen Instanzen}
 	\label{fig:messung_mean}
 \end{figure}
-Abschließend betrachten wir noch die zwei ausgewählten Varianten im direkten Vergleich. Dazu wurden
+\\
+
+Abschließend betrachten wir noch die zwei ausgewählten Varianten im direkten Vergleich. Hierzu wurden
 in Abbildung \ref{fig:messung_small} auf der horizontalen Achse die getesteten Instanzen aufgetragen
 und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) als Kreuze
-eingezeichnet. Die Instanzen sind nach aufsteigenden Werten für \sm{} sortiert. Aus Gründen der Übersichtlichkeit
-wird bei  der Beschriftung der Instanzen der Teil \fr{} weggelassen, die Instanzen werden 
-nur mit \la{}, \sm{} bezeichnet. Weiterhin wurden der
-Übersichtlichkeit wegen die Instanzen aus dem Bereich $32 < \text{\sm}  <32768$ ausgelassen, da sie das gleiche
-Bild wie die üblichen Instanzen zeigen.
+eingezeichnet. 
 Man sieht dabei, dass sich die Laufzeiten in den meisten Instanzen nicht so stark unterscheiden.
 Dies sind vor allem die Instanzen, bei denen der Unterschied zwischen \la{} und \sm{} nicht so groß ist.
 In den Instanzen, in denen sich die Werte für \sm{} und \la{} stark unterscheiden, ist jedoch ein 
 deutlicher Vorteil von (\SorSor, \true, \distr) zu erkennen. Auch bei den \glqq großen\grqq{} Instanzen
 mit Werten von $\text{\sm{}}> 500.000$ hat diese Variante einen deutlichen Laufzeitvorteil.
 Auf der Instanz (4.194.304, 4.194.304, 75) beispielsweise hat (\SeaUSet, \false, \perm) eine Laufzeit
-von circa 1.628 Sekunden, während (\SorSor, \true, \distr) nur etwa 0.146 Sekunden benötigt. Der Slowdown
-beträgt für diese Instanz also in etwa 11. 
+von circa 1,628 Sekunden, während (\SorSor, \true, \distr) nur etwa 0,146 Sekunden benötigt. Der Slowdown
+beträgt für diese Instanz also in etwa einem Wert von 11. 
 \begin{figure}
 \centering
 	\includegraphics[width = \textwidth]{figures/small_aufsteigend.pdf}
-	\caption{Vergleich der Laufzeiten zweier Varianten auf ausgewählten Instanzen}
+	\caption{Vergleich der Laufzeiten der zwei besten Varianten auf ausgewählten Instanzen.
+			Die Instanzen sind nach aufsteigenden Werten für \sm{} sortiert. Aus Gründen der Übersichtlichkeit
+wird bei  der Beschriftung der Instanzen der Teil \fr{} weggelassen, die Instanzen werden 
+nur mit \la{}, \sm{} bezeichnet. Weiterhin wurden der
+Übersichtlichkeit wegen die Instanzen aus dem Bereich $32 < \text{\sm}  <32768$ ausgelassen, da sie das gleiche
+Bild wie die üblichen Instanzen zeigen.}
 	\label{fig:messung_small}
 \end{figure}
 
@@ -172,20 +189,21 @@ beträgt für diese Instanz also in etwa 11.
 %%%%%% Diskussion
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\red{Diskussion der Ergebnisse}}
-\red{Nun} werden wir überprüfen, ob die ermittelten Ergebnisse zu erwarten waren, indem wir sie 
+\section{Diskussion der Ergebnisse}
+Es gilt zu überprüfen, ob die ermittelten Ergebnisse zu erwarten waren, indem wir sie 
 mit den Asymptotischen Laufzeiten aus der Tabelle \ref{tab:varianten} vergleichen.
 Laut den Asymptotischen Laufzeiten sollte die Varianten mit \SorSor{}, \distr{} und vorsortiert am schnellsten
 sein. Dies sieht man auch bei den mittleren gemessenen Laufzeiten aus Abbildung \ref{fig:messung_mean}.
-Dabei liegt diese Varianten deutlich auf dem ersten Platz. Die dazugehörige Variante mit
+Dabei liegt diese Variante deutlich auf dem ersten Platz. Die dazugehörige Variante mit
 der Tausch-Methode \perm{} liegt auf dem dritten Platz, obwohl sie im Vergleich eine der
 schlechtesten asymptotischen Laufzeiten hat. Der Grund für diese Diskrepanz 
 liegt vermutlich darin, dass diese
 asymptotische Laufzeit durch das einmalige Sortieren am Ende der Methode entsteht. 
-In anderen Varianten, die die gleiche asymptotische Laufzeit haben, wird jedoch eventuell häufiger
+In anderen Varianten, welche die gleiche asymptotische Laufzeit haben, wird jedoch eventuell häufiger
 sortiert oder eine Datenstruktur verwendet, die eine höhere Laufzeit produziert.
 \\
-Auffällig ist, dass die Varianten mit \USetSea{} jeweils deutlich langsamer sind, als die analogen
+
+Auffällig ist, dass die Varianten mit \USetSea{} jeweils deutlich langsamer sind als die analogen
 Varianten, welche \SeaUSet{} verwenden, obwohl die erwarteten asymptotischen Laufzeiten
 gleich sind. Dies liegt höchstwahrscheinlich an der
 Datenstruktur \texttt{unordered\_set}, einer Hash-Tabelle. Bei dieser Datenstruktur
@@ -198,6 +216,7 @@ die im Mittel zweitschnellste aller gemessenen Varianten, da sich hierbei
 weniger Elemente in der Hash-Tabelle befinden und der Füllgrad demnach geringer ist. 
 Somit wird auch eher die Laufzeit des Erwartungswerts erreicht.
 \\
+
 Mit einem ähnlichen Argument lassen sich auch die schlechten Laufzeiten 
 der Varianten, welche \SetSea{} verwenden, erklären. Hierbei wird ebenfalls das größere
 Array in die Datenstruktur eingefügt, was zu der schlechteren Laufzeit führt.  
@@ -216,11 +235,11 @@ Im Großen und Ganzen lassen sich also die gemessenen mittleren Laufzeiten gut e
 %%%%%% Fazit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\red{Auswahl der besten Variante}}
+\section{Auswahl der besten Variante}
 \label{sec:entscheidung}
-Abschließend muss an Hand der Messdaten entschieden werden, welche Variante zum Einsatz für
+Abschließend muss anhand der Messdaten entschieden werden, welche Variante zum Einsatz für
 einen \ct{} am Besten geeignet ist.
-Zusammenfassend haben wir im vorherigen Abschnitt festgestellt, 
+Zusammenfassend haben wir im Abschnitt \ref{ref:auswertung} festgestellt, 
 dass nur die Varianten (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) zur Auswahl stehen.
 Während die eine Variante am häufigsten die geringste Laufzeit hat, liegt die andere 
 bei der durchschnittlichen Laufzeit weiter vorne. Dies liegt vor allem daran, dass sich 
@@ -228,19 +247,21 @@ die Laufzeiten bei den Instanzen auf denen (\SeaUSet, \false, \perm) \glqq gewin
 Unter den anderen Instanzen gibt es jedoch welche, bei denen (\SorSor, \true, \distr) bis auf einen
 Faktor von circa 11 schneller ist.
 \\
+
 Um ein bestmögliches Laufzeitverhalten für einen \ct{} zu erreichen, könnte man auf die Idee kommen, 
-beide Varianten zusammen zu nutzen. Man könnte sich eine \red{Heuristik} überlegen, die jeweils angibt, 
+beide Varianten zusammen zu nutzen. Man könnte sich eine Heuristik überlegen, die jeweils angibt, 
 auf welcher Instanz man welche Variante verwenden sollte. Somit würde bei jedem \ct{} abhängig von 
 der Eingabe, also den Nachbarschaften, entschieden werden, welche der beiden Instanzen man benutzt. 
 Das Problem dabei liegt jedoch darin, dass bei diesen Varianten einmal die Vorsortiert-Invariante
 genutzt wird und einmal nicht. Dies ist natürlich nicht beides gemeinsam möglich. Entweder man hält die
-Nachbarschaften immer sortiert, oder eben nicht. Man muss sich also für eine Möglichkeit der
+Nachbarschaften immer sortiert, oder nicht. Man muss sich also für eine Möglichkeit der
 Invariante entscheiden. Dadurch ändert sich dann aber zwangsläufig  eine der beiden Varianten. 
 Entscheidet man sich, die Nachbarschaften sortiert zu halten, würde (\SeaUSet, \false, \perm) zu (\SeaUSet, \true, \perm){}
 werden, andernfalls würde sich (\SorSor, \true, \distr) zu (\SorSor, \false, \distr) verändern.
-Diese beiden \glqq veränderten \grqq{} Varianten haben aber jeweils deutlich schlechtere Laufzeiten
+Diese beiden \glqq veränderten\grqq{} Varianten haben aber jeweils deutlich schlechtere Laufzeiten
 als die ursprünglichen.
 \\
+
 Es ist also nicht sinnvoll möglich, die beiden Varianten miteinander zu kombinieren. Wir müssen uns
 also auf eine Variante festlegen. Dies ist die Variante (\SorSor, \true, \distr), da sie im Vergleich zur
 Alternative --- wie schon beschrieben ---
@@ -257,9 +278,9 @@ auch kein zusätzlicher Speicherplatz verbraucht.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{\red{Überschrift..?}}
+\section{\red{Vergleich zum Standard \gc{}}}
 \label{kap:result}
-\red{In einem letzten Experiment} wird geprüft, wie sich die Laufzeit der bipartiten \gc{}
+In einem letzten Experiment wird geprüft, wie sich die Laufzeit der bipartiten \gc{}
 Variante im Vergleich zum \gc{} auf massiven Graphen verhält.
 \\
 
@@ -274,18 +295,16 @@ Für jeden dieser drei Graphen gibt es zwei Varianten. Der Unterschied
 zwischen den beiden Varianten liegt darin, welche der beiden Partitionsklassen aktiv sind, 
 also auf welcher Partitionsklasse die \ct{e} ausgeführt werden.
 Somit ergeben sich sechs Instanzen. Auf diesen wird 
-\red{die in dieser Arbeit erarbeite} bipartite Version des \gc{} ausgeführt. Dazu müssen die
-einzelnen Graphen jedoch in einen ungerichteten Graph transformiert werden.
-Weiterhin wird auch der Standard \red{\cb{} Algorithmus was wurde angepasst?} 
-sowohl auf den ungerichteten als auch auf den gerichteten Graphen ausgeführt.
+die in dieser Arbeit erarbeite bipartite Version des \gc{} ausgeführt. Dazu müssen die
+einzelnen Graphen jedoch jeweils in einen ungerichteten Graph transformiert werden.
+Weiterhin wird auch der \red{Standard \cb{} Algorithmus (was wurde angepasst??)} 
+sowohl auf den ungerichteten als auch auf den gerichteten Graphen ausgeführt. Bei allen Varianten 
+wurden insgesamt 10 Globale Tausche vorgenommen.
 \\
 
 In Abbildung \ref{fig:speedup_komplett} sind die gemessenen Laufzeiten grafisch dargestellt.
-Auf der horizontalen Achse sind die einzelnen Instanzen als Tripel aufgetragen.
-Die erste Stelle steht dabei für die Knotenanzahl des Graphen, 
-die zweite Stelle für die Anzahl an Kanten und die dritte für die Anzahl der Knoten aus 
-der aktiven Partition. Um eventuelle Messfehler zu verringern, wurde jede Messung zehn mal 
-wiederholt. Als Datenpunkte sind jeweils Mittelwerte der Messungen aufgetragen.
+Um eventuelle Messfehler zu verringern, wurde jede Messung zehn mal 
+wiederholt. Als Datenpunkte sind jeweils die Mittelwerte der Messungen aufgetragen.
 Zusätzlich sind die jeweiligen Standardabweichungen als Fehlerbalken eingetragen. Da
 diese im Vergleich zu den Messwerten aber relativ klein sind, sind sie in der Grafik kaum zu erkennen.
 \\
@@ -307,7 +326,10 @@ relativ konstant bleiben.
 \begin{figure}
 \centering
 	\includegraphics[width = 0.8\textwidth]{figures/speedup.pdf}
-	\caption{Laufzeit Vergleich von BipartiteGlobalCurveball und Originalem \cb{}}
+	\caption{Laufzeitvergleich von bipartitem \gc{} und der abgeänderten Version des \cb{s}.{}
+	Auf der horizontalen Achse sind die einzelnen Instanzen als Tripel aufgetragen.
+Die erste Stelle steht dabei für die Knotenanzahl des Graphen, 
+die zweite Stelle für die Anzahl an Kanten und die dritte für die Anzahl der Knoten aus 
+der aktiven Partition.}
 	\label{fig:speedup_komplett}
 \end{figure}
-\red{\Large 10 global trades}
