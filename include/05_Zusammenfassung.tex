@@ -1,44 +1,23 @@
-Zum Abschluss dieser Arbeit lässt sich feststellen, dass das Ziel, einen Algorithmus
-zum Randomisieren massiver bipartiter Graphen zu entwickeln, welcher eine bessere Laufzeit aufweist, als der schon bekannte 
-\gc{} Algorithmus, erreicht wurde. 
-
-
-
-~\\
+Zum Abschluss dieser Arbeit lässt sich feststellen, dass das Ziel 
+der Anpassung von \gc{} an bipartite Graphen zur Reduzierung der Laufzeit erreicht werden konnte.
+Durch die Parallelisierung der einzelnen \ct{e} wird der Algorithmus derart beschleunigt, dass --- wie
+in Kapitel \ref{kap:result} gezeigt --- auf manchen Testinstanzen ein
+Speedup von bis zu einem Wert von 17 erreicht wird, was ein äußerst befriedigendes Resultat darstellt. 
+Um eine generellere Aussage über den Speedup vom bipartiten \gc{} im Vergleich zum Standard  \gc{}
+zu treffen, müsste man jedoch noch deutlich mehr Laufzeitmessungen auf verschiedenen Instanzen
+durchführen.
 \\
-\\
-
-Dies ist --- wie in Kapitel \ref{kap:result} besprochen --- gelungen
-
-
-
-
-Jedoch könnte man auch noch Verbesserungen vornehmen:
-
 
 Im Bezug auf die experimentelle Auswertung zur Bestimmung der schnellsten Methode 
-einen \ct{} umzusetzen, könnte man noch folgende Verbesserungen untersuchen.
+einen \ct{} umzusetzen, könnte man noch kleine Verbesserungen untersuchen.
+\\
 Zum Einen werden die Varianten nur auf Instanzen getestet, welche Nachbarschaften mit 
-maximal 4 Millionen Knoten enthalten. Je Nachdem, 
-
-
-Wir haben gesehen, wie ein \gc{} Tausch und damit auch ein \ct{} aufgebaut ist. 
-
-
-
-
-
-
-
-
-std in fehlerbalken aber so klein, dass sie nicht sichtbar sind.
-
-Verbessern könnte man noch:
-verschiedene benchmarks, größere instanzen, einfach mehr...
-
-auf anderem Rechner Architektur/system testen 
-
-hier auf jeden Fall noch die Python Laufzeiten undso
-
-Laufzeit Vergleiche...
-Ausblick?!
+maximal 4 Millionen Knoten enthalten. Je nachdem, auf welchen Graphen der Algorithmus angewendet wird, 
+könnte es sinnvoll sein, auch Instanzen
+mit größeren Nachbarschaften zu betrachten. Lassen sich die möglichen Eingabegraphen
+für ein spezielles Einsatzgebiet genauer spezifizieren, wäre es sinnvoll die verschiedenen
+Varianten auch nur auf solchen Graphen zu testen. Dann bleibt zu überprüfen, ob die ausgewählte
+Variante immer noch die geringste Laufzeit besitzt.
+\\
+Zum Anderen könnte man die Benchmarks zusätzlich noch auf Rechnern mit anderer Hardware ausführen.
+Dabei sind vor allem andere Prozessorarchitekturen und ein größerer Arbeitsspeicher interessant.

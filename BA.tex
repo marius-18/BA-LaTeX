@@ -1,8 +1,8 @@
 \documentclass[a4paper, 11pt]{scrbook}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some common includes. Add additional includes you need.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage[ngerman]{babel}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
@@ -14,6 +14,7 @@
 \RequirePackage{tikz}
 \RequirePackage{eurosym}
 \usetikzlibrary{snakes}
+
 \linespread{1.25}
 
 
@@ -30,9 +31,9 @@
 %\usepackage{subcaption}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Defines for mathematical notation. Add additional defines as needed.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \def\O{\mathcal{O}}
 \def\sort{\mathrm{sort}}
 \def\scan{\mathrm{scan}}
@@ -76,22 +77,6 @@
 
 %\newcommand{\tomorrow}{{\AdvanceDate[1]\today}}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Titel DEFINITION!
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\titlehead{\centering Bachelorarbeit mit dem Thema}
-
-%\title{Bachelorarbeit mit dem Thema \\ ~}
-
-%\subtitle{ Implementierung und experimentelle Untersuchung von Parallelem Global-Curveball zur Randomisierung
-%Massiver Bipartiter Graphen\\ ~}
-%\author{Marius Hagemann \\ 5732742 \\ s2486252@stud.uni-frankfurt.de \\~}
-%\date{\tomorrow}
-%\publishers{Betreuer: Prof. Dr. Ulrich Meyer \\ ~ \\ Goethe-Universität Frankfurt am Main \\ Fachbereich Informatik }
-
-%\swapnumbers
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -169,12 +154,11 @@
 %%%%%   ERKLÄRUNG + Inhaltsverzeichnis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \includepdf[pages=1]{include/erkabschlbachelorinf}
 
 \newpage
-
 \tableofcontents
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -194,22 +178,7 @@
 \input{include/01_Einleitung.tex}
 
 %\begin{itemize}
-%\item wozu Randomisierung?
-%-- Als (zufällige) Eingabe um Algorithmen zu testen?
-%-- Zum Analysieren von Netzwerken?
-%\red{bla}
-%\item es gibt auch andere Methoden um zufällige Graphen zu erstellen (zufällige Kanten zwischen Knoten)
 %aber dann bleibt die gewollte Struktur nicht erhalten
-%also Global Curveball (, bei dem Kanten getauscht werden)
-%\item wir beschränken uns hier nur auf den Spezialfall der bipartiten Graphen wodurch es einfacher wird ...?
-%\item wozu GlobalCurveball?
-%\item warum macht man das?
-%\item-- Zufällige Graphen, wobei die Grade aller Knoten erhalten bleiben
-%\item
-%Was ist networkit? +  Quelle
-%\item
-%was heißt massiver graph ? 
-%hoher Knotengrad??
 %\end{itemize}
 
 
@@ -222,10 +191,8 @@
 \input{include/02_Grundlagen.tex}
 
 %\begin{itemize}
-%\item \textbf{Notation}, Graph, bipartitheit, randomisierung, ...? 
-%\item theoretische grundlagen
-%\item beweis, kanten Tauschen wird uniform verteilt... (markov ??) FDSM sequenz -> algo macht komischen Graph draus -> 
-%\item Kanten tauschen, globaler Tausch, zufall
+%\item beweis, kanten Tauschen wird uniform verteilt... 
+%(markov ??) FDSM sequenz -> algo macht komischen Graph draus -> 
 %\item Parallelität (OpenMP)?
 %\item networkit (was ist das, wofür braucht man das
 %\end{itemize}
@@ -250,31 +217,13 @@
 \chapter{Experimentelle Untersuchung}
 \input{include/04_Experimente.tex}
 
-%\begin{itemize}
-
-%\item Versuche beschreiben. Aufbau, was warum wie wo?
-%\item \red{\Large was wurde erwartet, wie passt das ergebnis dazu? was bedeutet es?}
-%\item google Test/ google benchmark
-%\item
-%bestimmung der schnellsten Varianten..\\
-%-- disjoint neighbors\\
-%-- trade\\
-%-- auf welcher Maschine? gluten\\
-%plots\\
-
-
-
-%\end{itemize}
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%   Zusammenfassung
+%%%%%   Fazit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\chapter{\red{Fazit?}}
+\chapter{Fazit}
 \input{include/05_Zusammenfassung.tex}
 
 
@@ -283,21 +232,14 @@
 \\
 \\
 \\
-was hat das alles gebracht? \\
 Algo wird Teil von networkit?\\
-ausblick?\\
-was könnte man verbessern? mehre tests, andere maschinen
 \\
-was ist die Laufzeit von einem \gc{} tausch im mittel? für große graphen?
-
 ~\\
 \\
 \\
 \newpage
 \red{\Huge TODO:}
 \begin{itemize}
-	\item Einleitung
-	\item Zusammenfassung
 	\item \red{\Large \cb{} bezeichnungen undso einheitlich?!}
 	\item \red{\Large Anführungszeichen suchen!! + Leerzeichen dahinter}
 	\item \red{\huge Laufzeit test für das python ding.. wie schnell funktioniert der algo so?}
