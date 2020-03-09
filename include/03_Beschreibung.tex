@@ -1,7 +1,7 @@
 Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt, muss die disjunkte Nachbarschaft
 der beiden Knoten $u$ und $v$ bekannt sein, um einen \ct{} auf diesen Knoten $u$ und $v$
 auszuführen. Der \ct{} besteht dann darin, diese Knoten aus $N_{d}(u,v)$ zu durchmischen.
-Deshalb beschäftigen wir uns zuerst damit, wie man die disjunkte Nachbarschaft bestimmt.
+Deshalb beschäftigen wir uns zuerst damit wie man die disjunkte Nachbarschaft bestimmt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% COMMON NEIGHBORS
@@ -15,7 +15,8 @@ entweder in der disjunkten oder in der gemeinsamen Nachbarschaft. Das Ziel beste
 für jeden Knoten aus $N(u) \cup N(v)$ zu entscheiden, ob er zu $N_{d}(u,v)$ oder $N_{c}(u,v)$ gehört.
 \\
 
-Die Nachbarschaften $N(u)$ und $N(v)$ liegen wie in Abschnitt \ref{sec:datenstruktur} beschrieben jeweils
+Die Nachbarschaften $N(u)$ und $N(v)$ liegen --- wie in Abschnitt 
+\ref{sec:datenstruktur} beschrieben --- jeweils
 in einem Array vor. Der Übersichtlichkeit 
 wegen werden wir die beiden
 Arrays ebenfalls mit $N(u)$ und $N(v)$ bezeichnen. Aufgabe ist es,
@@ -23,16 +24,17 @@ Arrays ebenfalls mit $N(u)$ und $N(v)$ bezeichnen. Aufgabe ist es,
 ob es entweder in beiden Arrays vorkommt oder nur in einem von den beiden. Dafür 
 gibt es verschiedene algorithmische Ansätze.
 \\
-\\
+
 Als ersten naiven Ansatz könnte man für jedes Element des Arrays $N(u)$ das gesamte andere 
 Array $N(v)$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
 $\O(|N(u)|\cdot|N(v)|)$. Dies ist aber nicht sinnvoll, da wir 
 im Falle von massiven Graphen davon ausgehen können, dass die Arrays (also die Nachbarschaften)
  groß werden. 
 \\
+
 Dieses Problem kann man beispielsweise verhindern, indem man beide Arrays aufsteigend sortiert. 
-Um nun herauszufinden,
-welche Werte in beiden Arrays vorkommen, muss man lediglich $u$ und $v$ gleichzeitig linear durchlaufen
+Um herauszufinden,
+welche Werte in beiden Arrays vorkommen, muss man lediglich $N(u)$ und $N(v)$ gleichzeitig linear durchlaufen
 und testen, ob die Werte gleich sind oder nicht. Somit muss man jedes 
 Element der beiden Arrays --- nach dem Sortieren --- 
 nur einmal betrachten, was offensichtlich zu einer verbesserten Laufzeit im Vergleich zum naiven
@@ -48,7 +50,7 @@ führen würde.
 Es ist jedoch nicht offensichtlich, dass die Variante zu einer insgesamt besseren Laufzeit eines
 \ct{es} führt, da ein \ct{} schließlich auch noch aus dem Durchmischen der disjunkten Nachbarschaft besteht.
 Dadurch könnte die \red{Vorsortierheit} verletzt werden, weshalb man am Ende des \ct{es} nochmal sortieren
-muss, um sie wieder aufrecht zu erhalten. Ob das \red{Vorsortieren} zu einem Vorteil führt, wird im Kapitel 
+muss, um sie wieder aufrecht zu erhalten. Ob das \red{Vorsortieren} zu einem Vorteil führt, wird in Kapitel 
 \ref{cap:tests} anhand von Laufzeitmessungen geklärt.
 \\
 
@@ -63,17 +65,17 @@ Auch hier könnte die vorsortiert Invariante einen Vorteil bringen.
 \\
 
 Eine weitere Methode, um viele Werte schnell zu durchsuchen, bietet die Datenstruktur \texttt{set}, welche
-einem binären Suchbaums entspricht, beispielsweise eines Rot-Schwarz-Baums.
+einem binären Suchbaum entspricht, beispielsweise eines Rot-Schwarz-Baums.
 Dabei wird jedes Element des einen Arrays in den Suchbaum eingefügt. 
 Für jedes Element des anderen Arrays kann nun in logarithmischer
-Zeit bestimmt werden, ob es im Set und somit auch im ursprünglichen Array vorhanden ist.
+Zeit bestimmt werden, ob es im \texttt{set} und somit auch im ursprünglichen Array vorhanden ist.
 Somit erhält man die identischen asymptotischen Laufzeiten wie bei der Verwendung der
 binären Suche. Je nach Implementierung des Suchbaums könnte es aber auch zu einer verbesserten
 Laufzeit führen. 
 Für diese Möglichkeit gibt es ebenfalls zwei 
 analoge Varianten, nämlich \SetSea, bei der die Elemente des größeren Arrays in das \texttt{set} eingefügt werden
 und \SeaSet, bei der das kleinere Array zum \texttt{set} hinzugefügt wird.
-Auch bei den beiden Optionen könnte es sinnvoll sein, wenn die vorsortiert Invariante aufrecht erhalten wird.
+Auch bei diesen beiden Optionen könnte es sinnvoll sein, wenn die vorsortiert Invariante aufrechterhalten wird.
 Dies hängt ebenfalls von der internen Implementierung des Suchbaums ab.
 \\
 
@@ -84,7 +86,7 @@ in einer Hash-Tabelle. Ein Vorteil einer Hash-Tabelle liegt darin,
 dass das Einfügen und Suchen von Elementen
 erwartet in konstanter Zeit erfolgt.
 Ebenfalls gibt es hierbei wieder die Varianten, 
-in denen das größere Array in das unordered\_set eingefügt wird (\USetSea) 
+in denen entweder das größere Array in das \texttt{unordered\_set} eingefügt wird (\USetSea) 
 oder das kleinere (\SeaUSet).{}
 Asymptotisch ergibt sich in beiden Fällen eine \underline{erwartete} Laufzeit von $\O(|(N(u)| + |N(v)|)$.
 Diese Laufzeit hängt jedoch stark von der Implementierung und dem Füllgrad  der Hash-Tabelle ab. 
@@ -92,7 +94,7 @@ Schließlich werden wir auch bei den letzten beiden Methoden prüfen,
  ob die Invariante eventuell zu einer besseren Laufzeit führt.
 \\
 
-Zusammenfassend betrachten wir also insgesamt sieben verschiedene Möglichkeiten um die disjunkte
+Zusammenfassend betrachten wir also insgesamt sieben verschiedene Möglichkeiten, um die disjunkte
 und gemeinsame Nachbarschaft zu berechnen. Für jede dieser Varianten prüfen wir zusätzlich,
 ob die vorsortiert Invariante zu einer verbesserten Laufzeit führt oder ob es sich
 nicht lohnt, diese aufrechtzuerhalten.
@@ -113,12 +115,12 @@ $D_{u} = N_{d}(u,v) \cap N(u)$, in der die disjunkten Nachbarn von Knoten $u$ li
 und $D_{v} = N_{d}(u,v) \cap N(v)$, in der die disjunkten Nachbarn von $v$ liegen. Die anfänglich
 leeren Arrays, in denen die Ausgabe --- also die neuen Nachbarschaften von $u$ und $v$ --- zurückgegeben 
 werden soll, bezeichnen wir wieder als $N(u)$ und $N(v)$.
-Wir betrachten zwei unterchiedliche Möglichkeiten.
+Wir betrachten zwei unterschiedliche Möglichkeiten.
 \\
 
 Die erste Idee besteht darin,  
 das Array der disjunkten Nachbarschaft zufällig zu permutieren, sodass jedes Element an 
-einer zufälligen Position steht. Um nun die beide \glqq neuen\grqq{} Nachbarschaften von $u$ und $v$ zu erstellen,
+einer zufälligen Position steht. Um nun die beiden \glqq neuen\grqq{} Nachbarschaften von $u$ und $v$ zu erstellen,
 werden zuerst die Knoten aus der gemeinsamen Nachbarschaft in die leeren Arrays $N(u)$ und $N(v)$ kopiert.
 Dann werden die ersten $D_{u}$ Elemente aus dem permutierten Array in $N(u)$ kopiert, die restlichen
 in $N(v)$. Somit haben die Nachbarschaften durch den Tausch ihre ursprüngliche Größe nicht verändert, es gilt $|N(u)| = \deg(u)$ und
@@ -150,19 +152,18 @@ Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beis
 \end{figure}
 Bei diesem Verfahren fällt  jedoch auf, dass einige Elemente beim Permutieren unnötig vertauscht werden.
 Für jedes Element ist es eigentlich nur entscheidend, ob es unter den ersten $D_{u}$  liegt (also zum Array
-$N(u)$ hinzugefügt wird) oder nicht. Auf welcher Position genau es in 
+$N(u)$ hinzugefügt wird) oder nicht. Auf welcher Position es genau in 
 diesen Bereichen liegt, ist nicht von Relevanz. Ohne Beschränkung der Allgemeinheit gelte 
 $N(u) \le N(v)$. Dann kann man
 also die Laufzeit dieser Variante verbessern, indem nicht das ganze Array der disjunkten Nachbarschaft zufällig permutiert 
-wird, sondern nur die ersten $D_{u}$ \red{vielen} Elemente zufällig gewählt werden.
+wird, sondern nur die ersten $D_{u}$ Elemente zufällig gewählt werden.
  Dies setzt die Funktion 
 \texttt{random\_bipartition\_shuffle} um.
 \\
-\newpage{}
 
 Ein Nachteil dieser Methode besteht jedoch darin, dass durch das zufällige Vertauschen die beiden resultierenden Arrays
 $N(u)$ und $N(v)$ im Allgemeinen nicht mehr sortiert sind. Damit wird die im Abschnitt \ref{sec:common} beschriebene
-Invariante eventuell verletzt. Möchte man die Invariante aufrecht erhalten, müssen somit die beiden Arrays
+Invariante eventuell verletzt. Möchte man die Invariante aufrechterhalten, müssen somit die beiden Arrays
 in einem letzten Schritt nochmals sortiert werden.
 Wir nennen diese Variante \perm.
 \\
@@ -171,24 +172,24 @@ Die zweite Möglichkeit, die wir betrachten, werden wir als \distr{} bezeichnen.
 Die Idee besteht dabei, dass wir über jedes Element des Arrays $N_{d}(u,v)$ iterieren und eine Wahrscheinlichkeit
 berechnen, mit
 der das Element in die Nachbarschaft von $u$ (beziehungsweise $v$) eingefügt werden soll. Dann wird in einem 
-Bernoulli Experiment mit genau dieser Wahrscheinlichkeit ein Zufallsbit gezogen. Je nachdem, welchen
+Bernoulli Experiment mit genau dieser Wahrscheinlichkeit ein Zufallsbit gezogen. Je nachdem welchen
 Wert das Zufallsbit hat, wird das Element dann entweder in $N(u)$ oder in $N(v)$ kopiert. Dies wird so lange
-wiederholt, bis eines der beiden Arrays seine maximale Kapazität erreicht hat. 
+wiederholt bis eines der beiden Arrays seine maximale Kapazität erreicht hat. 
 \\
 
 Um die Wahrscheinlichkeit zu berechnen werden am Anfang zwei Variablen $n_u$ und $n_v$ initialisiert, 
 welche den Kapazitäten der beiden Arrays $u$ und $v$ entsprechen, wenn die Elemente aus der 
-gemeinsamen Nachbarschaft nicht berücksichtigt werden. \red{Es gilt also $n_v = |D_{v}|$ und
-$n_u= |D_{u}|$.}
+gemeinsamen Nachbarschaft nicht berücksichtigt werden. Es gilt also $n_u = |D_{u}|$ und
+$n_v= |D_{v}|$.
 Damit hat das erste Element des Arrays $N_{d}(u,v)$ eine Wahrscheinlichkeit von $p_u = \frac{n_u}{n_u+n_v}$, dem
 Array $N(u)$ hinzugefügt zu werden und analog eine Wahrscheinlichkeit $p_v = \frac{n_v}{n_u+n_v}$, um
 in $N(v)$ zu gelangen. Offensichtlich gilt $p_u + p_v = 1$. Dann wird mit einer der beiden
-Wahrscheinlichkeiten das Bernoulli Experiment durchgeführt, wobei es egal ist, welche Wahrscheinlichkeit
+Wahrscheinlichkeiten das Bernoulli Experiment durchgeführt, wobei es irrelevant ist, welche Wahrscheinlichkeit
 man dazu wählt, da $p_u$ genau die Gegenwahrscheinlichkeit von $p_v$ ist und umgekehrt. 
 Wählt man beispielsweise $p_u$ und das Experiment liefert eine eins, dann wird das aktuelle Element
 in $N(u)$ kopiert. Dabei
 hat sich aber offensichtlich die verbleibende Kapazität des Arrays $N(u)$ verringert. Also muss
-der Wert $n_u$ dekrementiert werden. Analoges gilt, falls das Element in die Nachbarschaft von $v$ kopiert wird.
+der Wert $n_u$ dekrementiert werden. Dies gilt analog, falls das Element in die Nachbarschaft von $v$ kopiert wird.
 Somit ändern sich nach jeder Iteration die Wahrscheinlichkeiten $p_u$ beziehungsweise $p_v$.
 Gilt nach irgendeinem Zeitpunkt entweder $n_u = 0$ oder $n_v = 0$, steht offenbar in einem der Arrays 
 keine freie Kapazität mehr zur Verfügung. Somit werden die übrigen Elemente, die noch in $N_{d}(u,v)$ vorhanden sind, 
@@ -197,37 +198,39 @@ einfach dem anderen Array hinzugefügt.
 
 An dieser Stelle  kann man jedoch noch eine Optimierung vornehmen.
 Da bei dem Bernoulli Experiment die Wahrscheinlichkeit $p_{u}$ --- beziehungsweise $p_{v}$ --- eine
-Dezimalzahl ist, werden zur Berechnung laufzeitintensive Gleitkommaopertationen 
+Dezimalzahl ist, werden zur Berechnung laufzeitintensive Gleitkommaoperationen 
 benötigt. Um dies zu umgehen, kann man eine zufällige Ganzzahl aus dem Intervall
 $[0, n_{u} + n_{v}-1]$ ziehen. Anschließend prüft man, ob die gezogene Zahl echt kleiner als $n_{u}$ ---
 beziehungsweise $n_{v}$ ---
-ist. Wenn dies der Fall ist, fährt man genauso fort wie wenn das Bernoulli Experiment eine eins
+ist. Wenn dies der Fall ist, fährt man genauso fort, wie wenn das Bernoulli Experiment eine eins
 zurückgibt. Auf diese Weise 
-ergeben sich für ein Element die gleichen Wahrscheinlichkeiten, in das jeweilige Array zu geraten, wie
+ergeben sich für ein Element die gleichen Wahrscheinlichkeiten in das jeweilige Array zu geraten, wie
 beim Bernoulli Experiment. Dabei werden aber ausschließlich \red{Integer} Operationen verwendet, welche
 von der Recheneinheit schneller verarbeitet werden können.
 \\
 
 \red{Dieses Vorgehen ist auch als Reservoir Sampling\cite{DBLP:journals/toms/Vitter85} bekannt.}
 \\
+
 Ein Vorteil dieser Methode ist, dass die in \ref{sec:common} beschriebene Invariante aufrecht erhalten werden kann.
 War das Array der disjunkten Nachbarschaft vor Beginn dieser Methode aufsteigend sortiert,
 dann sind auch die bisherigen Elemente der Arrays $N(u)$ und $N(v)$ aufsteigend sortiert, da für jedes
 Element nacheinander entschieden wurde, ob es zur Nachbarschaft von $u$ oder von $v$ hinzugefügt wird und dabei die
 Reihenfolge der Elemente untereinander nicht verändert wurde.
 \\
-Zum Schluss müssen noch die die gemeinsamen Nachbarn zu den Arrays $N(u)$ und $N(v)$ hinzugefügt werden.
+
+Zum Schluss müssen noch die gemeinsamen Nachbarn zu den Arrays $N(u)$ und $N(v)$ hinzugefügt werden.
 Möchte man die Invariante aufrecht erhalten, dann sind die beiden Arrays wie beschrieben schon
 aufsteigend sortiert. Da auch die Elemente aus $N_{c}(u,v)$ aufsteigend sortiert sind, erhält man
 die endgültigen Arrays von $N(u)$ und $N(v)$ durch ein Mergen mit $N_{c}(u,v)$. Soll die Invariante jedoch
 nicht aufrecht erhalten werden, reicht es aus, die Elemente aus $N_{c}(u,v)$ jeweils an das Ende der beiden Arrays
 zu kopieren.
 \\
-\\
+
 Wird die Variante vorsortiert nicht verwendet, ergibt sich für \perm{} und \distr{}
 die gleiche asymptotische Laufzeit von $\O(|N(u)| + |N(v)|)$. 
 Beim Verwenden der vorsortiert Variante ändert sich die asymptotische Laufzeit für \distr{}
-nicht, da das mergen ebenfalls in linearer Zeit ausgeführt werden kann. Bei \perm{}
+nicht, da das Mergen ebenfalls in linearer Zeit ausgeführt werden kann. Bei \perm{}
 hingegen müssen die beiden Arrays nochmals sortiert werden. Somit entsteht
 eine Laufzeit von $\O(|N(u)| \cdot \log(|N(u)|) + |N(v)| \cdot \log(|N(v)|))$.
 
@@ -287,7 +290,10 @@ Invariante das beste Laufzeitverhalten. Deswegen gehen wir an dieser Stelle
 noch einmal genauer auf diese beiden Methoden ein, indem wir sie in Pseudocode
 beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben, in Algorithmus \ref{algo:distr}
 \distr.
-%\red{...noch was dazu schreiben...?}
+\\
+
+Bei beiden Varianten wird davon ausgegangen, dass die vorsortiert Invariante genutzt wird.
+Somit fällt bei Algorithmus \ref{algo:sortsort} beispielsweise das anfängliche Sortieren weg.
 
 \begin{algorithm}
   \caption{SortSort}\label{algo:sortsort}
@@ -334,7 +340,7 @@ beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben, in Al
 	\State nv $\gets$ V.\texttt{size()} - common.\texttt{size()} \Comment{Kapazität von $v$}
 	\State i = 0
 	\While{i < disjoint.\texttt{size()}}
-		\State X $\sim \mathcal{B}(\frac{\text{nu}}{\text{nu}+\text{nv}})$  \Comment{ziehe ein Zufallsbit Bernoulli verteilt mit Wahrscheinlichkeit $\frac{nu}{nu+nv}$}
+		\State X $\sim \mathcal{B}(\frac{\text{nu}}{\text{nu}+\text{nv}})$  \Comment{Zufallsbit Bernoulli verteilt mit Wahrscheinlichkeit $\frac{nu}{nu+nv}$}
 
 		\If{X==1}
 			\State U.\texttt{append(}disjoint[i]\texttt{)} \Comment{Füge das Element in U ein}
@@ -346,8 +352,8 @@ beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben, in Al
 			\State nv- -\Comment{aktualisiere die Kapazität}
 		\EndIf{}
 	\EndWhile{}	
-	\State U.\texttt{merge(}common\texttt{)} \Comment{Merge U mit der gemeinsame Nachbarschaft}
-	\State V.\texttt{merge(}common\texttt{)} \Comment{Merge V mit der gemeinsame Nachbarschaft}
+	\State U.\texttt{merge(}common\texttt{)} \Comment{Merge U mit der gemeinsamen Nachbarschaft}
+	\State V.\texttt{merge(}common\texttt{)} \Comment{Merge V mit der gemeinsamen Nachbarschaft}
 	\State \textbf{return} U, V
 \EndProcedure
 \end{algorithmic}
@@ -359,9 +365,9 @@ beschreiben. In Algorithmus \ref{algo:sortsort} ist \SorSor{} beschrieben, in Al
 
 
 
-%\red{bei vorsortiert fällt Zeile \ref{algo:inv1} und \ref{algo:inv2} raus!!}
-%\\
-%\\
-%\red{Distribution}
+
+
+
+
 
 

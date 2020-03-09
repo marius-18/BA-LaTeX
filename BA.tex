@@ -1,4 +1,7 @@
-\documentclass[a4paper, 11pt]{scrbook}
+%\documentclass[a4paper, 11pt]{scrbook}
+\documentclass[a4paper,twoside, 11pt, openright]{scrbook}
+
+\RequirePackage[inner=35mm, outer=25mm, top=20mm, bottom=30mm]{geometry}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some common includes. Add additional includes you need.
@@ -6,7 +9,7 @@
 \RequirePackage[ngerman]{babel}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
-\RequirePackage[margin=23mm,bottom=30mm]{geometry}
+%\RequirePackage[margin=23mm,bottom=30mm]{geometry}
 \RequirePackage{graphicx}
 \RequirePackage{amsmath,amsfonts,amssymb,amsthm}
 \RequirePackage{listingsutf8}
@@ -95,8 +98,8 @@
 \newcommand{\true}{\textbf{true}}
 \newcommand{\false}{\textbf{false}}
 
-\newcommand{\gc}{Global Curveball}
-\newcommand{\ct}{Curveball-Tausch}
+\newcommand{\gc}{Global-Curveball}
+\newcommand{\ct}{Curveball Tausch}
 \newcommand{\cb}{Curveball}
 
 \newcommand{\partvek}{Partitions-Array}
@@ -107,7 +110,7 @@
 \newcommand{\fr}{fraction}
 
 
-\newcommand{\nk}{NetworKit }
+\newcommand{\nk}{NetworKit}
 \newcommand{\cpp}{C++ }
 
 \newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}

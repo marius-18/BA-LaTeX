@@ -17,8 +17,8 @@ besitzen. Im Zufallsgraph soll also jeder Knoten denselben Grad haben wie im ori
 Ein Algorithmus, welcher diese Eigenschaft erfüllt, ist beispielsweise Curveball \cite{curveball}.
 Hierbei wird ein Graph \glqq randomisiert, indem eine Sequenz an lokalen Modifikationen ausgeführt wird\grqq\footnote{\label{ftn:survey}frei übersetzt aus \cite{penschuck2020recent} Abschnitt 6.4}.
 Diese lokalen Modifikationen werden als \ct{} bezeichnet. Bei einem \ct{} werden von zwei zufälligen 
-Knoten die disjunkten Nachbarschaften durchgetauscht. Damit bleiben die Knotengrade unverändert.
-Um den Graph zu randomisieren, werden einige von diesen \ct{en} hintereinander auf jeweils zufälligen Knoten ausgeführt.
+Knoten die disjunkten Nachbarschaften durchgetauscht, damit bleiben die Knotengrade unverändert.
+Um den Graph zu randomisieren, werden einige dieser \ct{e} hintereinander auf jeweils zufälligen Knoten ausgeführt.
 Um sicherzugehen, dass alle Knoten Teil eines \ct{es} waren, werden auf diese Weise
 \glqq in Erwartung $\Theta(n\log(n))$  \ct{e} benötigt\grqq \footnote{frei übersetzt aus \cite{DBLP:conf/esa/CarstensH0PTW18} Abschnitt 3.3}.
 Um dies zu umgehen, \red{wurde} eine Erweiterung namens \gc{} \cite{DBLP:conf/esa/CarstensH0PTW18} eingeführt. 
@@ -39,10 +39,11 @@ Algorithmus erreicht werden.
 Der neu entwickelte Algorithmus wird unter dem Namen \texttt{BipartiteGlobalCurveball} 
 Teil vom Open-Source Projekt \nk{} werden.
 \\
-\\
-\newpage
-Zu Beginn dieser Arbeit werden die wichtigsten Begriffe und mathematischen Grundlagen definitiert.
-Im Anschluss werden verschiedene Methoden, \gc{} umzusetzen,  aufgezeigt und \red{ unter Einbeziehung 
+
+%\newpage
+Zu Beginn dieser Arbeit werden die wichtigsten Begriffe und mathematischen Grundlagen definiert.
+Im Anschluss werden verschiedene Methoden zur Umsetzung von \gc{}  aufgezeigt und \red{ unter Einbeziehung 
 theoretischer Aspekte miteinander verglichen.} 
-Mit Hilfe von Benchmark Tests wird schließlich die Methode ausgewählt, welche die geringste Laufzeit 
-aufweist.
+Mit Hilfe von Benchmark-Tests wird schließlich die Methode ausgewählt, welche die geringste Laufzeit 
+aufweist. Zum Abschluss der Arbeit wird die neu entwickelte Variante \texttt{BipartiteGlobalCurveball} 
+mit dem schon existierenden \gc{} verglichen.
