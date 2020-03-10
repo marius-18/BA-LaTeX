@@ -38,10 +38,10 @@ Um ein gutes Bild zu erhalten, sollten folgende Fälle abgedeckt sein:
 	\item Der Anteil an gemeinsame Elementen  ist klein
 \end{itemize}
 
-Um dies zu erreichen, führen wir mehrere Runden durch, in denen das Array large von anfänglich 128
-Elementen auf bis zu 4.000.000 Elementen vergrößert wird. Innerhalb jeder Runde werden mehrere Durchläufe 
-durchgeführt, bei denen Array small eine Größe zwischen 32 Elementen und der jeweiligen Größe von large hat.
-Für jeden dieser Durchgänge werden die beiden Arrays mit zufälligen, aber paarweise verschiedenen
+Um dies zu erreichen, wird jedes Experiment in  mehreren Runden durchgeführt, in denen das Array large von anfänglich 128
+Elementen auf bis zu 4.000.000 Elementen vergrößert wird. 
+Jede Runde besteht aus mehreren Durchläufe, bei denen das Array small eine Größe zwischen 32 Elementen und der jeweiligen Größe von large hat.
+Für jeden dieser Durchläufe werden die beiden Arrays mit zufälligen, aber paarweise verschiedenen
 Werten befüllt, bis sie die entsprechende Größe haben. 
 Dabei existiert jedoch kein Element, welches in beiden Arrays 
 enthalten ist, was dazu führen würde, dass ein \gc{} 
@@ -64,6 +64,7 @@ Der Wert \fett{\fr} steht dabei für den prozentualen Anteil der gemeinsamen Ele
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Messung}
+\label{sec:messung}
 Auf die im vorherigen Abschnitt beschriebene Weise werden die verschiedenen Instanzen erstellt und
 mittels Google Benchmark die Zeit gemessen. Aus Zeitgründen werden jedoch nicht alle Werte 
 für \la{} und \sm{} erstellt. Deshalb verdoppeln wir in jedem Schritt die Werte von \la{} und \sm{,}
@@ -141,7 +142,7 @@ Dieser Plot legt ebenfalls nahe, sich auf die beiden Varianten (\SeaUSet, \false
 die Slowdowns vergleichsweise klein sind. Jedoch lässt sich auch hier nicht bestimmen, welche der beiden
 Varianten die bessere ist. Ein Vorteil von (\SeaUSet, \false, \perm) ist, 
 dass die Methode auf den meisten Instanzen einen Slowdown
-von eins hat --- was wir ja auch schon in Abbildung \ref{fig:messung_counting} gesehen haben ---
+von eins hat ---was wir ja auch schon in Abbildung \ref{fig:messung_counting} gesehen haben---
 und damit langsamer anwächst. Ein Nachteil liegt aber darin, dass der Slowdown für manche Instanzen
 eine Größe von bis zu 10.0 erreicht, während der Slowdown von  (\SorSor, \true, \distr) durch den maximalen
 Wert von 3.5 beschränkt ist (in Abbildung \ref{fig:messung_slowdown} als gestrichelte Linie eingezeichnet).
@@ -230,7 +231,7 @@ eine Speicherallokation ausgeführt wird, was sehr laufzeitintensiv ist. Ist die
 Eingabe bereits sortiert, kann dies von der Implementierung des Binärbaums ausgenutzt werden.
 \\
 
-Zusammenfassend wirkend die gemessenen mittleren Laufzeiten 
+Insgesamt wirken die gemessenen mittleren Laufzeiten 
 also plausibel.
 
 
@@ -244,7 +245,7 @@ also plausibel.
 Abschließend muss anhand der Messdaten entschieden werden, welche Variante zum Einsatz für
 einen \ct{} am besten geeignet ist.
 Zusammenfassend haben wir im Abschnitt \ref{ref:auswertung} festgestellt, 
-dass nur die Varianten (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) zur Auswahl stehen.
+dass hierfür nur die Varianten (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) zur Auswahl stehen.
 Während die eine Variante am häufigsten die geringste Laufzeit hat, liegt die andere 
 bei der durchschnittlichen Laufzeit weiter vorne. Dies liegt vor allem daran, dass sich 
 die Laufzeiten bei den Instanzen, auf denen (\SeaUSet, \false, \perm) \glqq gewinnt\grqq{}, kaum unterscheiden.
@@ -253,13 +254,14 @@ Faktor von circa 11 schneller ist.
 \\
 
 Um ein bestmögliches Laufzeitverhalten für einen \ct{} zu erreichen, könnte man auf die Idee kommen, 
-beide Varianten zusammen zu nutzen. Man könnte sich eine Heuristik überlegen, die jeweils angibt 
+beide Varianten zusammen zu nutzen
+und dabei eine Heuristik entwickeln, die jeweils angibt ,
 auf welcher Instanz man welche Variante verwenden sollte. Somit würde bei jedem \ct{} abhängig von 
 der Eingabe, also den Nachbarschaften, entschieden werden, welche der beiden Instanzen man benutzt. 
-Das Problem dabei liegt jedoch darin, dass bei diesen Varianten einmal die vorsortiert Invariante
+Das Problem dabei liegt jedoch darin, dass bei diesen Varianten einmal die Vorsortierung
 genutzt wird und einmal nicht. Dies ist allerdings nicht beides gemeinsam möglich. Entweder hält man die
-Nachbarschaften immer sortiert, oder nicht. Man muss sich also für eine Möglichkeit der
-Invariante entscheiden. Dadurch ändert sich dann aber zwangsläufig  eine der beiden Varianten. 
+Nachbarschaften immer sortiert, oder nicht. Man muss sich also für eine Möglichkeit dieser
+Variante  entscheiden. Dadurch ändert sich dann aber zwangsläufig  eine der beiden anderen Varianten. 
 Entscheidet man sich die Nachbarschaften sortiert zu halten, würde (\SeaUSet, \false, \perm) zu (\SeaUSet, \true, \perm){}
 werden, andernfalls würde sich (\SorSor, \true, \distr) zu (\SorSor, \false, \distr) verändern.
 Diese beiden \glqq veränderten\grqq{} Varianten haben aber jeweils deutlich schlechtere Laufzeiten
@@ -268,12 +270,12 @@ als die ursprünglichen.
 
 Es ist also nicht sinnvoll möglich, die beiden Varianten miteinander zu kombinieren. Wir müssen uns
 also auf eine Variante festlegen. Dies ist die Variante (\SorSor, \true, \distr), da sie im Vergleich zur
-Alternative --- wie schon beschrieben ---
+Alternative ---wie schon beschrieben---
 in kaum einer Instanz eine wesentlich schlechtere Laufzeit hatte, jedoch auf manchen Instanzen wesentlich
 bessere Laufzeiten. Außerdem ist es die Variante mit der geringsten mittleren Laufzeit. 
 Ein Vorteil dieser Variante neben der Laufzeit liegt noch in der Einfachheit. So werden
 lediglich die beiden Arrays sortiert und linear durchlaufen. Es muss keine weitere Datenstruktur
-erstellt werden --- wie bei der anderen Variante das \texttt{unordered\_set} --- und damit wird
+erstellt werden ---wie bei der anderen Variante das \texttt{unordered\_set}--- und damit wird
 auch kein zusätzlicher Speicherplatz verbraucht.
 
 
@@ -290,7 +292,7 @@ Variante, sowohl im parallelen als auch im sequenziellen Fall,
 \\
 
 Dazu werden wir verschiedene Test-Instanzen erstellen.
-Als Grundlage dient ein Netflix Datensatz\cite{kaggle}, welcher Nutzer- und Film-Knoten enthält, 
+Als Grundlage dient ein Netflix-Datensatz\cite{kaggle}, welcher Nutzer- und Film-Knoten enthält, 
 wobei eine gerichtete Kante von einem Film zu einem Nutzer gezogen wird, wenn dieser den 
 Film gut bewertet hat. Damit liegen die Film-Knoten in einer Partitionsklasse und 
 die Nutzer-Knoten in der anderen.
@@ -332,12 +334,12 @@ Um zusätzlich zu sehen, wie stark die Parallelisierung die Laufzeit des biparti
 untersuchen.
 \\
 
-Alle vier beschriebenen Varianten werden nacheinander auf dem gleichen Prozessor ausgeführt, welcher 16
-Kerne besitzt. Es werden bei jeder Variante insgesamt 10 Globale Tausche vorgenommen.
+Alle vier beschriebenen Varianten werden nacheinander auf dem gleichen Prozessor ausgeführt, welcher 8
+Kerne mit Hyperthreading besitzt. Es werden bei jeder Variante insgesamt 10 Globale Tausche vorgenommen.
 In Abbildung \ref{fig:speedup_komplett} sind die gemessenen Laufzeiten in Form
 eines Balkendiagramms grafisch dargestellt.
-Um eventuelle Messfehler zu verringern, wurde jede Messung zehn mal 
-wiederholt. Als Datenpunkte sind jeweils die Mittelwerte der Messungen aufgetragen.
+Um eventuelle Messfehler zu verringern, wurde jede Messung zehnmal 
+wiederholt. Dabei sind jeweils die Mittelwerte der Messungen aufgetragen.
 \\
 
 Dabei fällt auf, dass sich die Laufzeiten von \cb{} und bipartitem \gc{} auf den
@@ -355,17 +357,20 @@ Für die sequentielle Variante des \gc{} lässt sich sagen, dass die Laufzeiten 
 einen annähernd konstanten Faktor geringer sind, als die von den beiden \cb{} Varianten. 
 Dies liegt vor allem daran, 
 dass ein einzelner \ct{} auf bipartiten Graphen einfacher aufgebaut ist, als auf allgemeinen Graphen.
-So müssen lediglich die disjunkten Nachbarschaften ermittelt und getauscht werden, \red{während...?}.
+Auch die verbesserte Datenstruktur im bipartiten \gc{} führt zu der geringeren Laufzeit.
+Während im bipartiten \gc{} durch das Tauschen der Nachbarschaft direkt die Datenstruktur
+aktualisiert wird, müssen beim \cb{} noch Kanten zur Adjazenzlistendarstellung hinzugefügt, 
+beziehungsweise entfernt, werden.
 Auf der größten Instanz wird somit ein Speedup von ungefähr 2 erreicht.
-Im Vergleich mit der parallelen Version des bipartiten \gc{}, besitzt dieser in den meisten Fällen
+Im Vergleich mit der parallelen Version des bipartiten \gc{}, besitzt diese in den meisten Fällen
 eine geringere Laufzeit, als die sequenzielle Variante. Dies liegt an der Parallelisierung und
 war damit zu erwarten. Einzig auf den Instanzen mit lediglich 10.000 Knoten, hat die sequenzielle
 Variante eine geringere Laufzeit. Dies liegt vermutlich an einem Overhead, der durch die Koordination
-der einzelnen Parallelen Threads durch OpenMP entsteht.
+der einzelnen parallelen Threads durch OpenMP entsteht.
 \\
 
 Insgesamt fällt jedoch auf, dass die Laufzeiten bei wachsender Größe für die \cb{}
-Variante stark ansteigen, wobei die Laufzeit vom bipartiten \gc{} im Vergleich dazu
+Variante stark ansteigen, wobei die Laufzeit vom parallelen bipartiten \gc{} im Vergleich dazu
 relativ konstant bleiben.
 \begin{figure}
 \centering

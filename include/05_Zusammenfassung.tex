@@ -4,16 +4,43 @@
 
 Zum Abschluss dieser Arbeit lässt sich feststellen, dass das Ziel 
 der Anpassung von \gc{} an bipartite Graphen zur Reduzierung der Laufzeit erreicht werden konnte.
-Durch die Parallelisierung der einzelnen \ct{e} wird der Algorithmus derart beschleunigt, dass --- wie
-in Kapitel \ref{kap:result} gezeigt --- auf manchen Testinstanzen ein
-Speedup von bis zu einem Wert von 17 erreicht wird, was ein äußerst befriedigendes Resultat darstellt. 
-Um eine generellere Aussage über den Speedup vom bipartiten \gc{} im Vergleich zum Standard  \gc{}
-zu treffen, müsste man jedoch noch deutlich mehr Laufzeitmessungen auf verschiedenen Instanzen
-durchführen.
 \\
 
-Im Bezug auf die experimentelle Auswertung zur Bestimmung der schnellsten Methode 
+Durch die Parallelisierung der einzelnen \ct{e} wird der Algorithmus derart beschleunigt, dass ---wie
+in Kapitel \ref{kap:result} gezeigt--- auf manchen Testinstanzen ein
+Speedup von bis zu einem Wert von 17 erreicht wird, was ein äußerst befriedigendes Resultat darstellt. 
+\\
+
+Führt man den bipartiten \gc{} in sequenzieller Weise ---ohne Parallelisierung--- aus, lässt 
+sich bereits eine Halbierung der Laufzeit im Vergleich zum Standard \cb{} feststellen.
+Dazu trägt vor allem die 
+für den bipartiten \gc{} eigens angepasste Datenstruktur bei, welche die Anforderungen eins \ct{es} auf bipartiten
+Graphen in geringerer Laufzeit unterstützt. 
+Weiter führt zu diesem Laufzeitvorteil auch die Auswahl der besten Variante, 
+einen \ct{} umzusetzen, welche in Kapitel \ref{sec:entscheidung} beschrieben ist.
+\\
+
+Das experimentelle Untersuchen der verschiedenen Varianten war dabei sehr umfangreich und zeitintensiv.
+Zum einen mussten die einzelnen Methoden der Abschnitte \ref{sec:common} und \ref{sec:trade} aufwändig in \cpp{}
+implementiert werden. Zum anderen war der Entwicklungsprozess sehr zeitaufwändig, 
+da die Messungen, welche in Kapitel \ref{sec:messung} beschrieben
+werden, mehrfach wiederholt werden mussten.
+Aufgrund der hohen Anzahl an Test-Instanzen  benötigt eine vollständige Messung jeweils eine Gesamtzeit 
+von etwa 19 Stunden. 
+\\
+
+Im Hinblick auf den erreichten Speedup kann festgestellt werden, dass sich der hohe Aufwand 
+gelohnt hat.
+\\
+
+Um jedoch eine generellere Aussage über den Speedup vom bipartiten \gc{} im Vergleich zum Standard  \gc{}
+ treffen zu können, müssten noch deutlich mehr Laufzeitmessungen auf verschiedenen Instanzen
+durchgeführt werden.
+\\
+
+Auch im Bezug auf die experimentelle Auswertung zur Bestimmung der schnellsten Methode, 
 einen \ct{} umzusetzen, könnte man noch weitere Untersuchungen vornehmen.
+\\
 \\
 
 Zum einen werden die Varianten nur auf Instanzen getestet, welche Nachbarschaften mit 

@@ -24,9 +24,9 @@ ob es entweder in beiden Arrays vorkommt oder nur in einem von den beiden. Dafü
 gibt es verschiedene algorithmische Ansätze.
 \\
 
-Als ersten naiven Ansatz könnte man für jedes Element des Arrays $N(u)$ das gesamte andere 
-Array $N(v)$ per linearer Suche nach diesem Element durchsuchen. Hierfür ergibt sich eine Laufzeit von
-$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber nicht sinnvoll, da wir 
+Als ersten naiven Ansatz könnte man für jedes Element $x \in N(u)$ mittels
+ linearer Suche überprüfen, ob $x$ auch in $N(v)$ enthalten ist. Hierfür ergibt sich eine Laufzeit von
+$\O(|N(u)|\cdot|N(v)|)$. Dies ist aber problematisch, da wir 
 im Falle von massiven Graphen davon ausgehen können, dass die Nachbarschaften
  groß werden. 
 \\
@@ -106,7 +106,7 @@ für das Sortieren entfällt.
 \\
 
 Eine weitere Methode, um viele Werte schnell zu durchsuchen, bietet die Datenstruktur \texttt{set}, welche
-einem binären Suchbaum entspricht, \red{beispielsweise eines Rot-Schwarz-Baums.}
+einem binären Suchbaum entspricht, beispielsweise einem Rot-Schwarz-Baum.
 Dabei wird jedes Element des einen Arrays in den Suchbaum eingefügt. 
 Für jedes Element des anderen Arrays kann nun in logarithmischer
 Zeit bestimmt werden, ob es im \texttt{set} und somit auch im ursprünglichen Array vorhanden ist.
@@ -168,7 +168,7 @@ einer zufälligen Position steht. Um nun die beiden \glqq neuen\grqq{} Nachbarsc
 werden zuerst die Knoten aus der gemeinsamen Nachbarschaft in die leeren Arrays $N'(u)$ und $N'(v)$ kopiert.
 Dann werden die ersten $|D_{u}|$ Elemente aus dem permutierten Array in $N'(u)$ kopiert, die restlichen
 in $N'(v)$. Somit haben die Nachbarschaften durch den Tausch ihre 
-ursprüngliche Größe nicht verändert, es gilt $|N'(u)| = \deg(u)$ und
+ursprüngliche Größe nicht verändert und es gilt $|N'(u)| = \deg(u)$ und
 $|N'(v)| = \deg(v)$.
 Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beispiel zu sehen.
 \begin{figure}
@@ -225,7 +225,7 @@ Wert das Zufallsbit hat, wird das Element dann entweder in $N'(u)$ oder in $N'(v
 wiederholt bis eines der beiden Arrays seine maximale Kapazität erreicht hat. 
 \\
 
-Um die Wahrscheinlichkeit zu berechnen werden am Anfang zwei Variablen $n_u$ und $n_v$ initialisiert, 
+Um die Wahrscheinlichkeit zu berechnen, werden am Anfang zwei Variablen $n_u$ und $n_v$ initialisiert, 
 welche den Kapazitäten der beiden Arrays $u$ und $v$ entsprechen, wenn die Elemente aus der 
 gemeinsamen Nachbarschaft nicht berücksichtigt werden. Es gilt also $n_u = |D_{u}|$ und
 $n_v= |D_{v}|$.
@@ -253,7 +253,7 @@ echt kleiner als $n_{u}$ ---beziehungsweise $n_{v}$---
 ist. Wenn dies der Fall ist, fährt man genauso fort, wie wenn das Bernoulli-Experiment eine eins
 zurückgibt. Auf diese Weise 
 ergeben sich für ein Element die gleichen Wahrscheinlichkeiten in das jeweilige Array zu geraten, wie
-beim Bernoulli-Experiment. Dabei wird aber ausschließlich \red{Arithmetik} auf ganzen Zahlen verwendet, welche
+beim Bernoulli-Experiment. Dabei wird aber ausschließlich Arithmetik auf ganzen Zahlen verwendet, welche
 von der Recheneinheit schneller verarbeitet werden kann.
 \\
 
@@ -265,10 +265,10 @@ Reihenfolge der Elemente untereinander nicht verändert wurde.
 \\
 
 Zum Schluss müssen noch die gemeinsamen Nachbarn zu den Arrays $N'(u)$ und $N'(v)$ hinzugefügt werden.
-Möchte man die Invariante aufrecht erhalten, dann sind die beiden Arrays wie beschrieben schon
+Möchte man die vorsortierte Variante aufrecht erhalten, dann sind die beiden Arrays wie beschrieben schon
 aufsteigend sortiert. Da auch die Elemente aus $N_{c}(u,v)$ aufsteigend sortiert sind, erhält man
 die endgültigen Arrays von $N'(u)$ und $N'(v)$ durch ein Mergen mit 
-$N_{c}(u,v)$. Soll die Invariante jedoch
+$N_{c}(u,v)$. Soll die Vorsortierung jedoch
 nicht aufrecht erhalten werden, reicht es aus, die Elemente aus 
 $N_{c}(u,v)$ jeweils an das Ende der beiden Arrays
 zu kopieren.
@@ -282,10 +282,10 @@ hingegen müssen die beiden Arrays nochmals sortiert werden. Somit entsteht
 eine Laufzeit von $\O(|N(u)| \cdot \log(|N(u)|) + |N(v)| \cdot \log(|N(v)|))$.{}
 \\
 
-\red{In Kapitel \ref{sec:entscheidung} wird sich herausstellen, dass der Algorithmus \distr{} ein Teil der
+In Kapitel \ref{sec:entscheidung} wird sich herausstellen, dass der Algorithmus \distr{} ein Teil der
 Variante ist, welche insgesamt die beste Laufzeit für einen \ct{} besitzt. Dabei wird die Variante
 mit der Vorsortierung genutzt. Aus diesem Grund ist die Methode \distr{} in Form von Pseudocode
-im Algorithmus \ref{algo:distr} gegeben.}
+im Algorithmus \ref{algo:distr} gegeben.
 
 
 \begin{algorithm}
@@ -327,7 +327,7 @@ im Algorithmus \ref{algo:distr} gegeben.}
 
 \section{\ct}
 Wie schon in Abschnitt \ref{sec:global_curveball} beschrieben, 
-besteht ein Curveball Tausch auf zwei verschiedenen Knoten $u, v \in V$  ($u\neq v$) daraus, die 
+besteht ein \ct{} auf zwei verschiedenen Knoten $u, v \in V$  ($u\neq v$) daraus, die 
 gemeinsame und disjunkte Nachbarschaft der beiden Knoten zu bestimmen
 und schließlich die Knoten aus der disjunkten Nachbarschaft zufällig zu tauschen.
 \\

@@ -138,7 +138,7 @@ Der in dieser Arbeit entwickelte bipartite \gc{} wird schließlich zu \nk{} hinz
 %%%%%% Global Curveball
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Global Curveball auf bipartiten Graphen}
+\section{\gc{} auf bipartiten Graphen}
 %\red{\Huge in der bipartiten verison.....}
 \label{sec:global_curveball}
 \gc{} ist ein Verfahren zum Randomisieren von Graphen.
@@ -254,7 +254,7 @@ Da es innerhalb der aktiven Partitionsklasse
 keine zwei Knoten gibt, welche durch eine Kante miteinander verbunden sind, 
 wird bei einem \ct{} auf beliebigen Knoten $u$ und $v$ der aktiven Partitionsklasse
 die Nachbarschaft eines anderen Knotens $x$ der gleichen Partitionsklasse nicht verändert. Somit
-\glqq überschneiden\grqq{} sich die einzelnen Curveball-Tausche nicht. Man kann sie daher zeitgleich, 
+\glqq überschneiden\grqq{} sich die einzelnen \ct{e} nicht. Man kann sie daher zeitgleich, 
 also parallel, ausführen. Diese Parallelität führt zu einem Laufzeitvorteil.
 \\
 
@@ -272,7 +272,7 @@ Stichprobe aller Graphen mit gleicher Gradsequenz erzeugt, kann man das Verfahre
 Dabei entsprechen die Zustände allen Graphen, deren Gradsequenz mit der des Ursprungsgraphen identisch
 ist.
 Zwischen zwei Zuständen gibt es genau dann einen Übergang, wenn die beiden Graphen durch einen
-\gc{}-Tausch ineinander überführbar sind. Diese Markov-Kette 
+\gc{} Tausch ineinander überführbar sind. Diese Markov-Kette 
 ist aperiodisch, irreduzibel und symmetrisch \cite{penschuck2020recent}.
  Ebenso ist die Markov-Kette endlich, da die Anzahl an
 Graphen mit gegebener Gradsequenz beschränkt ist. 
@@ -362,7 +362,7 @@ disjunkten Nachbarschaft tauschen.
 	\draw[out=-70, in=110, <->,>=latex, very thick] (7,-0.5) to  node[right= 5ex] {vertauschen} (8.5,-1) ;
 
   \end{tikzpicture}
-  \caption{Skizze eines \cb-Tausches auf den Arrays}
+  \caption{Skizze eines \ct{es} auf den Arrays}
   \label{fig:curveball_trade_vector}
   
 \end{figure}
@@ -374,7 +374,7 @@ disjunkten Nachbarschaft tauschen.
 
 Abbildung \ref{fig:curveball_trade_vector} illustriert, wie ein \ct{} 
 in der Datenstruktur ---also den beiden Arrays--- aussieht. Dabei werden zuerst die Elemente
-der beiden Vektoren in gemeinsame und disjunkte Nachbarschaft aufgeteilt. Die gemeinsame Nachbarschaft ist
+der beiden Arrays in gemeinsame und disjunkte Nachbarschaft aufgeteilt. Die gemeinsame Nachbarschaft ist
 wieder in grau gekennzeichnet, die disjunkte Nachbarschaft in gelb. 
 Bei einem \ct{} bleiben dann die Elemente 
 der gemeinsamen Nachbarschaft unverändert, während die Elemente aus der 
@@ -422,7 +422,7 @@ auf dem \partvek{} gegeben.
 Dazu wird das Array zuerst zufällig permutiert, sodass jedes Element an einer zufälligen
 Position steht.
 Dann wird jeweils unabhängig ein \ct{} auf den Elementen eins und zwei, drei und vier, usw. ausgeführt.
-Durch das zufällige Permutieren des Arrays zu Beginn wird also jeder der Curveball-Tausche auf zwei zufälligen
+Durch das zufällige Permutieren des Arrays zu Beginn wird also jeder der \ct{e} auf zwei zufälligen
 Knoten ausgeführt. Hat das \partvek{} eine ungerade Anzahl an Elementen, bleibt am Ende ein Element übrig, 
 welches nicht Teil von einem \ct{} ist. 
 
