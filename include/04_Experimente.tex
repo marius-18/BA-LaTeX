@@ -5,7 +5,7 @@ für das Tauschen der Nachbarschaft zwei. Weiterhin prüfen wir, ob es sinnvoll 
 die Variante der Vorsortierung zu nutzen oder nicht.
 Kombiniert man all diese Möglichkeiten erhält man somit insgesamt 28 verschiedene Varianten einen \gc{} 
 Tausch umzusetzen.
-In diesem Kapitel diskutieren wir, welche der Varianten ausgewählt werden sollte.
+In diesem Kapitel diskutieren wir, welche der Varianten am geeignetsten ist.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Aufbau
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -17,11 +17,7 @@ Instanzen getestet und mittels Google Benchmark \cite{benchmark} wird die Zeit g
 die für das Ausführen benötigt wurde.
 \\
 
-%\red{Google Benchmark ist ein \red{Framework} ...?}
-%\\
-%\\
-Wie %\red{vorher (kapitel ..?)} 
-beschrieben benötigen die Methoden als Eingabe keinen Graph, 
+Wie beschrieben benötigen die Methoden als Eingabe keinen Graph, 
 sondern lediglich zwei Arrays, welche jeweils die Nachbarschaft zweier Knoten repräsentieren. Ohne 
 Beschränkung der Allgemeinheit nennen wir das größere Array \fett{large}, das kleinere \fett{small}.
 Um möglichst gut zu erkennen, wie sich die verschiedenen Methoden bei unterschiedlichen
@@ -40,7 +36,7 @@ Um ein gutes Bild zu erhalten, sollten folgende Fälle abgedeckt sein:
 
 Um dies zu erreichen, wird jedes Experiment in  mehreren Runden durchgeführt, in denen das Array large von anfänglich 128
 Elementen auf bis zu 4.000.000 Elementen vergrößert wird. 
-Jede Runde besteht aus mehreren Durchläufe, bei denen das Array small eine Größe zwischen 32 Elementen und der jeweiligen Größe von large hat.
+Jede Runde besteht aus mehreren Durchläufen, bei denen das Array small eine Größe zwischen 32 Elementen und der jeweiligen Größe von large hat.
 Für jeden dieser Durchläufe werden die beiden Arrays mit zufälligen, aber paarweise verschiedenen
 Werten befüllt, bis sie die entsprechende Größe haben. 
 Dabei existiert jedoch kein Element, welches in beiden Arrays 
@@ -73,9 +69,7 @@ einzelnen Methoden gemessen werden.
 Um Rauschen zu verringern, wird dabei jede Variante so oft wiederholt
  bis mindestens 100ms gemessen wurden.
 Um eventuelle Messfehler zu minimieren, wird
-dieser Vorgang 
-%durch den Google Benchmark Parameter \texttt{benchmark\_repetitions} 
-jeweils fünf mal wiederholt. 
+dieser Vorgang jeweils fünf mal wiederholt. 
 Als resultierender Messwert dient der Mittelwert dieser Wiederholungen.
 \\
 
@@ -101,14 +95,14 @@ zu analysieren und grafisch aufzuarbeiten.
 \begin{figure}
 \centering
 	\includegraphics[width = 0.65\textwidth]{figures/counting.pdf}
-	\caption{Vergleich der Varianten, welche am häufigsten die geringste Laufzeit hatten}
+	\caption{Vergleich der Varianten, welche am häufigsten die geringste Laufzeit aufweisen}
 	\label{fig:messung_counting}
 \end{figure}
 \\
 
 Zuerst betrachten wir für jede Instanz, welche Methode am schnellsten war.
 Interessant sind dann jeweils die Methoden, für die häufig die geringste Laufzeit gemessen wurde.
-In Abbildung \ref{fig:messung_counting} ist dazu ein Balkendiagramm gegeben.
+In Abbildung \ref{fig:messung_counting} ist dazu ein Balkendiagramm dargestellt.
 Dabei sieht man eindeutig, dass die Variante (\SeaUSet, \false, \perm) mit Abstand 
 auf den meisten Instanzen die schnellste Laufzeit aller Methoden hat. Die
 430 Instanzen auf welchen (\SeaUSet, \false, \perm) die schnellste Methode ist, entsprechen einem Anteil von rund
@@ -123,7 +117,9 @@ betrachten wir einen weiteren Plot in Abbildung \ref{fig:messung_slowdown}.
 \begin{figure}
 \centering
 	\includegraphics[width = 1\textwidth]{figures/slowdown.pdf}
-	\caption{Slowdown der einzelnen Varianten im jeweiligen Vergleich zur Variante mit der geringsten Laufzeit}
+	\caption[Slowdown der einzelnen Varianten im jeweiligen Vergleich zur Variante mit der geringsten Laufzeit.]
+	{Slowdown der einzelnen Varianten im jeweiligen Vergleich zur Variante mit der geringsten Laufzeit. 
+	Dabei ist der Wert 3.5 als gestrichelte Linie eingezeichnet}
 	\label{fig:messung_slowdown}
 \end{figure}
 Um diesen Plot zu erstellen, wurde jede Variante einzeln betrachtet.
@@ -131,7 +127,7 @@ Dann wird für jede Instanz bestimmt, welche Variante die kürzeste Laufzeit hat
 aus dieser Laufzeit und der Laufzeit der betrachteten Variante berechnet. Dieses Verhältnis wird als Slowdown
 bezeichnet und gibt an, um welchen Faktor die Variante langsamer als die schnellste ist. Die Slowdowns
 zu jeder Instanz werden schließlich aufsteigend sortiert und als Kurve in den Plot eingefügt.
-Da die Slowdowns jedoch für jede Variante unabhängig voneinader sortiert werden, geht dadurch 
+Da die Slowdowns jedoch für jede Variante unabhängig voneinander sortiert werden, geht dadurch 
 die Ordnung über die Instanzen verloren. Somit entspricht eine Stelle auf der horizontalen Achse 
 nicht für jede Variante der gleichen Instanz. Einen \glqq guten\grqq{} Algorithmus erkennt man in diesem
 Plot, wenn die entsprechende Kurve lange nahe der eins verläuft.
@@ -144,8 +140,8 @@ Varianten die bessere ist. Ein Vorteil von (\SeaUSet, \false, \perm) ist,
 dass die Methode auf den meisten Instanzen einen Slowdown
 von eins hat ---was wir ja auch schon in Abbildung \ref{fig:messung_counting} gesehen haben---
 und damit langsamer anwächst. Ein Nachteil liegt aber darin, dass der Slowdown für manche Instanzen
-eine Größe von bis zu 10.0 erreicht, während der Slowdown von  (\SorSor, \true, \distr) durch den maximalen
-Wert von 3.5 beschränkt ist (in Abbildung \ref{fig:messung_slowdown} als gestrichelte Linie eingezeichnet).
+eine Größe von bis zu 10 erreicht, während der Slowdown von  (\SorSor, \true, \distr) durch den maximalen
+Wert von 3.5 beschränkt ist.
 \newpage
 Dieser Nachteil spiegelt sich ebenfalls in Abbildung \ref{fig:messung_mean} wieder. Für diesen Plot
 wurde über alle Instanzen für jede Variante jeweils die mittlere Laufzeit bestimmt. Obwohl
@@ -167,7 +163,7 @@ haben eine deutlich größere mittlere Laufzeit.
 
 Abschließend betrachten wir noch die zwei ausgewählten Varianten im direkten Vergleich. Hierzu wurden
 in Abbildung \ref{fig:messung_small} auf der horizontalen Achse die getesteten Instanzen aufgetragen
-und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) als Kreuze
+und dazu die jeweiligen Laufzeiten von (\SorSor, \true, \distr) und (\SeaUSet, \false, \perm) als Punkte
 eingezeichnet. 
 Man sieht dabei, dass sich die Laufzeiten in den meisten Instanzen nicht so stark unterscheiden.
 Dies sind vor allem die Instanzen, bei denen der Unterschied zwischen \la{} und \sm{} nicht so groß ist.
@@ -255,7 +251,7 @@ Faktor von circa 11 schneller ist.
 
 Um ein bestmögliches Laufzeitverhalten für einen \ct{} zu erreichen, könnte man auf die Idee kommen, 
 beide Varianten zusammen zu nutzen
-und dabei eine Heuristik entwickeln, die jeweils angibt ,
+und dabei eine Heuristik entwickeln, die jeweils angibt,
 auf welcher Instanz man welche Variante verwenden sollte. Somit würde bei jedem \ct{} abhängig von 
 der Eingabe, also den Nachbarschaften, entschieden werden, welche der beiden Instanzen man benutzt. 
 Das Problem dabei liegt jedoch darin, dass bei diesen Varianten einmal die Vorsortierung

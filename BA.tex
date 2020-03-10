@@ -1,14 +1,13 @@
 %\documentclass[a4paper, 11pt]{scrbook}
 \documentclass[a4paper,twoside, 11pt, openright]{scrbook}
 
-\RequirePackage[inner=35mm, outer=25mm, top=20mm, bottom=30mm]{geometry}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some common includes. Add additional includes you need.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage[ngerman]{babel}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
+\RequirePackage[inner=35mm, outer=25mm, top=20mm, bottom=30mm]{geometry}
 %\RequirePackage[margin=23mm,bottom=30mm]{geometry}
 \RequirePackage{graphicx}
 \RequirePackage{amsmath,amsfonts,amssymb,amsthm}
@@ -30,8 +29,7 @@
 
 
 \usepackage{cite}
-%\usepackage{multirow, tabularx}
-%\usepackage{subcaption}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Defines for mathematical notation. Add additional defines as needed.
@@ -53,33 +51,6 @@
 \newtheorem{remark}[theorem]{Bemerkung}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Beispiel}
-
-
-%% wozu das ?! 
-%\usepackage{listings}% http://ctan.org/pkg/listings
-%\lstset{
-%  basicstyle=\ttfamily,
-%  mathescape,
-%    showspaces=false,
-%  showstringspaces=false
-%}
-
-%\lstset{
-%   basicstyle=\fontsize{10}{13}\selectfont\ttfamily
-%}
-
-%\lstset{literate=%
-%  {Ö}{{\"O}}1
-%  {Ä}{{\"A}}1
-%  {Ü}{{\"U}}1
-%  {ß}{{\ss}}1
-%  {ü}{{\"u}}1
-%  {ä}{{\"a}}1
-%  {ö}{{\"o}}1
-%}
-
-%\newcommand{\tomorrow}{{\AdvanceDate[1]\today}}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,7 +113,7 @@
 	\vspace{0.5cm}
 	{\large Matrikelnummer 5732742 }
 	\vfill
-	{\Large \today}
+	{\Large 11. März 2020}
 	\vfill
 	{\LARGE Betreuer:\\ Prof. Dr. Ulrich Meyer \\ Manuel Penschuck\par}
 	\vspace{1.5cm}
@@ -171,6 +142,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\chapter*{Abstract}
 \input{include/00_Abstract.tex}
 
 

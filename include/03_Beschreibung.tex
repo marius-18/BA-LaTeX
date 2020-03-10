@@ -1,7 +1,7 @@
 Wie bereits in Kapitel \ref{sec:global_curveball} erwähnt, muss die disjunkte Nachbarschaft
 der beiden Knoten $u$ und $v$ bekannt sein, um einen \ct{} auf diesen Knoten $u$ und $v$
 auszuführen. Der \ct{} besteht dann darin, diese Knoten aus $N_{d}(u,v)$ zu durchmischen.
-Deshalb beschäftigen wir uns zuerst damit wie man die disjunkte Nachbarschaft bestimmt.
+Deshalb beschäftigen wir uns zuerst damit, wie man die disjunkte Nachbarschaft bestimmt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% COMMON NEIGHBORS
@@ -116,10 +116,10 @@ Laufzeit führen.
 Für diese Möglichkeit gibt es ebenfalls zwei 
 analoge Varianten, nämlich \SetSea, bei der die Elemente des größeren Arrays in das \texttt{set} eingefügt werden
 und \SeaSet, bei der das kleinere Array zum \texttt{set} hinzugefügt wird.
-Im Gegensatz zur Methode mit der binären Suche, führt das Verwenden der vorsortierten Variante in diesem Fall
+Im Gegensatz zur Methode mit der binären Suche führt das Verwenden der vorsortierten Variante in diesem Fall
 nicht zu einer asymptotisch besseren Laufzeit. Dies liegt daran, da es asymptotisch
 gesehen für das Erstellen eines Binärbaums keinen Unterschied macht, ob die Werte sortiert sind oder nicht.
-Je nach Implementierung des Suchbaums könnte es trotzdem zu eine Laufzeitvorteil führen, 
+Je nach Implementierung des Suchbaums könnte es trotzdem zu einem Laufzeitvorteil führen, 
 wenn die Nachbarschaften bereits sortiert sind.
 \\
 
@@ -170,7 +170,10 @@ Dann werden die ersten $|D_{u}|$ Elemente aus dem permutierten Array in $N'(u)$ 
 in $N'(v)$. Somit haben die Nachbarschaften durch den Tausch ihre 
 ursprüngliche Größe nicht verändert und es gilt $|N'(u)| = \deg(u)$ und
 $|N'(v)| = \deg(v)$.
-Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beispiel zu sehen.
+Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beispiel dargestellt.
+%
+%
+%%%%% Trade mit Permuatation
 \begin{figure}
 \centering
   \begin{tikzpicture}[decoration=brace]
@@ -190,11 +193,14 @@ Zur besseren Veranschaulichung ist in Abbildung \ref{fig:trade_shuffle} ein Beis
 \node[] at (-1.2, 0.5)     (5)     {$N_{d}(u,v):$};
 
   \end{tikzpicture}
-  \caption[Beispiel eines Tausches der disjunkten Nachbarschaft mit der Variante \perm]{Beispiel für einen Tausch mit der Variante \perm. Dabei wird das Array der 
+  \caption[Beispiel eines Tausches der disjunkten Nachbarschaft mit der Variante Permutation]{Beispiel für einen Tausch mit der Variante \perm. Dabei wird das Array der 
   disjunkten Nachbarschaft $N_{d}(u,v)$ zufällig permutiert. Die ersten $|D_{u}|$ Elemente werden der Nachbarschaft
   von $u$ zugeordnet, die restlichen $|D_{v}|$ zur Nachbarschaft von $v$. }
   \label{fig:trade_shuffle}
 \end{figure}
+%
+%
+%
 \\
 
 Bei diesem Verfahren fällt  jedoch auf, dass einige Elemente beim Permutieren unnötig vertauscht werden.
@@ -209,7 +215,7 @@ wird, sondern nur die ersten $|D_{u}|$ Elemente zufällig gewählt werden.
 \\
 
 Ein Nachteil dieser Methode besteht jedoch darin, dass durch das zufällige Vertauschen die beiden resultierenden Arrays
-$N(u)$ und $N(v)$ im Allgemeinen nicht mehr sortiert sind. 
+$N'(u)$ und $N'(v)$ im Allgemeinen nicht mehr sortiert sind. 
 Damit wird die im Abschnitt \ref{sec:common} beschriebene
 Variante eventuell verletzt. Möchte man die Vorsortierung aufrechterhalten, müssen somit die beiden Arrays
 in einem letzten Schritt nochmals sortiert werden.
@@ -343,7 +349,6 @@ Laufzeiten zusammengefasst.
 		 & \multicolumn{2}{c||}{\distr} & \multicolumn{2}{c}{\perm} \\ \hline \hline
 		\fett{vorsortiert} & \true & \false & \true & \false
 		\\ \hline\hline
-		%\SorSor & $\O(|N(u)| + |N(v)|)$ & $\O(|N(u)\cdot \log(|N(u)|) + |N(v)|\cdot \log(|N(v)|))$ & $\O(|N(u)| + |N(v)|)$ & \\ \hline
 		\SorSor 	& $\O(l)$ 				& $\O(l\cdot \log(l))$ 		& $\O(l \cdot \log(l))$ 					& $\O(l\cdot \log(l))$ 	\\ \hline
 		\SeaSor 	& $\O(l\cdot \log(s))$ 	& $\O(l\cdot  \log(s))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(s))$ \\ \hline
 		\SorSea 	& $\O(s\cdot \log(l))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(l))$ 	& $\O(l\cdot  \log(l))$ \\ \hline

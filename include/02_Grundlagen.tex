@@ -1,8 +1,5 @@
 
 
-%In diesem Kapitel gehen wir auf die wichtigsten theoretischen Grundlagen, die für diese
-%Arbeit benötigt werden, ein.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Definitionen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -11,7 +8,7 @@
 Zu Beginn definieren wir die grundlegenden mathematischen Begriffe. Als wichtigste Grundlage dient 
 hierbei das Konzept des ungerichteten Graphen.
 \begin{definition}[Graph] ~\\
-Ein (ungerichteter) \textbf{Graph} $G = (V,E)$ ist ein Tupel bestehend aus einer Knotenmenge $V$ und einer Kantenmenge
+Ein ungerichteter \textbf{Graph} $G = (V,E)$ ist ein Tupel bestehend aus einer Knotenmenge $V$ und einer Kantenmenge
  $E$. Eine Kante verbindet zwei Knoten miteinander und ist damit eine Menge aus zwei Knoten.
  Es gilt $E \subseteq \{ \{u,v\} |\ u,v \in V\}$. Eine Kante $e = \{u,u\} \in E$ wird als \fett{Eigenschleife}
  bezeichnet.
@@ -41,7 +38,6 @@ $V_1$ und $V_2$ \glqq kreuzen\grqq.
 %
 %%%%% Beispiel bipartiter Graph
 \begin{figure}
-%bipartiter graph
 \centering
 \begin{tikzpicture}
 \tikzset{node style/.style={shape=circle,draw=black, inner sep=5pt,}}
@@ -49,12 +45,10 @@ $V_1$ und $V_2$ \glqq kreuzen\grqq.
 \node[node style] at (0, 0)     (1)     {$v_1$};
 \node[node style] at (0, -1.5)   (2)     {$v_2$};
 \node[node style] at (0, -3)     (3)     {$v_3$};
-%\node[node style] at (0, -4.5)   (4)     {$v_4$};
 
 \node[node style] at (3, 0)     (5)     {$v_4$};
 \node[node style] at (3, -1.5)   (6)     {$v_5$};
 \node[node style] at (3, -3)   (7)     {$v_6$};
-%\node[node style] at (3, -4.5)   (8)     {$v_8$};
 
    
 \draw[line width=0.1mm, >=latex]
@@ -64,8 +58,6 @@ $V_1$ und $V_2$ \glqq kreuzen\grqq.
             (2)     edge[right]    node {} (5)
             (2)     edge[right]    node {} (6)
             (3)     edge[right]    node {} (6)
-            %(4)     edge[right]    node {} (5)
-            %(4)     edge[right]    node {} (8)
             (3)     edge[right]    node {} (7)
 ;
 \end{tikzpicture}
@@ -94,7 +86,7 @@ in der gemeinsamen oder in der disjunkten Nachbarschaft.
 \end{definition}
 
 Dabei bemerken wir, dass in einem bipartiten Graphen zwei Knoten aus einer Partitionsklasse nie
-in der gegenseitigen Nachbarschaft liegen können. Diesen Fakt werden wir beim Bipartiten \gc{} ausnutzen.
+in der gegenseitigen Nachbarschaft liegen können. Diesen Fakt werden wir beim bipartiten \gc{} ausnutzen.
 Zuletzt sind noch die Begriffe Knotengrad und Gradsequenz relevant.
 \begin{definition}[Knotengrad]~\\
 Der \fett{Grad} eines Knotens $v \in V$ wird mit $\deg(v)$ bezeichnet und entspricht der Anzahl
@@ -120,14 +112,14 @@ $D = (3,2,2,2,3,2)$.
 \nk{} \cite{nk} ist ein Open-Source Projekt, welches  zum Ziel hat, Werkzeuge für die
 Analyse großer Netzwerke in den Größenordnungen von Tausenden bis Milliarden 
 von Kanten zur Verfügung zu stellen.
-Dazu werden effiziente Graph Algorithmen implementiert, wobei viele parallelisiert
+Dazu werden effiziente Graph-Algorithmen implementiert, wobei viele parallelisiert
 sind, um sie auf Multicore Architekturen zu nutzen\cite{nk_page}.
 \nk{} ist ein Python Modul, wobei die meisten Algorithmen aus Gründen
 der Performance in \cpp programmiert sind. Für die Parallelisierungen wird in der Regel OpenMP\cite{openmp} verwendet.
 \\
 
 Mit \nk{} lassen sich in einfacher Art und Weise Graphen erstellen  und verschiedene
-Algorithmen auf ihnen ausführen. So können beispielsweise Standardalgortihmen
+Algorithmen auf ihnen ausführen. So können beispielsweise Standardalgorithmen
 wie Breitensuche, Tiefensuche oder Dijkstras Algorithmus ausgeführt werden. 
 Zum Randomisieren von Graphen sind in \nk{} unter anderem die in der Einleitung schon genannten 
 Algorithmen \cb{} und \gc{} implementiert.
@@ -139,7 +131,6 @@ Der in dieser Arbeit entwickelte bipartite \gc{} wird schließlich zu \nk{} hinz
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\gc{} auf bipartiten Graphen}
-%\red{\Huge in der bipartiten verison.....}
 \label{sec:global_curveball}
 \gc{} ist ein Verfahren zum Randomisieren von Graphen.
 Die Aufgabe liegt also darin, bei einer gegebenen Gradsequenz $D$, eine uniform verteilte Stichprobe
@@ -147,7 +138,7 @@ aus der Menge aller Graphen mit Gradsequenz $D$ zurückzugeben. Durch das Ausfü
 bleibt also für jeden Knoten $v\in V$ sein Grad $\deg(v)$ erhalten. 
 \\
 
-Bipartiter \gc{} operiert auf einfachen bipartiten Graphen. Somit ist sowohl der Eigabegraph als auch
+Bipartiter \gc{} operiert auf einfachen bipartiten Graphen. Somit ist sowohl der Eingabegraph als auch
 der Ausgabegraph bipartit. Insbesondere gibt es damit keine Eigenschleifen und Multikanten.
 Weiterhin entstehen dadurch 
 Vorteile, die algorithmisch ausgenutzt werden können. Zuerst behandeln wir jedoch einen einzelnen \cb{}, welcher
@@ -157,7 +148,9 @@ die Grundlage eines jeden \gc{} darstellt.
 \fett{\cb{}} ist  ein Prozess, bei dem Kanten zufällig getauscht werden. Bei einem \ct{} werden
 zwei verschiedene Knoten $u$ und $v$ ($u\neq v$) zufällig uniform verteilt ausgewählt und deren Nachbarschaft
 zufällig durchmischt. 
-Dabei muss jedoch darauf geachtet werden, dass durch dieses zufällige Mischen, die Eigenschaft
+\\
+
+Dabei muss jedoch darauf geachtet werden, dass durch dieses zufällige Mischen die Eigenschaft
 des bipartiten Graphen nicht verletzt wird. Ebenfalls dürfen keine Multikanten entstehen.
 Deshalb werden bei der bipartiten Variante  von \cb{}
 die Knoten $u$ und $v$ immer beide aus der gleichen Partitionsklasse gezogen.
@@ -165,12 +158,14 @@ Auf diese Weise ist sichergestellt, dass
 es keine Kante zwischen $u$ und $v$ gibt. Somit sind die beiden Knoten nicht in der jeweils anderen Nachbarschaft
 enthalten, es gilt folglich $u\notin N(v)$ und $v\notin N(u)$. Dadurch
 können bei einem Durchmischen der Nachbarschaft also keine Eigenschleifen entstehen.
+\\
+
 Wird jedoch die vollständige Nachbarschaft durchmischt und wieder auf $ N(u)$ und $N(v)$ 
 aufgeteilt, könnte es passieren, 
 dass Multikanten entstehen. Dies geschieht
 genau dann, wenn ein Knoten aus der gemeinsamen Nachbarschaft getauscht wird, sodass er danach in 
 einer der Nachbarschaften doppelt vorkommt.
-Um dies zu vermeiden werden ausschließlich die Knoten aus der disjunkten Nachbarschaft $N_{d}(u,v)$ getauscht.
+Um dies zu vermeiden, werden ausschließlich die Knoten aus der disjunkten Nachbarschaft $N_{d}(u,v)$ getauscht.
 Ein Beispiel für solch einen Tausch ist in Abbildung \ref{fig:curveball_trade_graph} gegeben.
 %
 %
@@ -245,7 +240,7 @@ jeder Knoten Teil eines solchen \ct{es} sein soll. Im Fall von bipartiten Graphe
 aus, wenn die \ct{e} lediglich auf den Knoten aus einer der beiden Partitionsklassen ausgeführt werden. Dies
 liegt daran, dass in bipartiten Graphen alle Kanten die Partitionen kreuzen. Somit werden durch
 die \ct{e} auf den Knoten der einen Partitionsklasse auch die Nachbarschaften der Knoten aus der anderen
-Partitionsklasse geändert. Die Partitionsklasse auf der die \ct{e} ausgeführt werden, wird als 
+Partitionsklasse geändert. Die Partitionsklasse, auf der die \ct{e} ausgeführt werden, wird als 
 \fett{aktive Partitionsklasse} bezeichnet. 
 \\
 
@@ -267,7 +262,7 @@ Im vollständigen Randomisierungs-Algorithmus werden schließlich mehrere solche
 durchgeführt. Die genaue Anzahl lässt sich beim Aufrufen des Algorithmus durch einen Parameter festlegen.
 \\
 
-Um zu zeigen, dass das mehrfache Anwenden vom Bipartiten \gc{} eine uniform verteilte
+Um zu zeigen, dass das mehrfache Anwenden vom bipartiten \gc{} eine uniform verteilte
 Stichprobe aller Graphen mit gleicher Gradsequenz erzeugt, kann man das Verfahren als Markov-Kette interpretieren.
 Dabei entsprechen die Zustände allen Graphen, deren Gradsequenz mit der des Ursprungsgraphen identisch
 ist.
@@ -295,7 +290,7 @@ in einem Array die Nachbarn gespeichert sind.
 \\
 
 Da wir jedoch ausschließlich auf bipartiten ungerichteten Graphen
-arbeiten, können wir eine einfachere Datenstruktur nutzen. 
+arbeiten, können wir die Datenstruktur verbessern. 
 Dazu transformieren wir
 den Graph, indem wir in einem Array für jeden Knoten aus einer der beiden Partitionsklassen
 ein Array speichern, welches die jeweilige Nachbarschaft des Knotens enthält.
@@ -371,7 +366,7 @@ disjunkten Nachbarschaft tauschen.
 %
 %
 \\
-
+\newpage
 Abbildung \ref{fig:curveball_trade_vector} illustriert, wie ein \ct{} 
 in der Datenstruktur ---also den beiden Arrays--- aussieht. Dabei werden zuerst die Elemente
 der beiden Arrays in gemeinsame und disjunkte Nachbarschaft aufgeteilt. Die gemeinsame Nachbarschaft ist
@@ -421,7 +416,7 @@ In Abbildung \ref{fig:global_curveball_trade_vector} ist eine Skizze für einen 
 auf dem \partvek{} gegeben.
 Dazu wird das Array zuerst zufällig permutiert, sodass jedes Element an einer zufälligen
 Position steht.
-Dann wird jeweils unabhängig ein \ct{} auf den Elementen eins und zwei, drei und vier, usw. ausgeführt.
+Dann wird jeweils unabhängig ein \ct{} auf den Elementen eins und zwei, drei und vier, und so weiter ausgeführt.
 Durch das zufällige Permutieren des Arrays zu Beginn wird also jeder der \ct{e} auf zwei zufälligen
 Knoten ausgeführt. Hat das \partvek{} eine ungerade Anzahl an Elementen, bleibt am Ende ein Element übrig, 
 welches nicht Teil von einem \ct{} ist. 

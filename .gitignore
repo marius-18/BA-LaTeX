@@ -3,4 +3,14 @@
 *.log
 *.toc
 *.lof
+*.loa
+*.lot
 *.dvi
+
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
