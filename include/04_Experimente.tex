@@ -2,18 +2,18 @@
 Wie im vorherigen Kapitel beschrieben, existieren verschiedene Varianten, einen \gc{} Tausch 
 durchzuführen. Für das Finden der gemeinsamen Nachbarschaft betrachten wir sieben verschiedene Methoden, 
 für das Tauschen der Nachbarschaft zwei. Weiterhin prüfen wir, ob es sinnvoll ist, 
-die vorsortiert Invariante zu nutzen oder nicht, was ebenfalls zwei Möglichkeiten entspricht.
-Kombiniert man all diese Möglichkeiten erhält man also insgesamt 28 verschiedene Varianten für einen \gc{} 
-Tausch.
-In diesem Kapitel diskutieren wir, welche der Varianten ausgewählt wurde.
+die Variante der Vorsortierung zu nutzen oder nicht.
+Kombiniert man all diese Möglichkeiten erhält man somit insgesamt 28 verschiedene Varianten einen \gc{} 
+Tausch umzusetzen.
+In diesem Kapitel diskutieren wir, welche der Varianten ausgewählt werden sollte.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Aufbau
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Versuchsaufbau}
-Um die einzelnen Varianten auf ihre Laufzeit zu testen, wurde ein Versuch aufgebaut.
-Dazu wurden alle Methoden in \cpp programmiert. Diese wurden dann auf unterschiedlichen
-Instanzen getestet und mittels Google Benchmark \cite{benchmark} wurde die Zeit gemessen, 
+Um die einzelnen Varianten auf ihre Laufzeit zu testen, wird ein Versuch aufgebaut.
+Dazu werden alle Methoden in \cpp programmiert. Diese werden dann auf unterschiedlichen
+Instanzen getestet und mittels Google Benchmark \cite{benchmark} wird die Zeit gemessen, 
 die für das Ausführen benötigt wurde.
 \\
 
@@ -22,40 +22,38 @@ die für das Ausführen benötigt wurde.
 %\\
 Wie %\red{vorher (kapitel ..?)} 
 beschrieben benötigen die Methoden als Eingabe keinen Graph, 
-sondern lediglich zwei Vektoren, welche jeweils die Nachbarschaft zweier Knoten repräsentieren. Ohne 
-Beschränkung der Allgemeinheit nennen wir den größeren (sofern einer der beiden Vektoren größer ist)
-$u$ und den kleineren $v$.
+sondern lediglich zwei Arrays, welche jeweils die Nachbarschaft zweier Knoten repräsentieren. Ohne 
+Beschränkung der Allgemeinheit nennen wir das größere Array \fett{large}, das kleinere \fett{small}.
 Um möglichst gut zu erkennen, wie sich die verschiedenen Methoden bei unterschiedlichen
 Eingaben verhalten, messen wir die Laufzeiten für eine ganze Reihe an Instanzen. 
 Um ein gutes Bild zu erhalten, sollten folgende Fälle abgedeckt sein:
 
 \begin{itemize}
-	\item Beide Vektoren liegen in der gleichen Größenordnung
+	\item Beide Arrays liegen in der gleichen Größenordnung
 	
-	\item Einer der Vektoren ist wesentlich größer als der andere
+	\item Eines der Arrays ist wesentlich größer als das andere
 	
-	\item Der Anteil an gemeinsamen Nachbarn ist groß
+	\item Der Anteil an gemeinsamen Elementen ist groß
 	
-	\item Der Anteil an gemeinsame Nachbarn  ist klein
+	\item Der Anteil an gemeinsame Elementen  ist klein
 \end{itemize}
 
-Um dies zu erreichen, führen wir mehrere Runden durch, in denen der Vektor $u$ von anfänglich 128
+Um dies zu erreichen, führen wir mehrere Runden durch, in denen das Array large von anfänglich 128
 Elementen auf bis zu 4.000.000 Elementen vergrößert wird. Innerhalb jeder Runde werden mehrere Durchläufe 
-durchgeführt, bei denen der Vektor $u$ eine Größe zwischen 32 Elementen und der jeweiligen Größe von $v$ hat.
-Für jeden dieser Durchgänge werden die beiden Vektoren mit zufälligen, aber paarweise verschiedenen
+durchgeführt, bei denen Array small eine Größe zwischen 32 Elementen und der jeweiligen Größe von large hat.
+Für jeden dieser Durchgänge werden die beiden Arrays mit zufälligen, aber paarweise verschiedenen
 Werten befüllt, bis sie die entsprechende Größe haben. 
-Dabei existiert jedoch kein Element, welches in beiden Vektoren 
+Dabei existiert jedoch kein Element, welches in beiden Arrays 
 enthalten ist, was dazu führen würde, dass ein \gc{} 
 Tausch nichts verändern würde. Um sicherzugehen,
-dass die gemeinsame Nachbarschaft nicht leer ist, müssen somit Elemente des einen Vektors 
-in den anderen hineinkopiert werden. Damit die Größe der gemeinsamen Nachbarschaft
+dass die gemeinsame Nachbarschaft nicht leer ist, müssen somit Elemente des einen Arrays 
+in das andere hineinkopiert werden. Damit die Größe der gemeinsamen Nachbarschaft
 variiert wird, werden zuerst 10, dann 25, 50 und 75 Prozent der Elemente kopiert. 
 \\
 
 Eine einzelne Test-Messung lässt sich somit durch ein Tripel \fett{(\la, \sm, \fr)} beschreiben, wobei
-\fett{\la} die Größe von $u$ ist und \fett{\sm} die 
-Größe von $v$.
-\red{Der Wert \fett{\fr} steht dabei für den prozentualen Anteil der gemeinsamen Elemente \red{an} $v$.}
+large  und small für die Größe der jeweiligen Arrays stehen.
+Der Wert \fett{\fr} steht dabei für den prozentualen Anteil der gemeinsamen Elemente an small.
 
 
 
@@ -70,16 +68,18 @@ Auf die im vorherigen Abschnitt beschriebene Weise werden die verschiedenen Inst
 mittels Google Benchmark die Zeit gemessen. Aus Zeitgründen werden jedoch nicht alle Werte 
 für \la{} und \sm{} erstellt. Deshalb verdoppeln wir in jedem Schritt die Werte von \la{} und \sm{,}
 anstatt sie um eins zu inkrementieren. Somit ergeben sich insgesamt 672 Instanzen, auf denen die Laufzeiten der 
-einzelnen Methoden gemessen werden. Jede Variante wird dabei so oft wiederholt bis 100ms gemessen wurden.
+einzelnen Methoden gemessen werden. 
+Um Rauschen zu verringern, wird dabei jede Variante so oft wiederholt
+ bis mindestens 100ms gemessen wurden.
 Um eventuelle Messfehler zu minimieren, wird
 dieser Vorgang 
 %durch den Google Benchmark Parameter \texttt{benchmark\_repetitions} 
 jeweils fünf mal wiederholt. 
-\red{Als resultierender Messwert dient der Mittelwert dieser Wiederholungen. }
+Als resultierender Messwert dient der Mittelwert dieser Wiederholungen.
 \\
 
 Alle Messungen wurden auf einem Rechner mit 64GB Arbeitsspeicher und einem Prozessor vom Typ Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz,
-mit 8 Kernen und einem Cache von 20 MB, ausgeführt.
+mit 8 Kernen, Hyperthreading und einem Cache von 20 MB, ausgeführt.
 Mit dieser Konfiguration hat die Dauer für alle 28 Varianten in Summe ungefähr 19 Stunden betragen.
 
 
@@ -95,11 +95,11 @@ Die ermittelten Messdaten werden schließlich mit Hilfe von
 Jupyter Notebook \cite{jupyter} ausgewertet. Dabei
 handelt es sich um ein Tool, mit dem man Python-Programme auf einfache Art und Weise erstellen und 
 ausführen kann.
-Innerhalb von Python werden wir die Bibliotheken \fett{Matplotlib} und \fett{pandas} nutzen, um die Daten
+Innerhalb von Python nutzen wir die Bibliotheken \fett{Matplotlib} und \fett{pandas}, um die Daten
 zu analysieren und grafisch aufzuarbeiten.
 \begin{figure}
 \centering
-	\includegraphics[width = 0.5\textwidth]{figures/counting.pdf}
+	\includegraphics[width = 0.65\textwidth]{figures/counting.pdf}
 	\caption{Vergleich der Varianten, welche am häufigsten die geringste Laufzeit hatten}
 	\label{fig:messung_counting}
 \end{figure}
@@ -122,7 +122,7 @@ betrachten wir einen weiteren Plot in Abbildung \ref{fig:messung_slowdown}.
 \begin{figure}
 \centering
 	\includegraphics[width = 1\textwidth]{figures/slowdown.pdf}
-	\caption{\red{Slowdown der einzelnen Varianten im jeweiligen Vergleich zur Variante mit der geringsten Laufzeit}}
+	\caption{Slowdown der einzelnen Varianten im jeweiligen Vergleich zur Variante mit der geringsten Laufzeit}
 	\label{fig:messung_slowdown}
 \end{figure}
 Um diesen Plot zu erstellen, wurde jede Variante einzeln betrachtet.
@@ -132,7 +132,8 @@ bezeichnet und gibt an, um welchen Faktor die Variante langsamer als die schnell
 zu jeder Instanz werden schließlich aufsteigend sortiert und als Kurve in den Plot eingefügt.
 Da die Slowdowns jedoch für jede Variante unabhängig voneinader sortiert werden, geht dadurch 
 die Ordnung über die Instanzen verloren. Somit entspricht eine Stelle auf der horizontalen Achse 
-nicht für jede Variante der gleichen Instanz.
+nicht für jede Variante der gleichen Instanz. Einen \glqq guten\grqq{} Algorithmus erkennt man in diesem
+Plot, wenn die entsprechende Kurve lange nahe der eins verläuft.
 \\
 
 Dieser Plot legt ebenfalls nahe, sich auf die beiden Varianten (\SeaUSet, \false, \perm) und 
@@ -178,7 +179,7 @@ beträgt für diese Instanz also in etwa einem Wert von 11.
 \begin{figure}
 \centering
 	\includegraphics[width = \textwidth]{figures/small_aufsteigend.pdf}
-	\caption{Vergleich der Laufzeiten der zwei besten Varianten auf ausgewählten Instanzen.
+	\caption[Laufzeitvergleich der zwei besten Varianten auf ausgewählten Instanzen] {Vergleich der Laufzeiten der zwei besten Varianten auf ausgewählten Instanzen.
 			Die Instanzen sind nach aufsteigenden Werten für \sm{} sortiert. Aus Gründen der Übersichtlichkeit
 wird bei  der Beschriftung der Instanzen der Teil \fr{} weggelassen, die Instanzen werden 
 nur mit \la{}, \sm{} bezeichnet. Weiterhin wurden der
@@ -224,12 +225,13 @@ der Varianten, welche \SetSea{} verwenden, erklären. Hierbei wird ebenfalls das
 Array in die Datenstruktur eingefügt, was zu der schlechteren Laufzeit führt.  
 Dabei fällt jedoch noch auf, dass vor allem die Varianten, 
 bei welchen nicht vorsortiert wird, die mit Abstand längsten Laufzeiten besitzen. Als Begründung 
-dient hier \red{vermutlich}, dass das Erstellen eines Binärbaums bei sortierten Elementen in dieser
-Implementierung des Baumes dem Anschein nach wesentlich schneller ist, als bei beliebigen Elementen.
+dient hier, dass beim Erstellen des Binärbaums für jeden Knoten, welcher eingefügt wird,
+eine Speicherallokation ausgeführt wird, was sehr laufzeitintensiv ist. Ist die
+Eingabe bereits sortiert, kann dies von der Implementierung des Binärbaums ausgenutzt werden.
 \\
 
-Im Großen und Ganzen lassen sich also die gemessenen mittleren Laufzeiten gut erklären.
-\red{Man kann die Ergebnisse somit als verlässlich einstufen.}
+Zusammenfassend wirkend die gemessenen mittleren Laufzeiten 
+also plausibel.
 
 
 
@@ -280,55 +282,95 @@ auch kein zusätzlicher Speicherplatz verbraucht.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{\red{Vergleich zum Standard \gc{}}}
+\section{Vergleich zum Standard \cb{}}
 \label{kap:result}
 In einem letzten Experiment wird geprüft, wie sich die Laufzeit der bipartiten \gc{}
-Variante im Vergleich zum \gc{} auf massiven Graphen verhält.
+Variante, sowohl im parallelen als auch im sequenziellen Fall,
+ im Vergleich zum \cb{} auf massiven Graphen verhält.
 \\
 
 Dazu werden wir verschiedene Test-Instanzen erstellen.
-\red{Als Grundlage dient ein Netflix Datensatz, welcher Nutzer- und Film-Knoten enthält, 
+Als Grundlage dient ein Netflix Datensatz\cite{kaggle}, welcher Nutzer- und Film-Knoten enthält, 
 wobei eine gerichtete Kante von einem Film zu einem Nutzer gezogen wird, wenn dieser den 
-Film gut bewertet hat.} Damit liegen die Film-Knoten in einer Partitionsklasse und 
+Film gut bewertet hat. Damit liegen die Film-Knoten in einer Partitionsklasse und 
 die Nutzer-Knoten in der anderen.
 Aus diesem Graph werden drei Subgraphen erstellt, wobei jeweils 1000, 10.000 und 100.000  zufällige
 Nutzer-Knoten ausgewählt werden und deren vollständige Nachbarschaft hinzugefügt wird.
 Für jeden dieser drei Graphen gibt es zwei Varianten. Der Unterschied
 zwischen den beiden Varianten liegt darin, welche der beiden Partitionsklassen aktiv sind, 
 also auf welcher Partitionsklasse die \ct{e} ausgeführt werden.
-Somit ergeben sich sechs Instanzen. Auf diesen wird 
-die in dieser Arbeit erarbeite bipartite Version des \gc{} ausgeführt. Dazu müssen die
-einzelnen Graphen jedoch jeweils in einen ungerichteten Graph transformiert werden.
-Weiterhin wird auch der \red{Standard \cb{} Algorithmus (was wurde angepasst??)} 
-sowohl auf den ungerichteten als auch auf den gerichteten Graphen ausgeführt. Bei allen Varianten 
-wurden insgesamt 10 Globale Tausche vorgenommen.
+Somit ergeben sich sechs Instanzen. 
 \\
 
-In Abbildung \ref{fig:speedup_komplett} sind die gemessenen Laufzeiten grafisch dargestellt.
+Auf diesen wird 
+die in dieser Arbeit erarbeite bipartite Version des \gc{} ausgeführt. Dazu müssen die
+einzelnen Graphen jedoch jeweils in einen ungerichteten Graph transformiert werden.
+\\
+
+Als Vergleich verwenden wir an dieser Stelle nicht 
+den Standard \gc{} Algorithmus. Dies liegt daran, 
+dass bei diesem Algorithmus auf bipartiten Graphen die Eigenschaft der
+Bipartitheit verletzt werden könnte und zusätzlich viele unnötige \ct{e} ausgeführt werden. 
+Auf einem bipartiten Graphen liegen in der disjunkten Nachbarschaft zweier Knoten, 
+welche nicht aus der gleichen Partitionsklasse stammen, entweder keine Knoten,
+ oder die beiden Knoten selbst. 
+Führt man nun ein \ct{} auf diesen beiden Knoten aus, verändert sich entweder (im Falle einer leeren disjunkten
+Nachbarschaft) nichts
+oder es könnte passieren, dass ein Knoten sich selbst in seine Nachbarschaft getauscht bekommt.
+Damit hätte dieser Knoten eine Kante zu sich selbst, was es jedoch auf bipartiten Graphen nicht 
+geben darf.
+\\
+
+Deshalb wird als Vergleich der Standard \cb{} Algorithmus \cite{DBLP:conf/esa/CarstensH0PTW18}
+sowohl auf den ungerichteten als auch auf den gerichteten Graphen ausgeführt.
+Um die Probleme, welche wir für den \gc{} Algorithmus beschrieben haben, zu umgehen, 
+führen wir die einzelnen \ct{e} ausschließlich auf Knoten einer Partitionsklasse aus.
+\\
+
+Um zusätzlich zu sehen, wie stark die Parallelisierung die Laufzeit des bipartiten
+\gc{} beeinflusst, werden wir weiterhin eine sequenzielle Variante des bipartiten \gc{} 
+untersuchen.
+\\
+
+Alle vier beschriebenen Varianten werden nacheinander auf dem gleichen Prozessor ausgeführt, welcher 16
+Kerne besitzt. Es werden bei jeder Variante insgesamt 10 Globale Tausche vorgenommen.
+In Abbildung \ref{fig:speedup_komplett} sind die gemessenen Laufzeiten in Form
+eines Balkendiagramms grafisch dargestellt.
 Um eventuelle Messfehler zu verringern, wurde jede Messung zehn mal 
 wiederholt. Als Datenpunkte sind jeweils die Mittelwerte der Messungen aufgetragen.
-Zusätzlich sind die jeweiligen Standardabweichungen als Fehlerbalken eingetragen. Da
-diese im Vergleich zu den Messwerten aber relativ klein sind, sind sie in der Grafik kaum zu erkennen.
 \\
 
 Dabei fällt auf, dass sich die Laufzeiten von \cb{} und bipartitem \gc{} auf den
-Instanzen mit über 100.000 deutlich unterscheiden. Auf diesen Instanzen erreicht
+Instanzen mit über 100.000 Knoten deutlich unterscheiden. Auf diesen Instanzen erreicht
 der bipartite \gc{} einen Speedup von bis zu 17. 
 Während die Laufzeit der angepassten \cb{} Variante auf dem gerichteten Graphen in etwa 9 Sekunden
 und auf dem ungerichteten etwa 10,5 Sekunden beträgt, liegt sie beim bipartiten \gc{} bei lediglich 
-0,6 Sekunden. Dies entspricht --- auf dieser Instanz ---  einem Speedup von ungefähr 17.
+0,6 Sekunden. Dies entspricht ---auf dieser Instanz---  einem Speedup von ungefähr 17.
 Auf den Instanzen mit ungefähr 25.000 Knoten wird ein Speedup zwischen 3 und 5 erreicht.
 Bei den kleineren, etwa 10.000 Knoten umfassenden Instanzen, besitzt die \cb{} Implementierung jedoch 
 eine leicht geringere Laufzeit.
 \\
 
-Insgesamt fällt jedoch auf, dass die Laufzeiten bei wachsender Instanz für die \cb{}
+Für die sequentielle Variante des \gc{} lässt sich sagen, dass die Laufzeiten auf jeder Instanz um
+einen annähernd konstanten Faktor geringer sind, als die von den beiden \cb{} Varianten. 
+Dies liegt vor allem daran, 
+dass ein einzelner \ct{} auf bipartiten Graphen einfacher aufgebaut ist, als auf allgemeinen Graphen.
+So müssen lediglich die disjunkten Nachbarschaften ermittelt und getauscht werden, \red{während...?}.
+Auf der größten Instanz wird somit ein Speedup von ungefähr 2 erreicht.
+Im Vergleich mit der parallelen Version des bipartiten \gc{}, besitzt dieser in den meisten Fällen
+eine geringere Laufzeit, als die sequenzielle Variante. Dies liegt an der Parallelisierung und
+war damit zu erwarten. Einzig auf den Instanzen mit lediglich 10.000 Knoten, hat die sequenzielle
+Variante eine geringere Laufzeit. Dies liegt vermutlich an einem Overhead, der durch die Koordination
+der einzelnen Parallelen Threads durch OpenMP entsteht.
+\\
+
+Insgesamt fällt jedoch auf, dass die Laufzeiten bei wachsender Größe für die \cb{}
 Variante stark ansteigen, wobei die Laufzeit vom bipartiten \gc{} im Vergleich dazu
 relativ konstant bleiben.
 \begin{figure}
 \centering
 	\includegraphics[width = 0.8\textwidth]{figures/speedup.pdf}
-	\caption{Laufzeitvergleich von bipartitem \gc{} und der abgeänderten Version des \cb{s}.{}
+	\caption[Laufzeitvergleich von bipartitem \gc{} und einer abgeänderten Variante von \cb{}]{Laufzeitvergleich von bipartitem \gc{} und der abgeänderten Version des \cb{s}.{}
 	Auf der horizontalen Achse sind die einzelnen Instanzen als Tripel aufgetragen.
 Die erste Stelle steht dabei für die Knotenanzahl des Graphen, 
 die zweite Stelle für die Anzahl an Kanten und die dritte für die Anzahl der Knoten aus 

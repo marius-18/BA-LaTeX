@@ -4,15 +4,19 @@
 
 ~\\
 
-Ziel dieser Bachelorarbeit ist es, einen \red{effizienten} Algorithmus
-zur Randomisierung massiver bipartiter Graphen zu entwickeln. Dazu 
-wurde das Konzept des \gc{} für bipartite Graphen
-angepasst. Es werden verschiedene Möglichkeiten zur Umsetzung diskutiert.
+Ziel dieser Bachelorarbeit ist es, einen effizienten Algorithmus
+zur Randomisierung massiver bipartiter Graphen zu entwickeln.
+Die Graph Randomisierung ist vor allem zur Analyse von großen Netzwerken eine häufig verwendete Methode.
+ Dazu 
+wurde das Konzept des \gc{} auf bipartiten Graphen
+angepasst. Es werden verschiedene Algorithmen zur Umsetzung diskutiert.
 Anhand von Benchmarks wird unter den getesteten Methoden diejenige ausgewählt,
 welche die geringste Laufzeit aufweist.
-Im Vergleich zu dem schon existierenden \gc{} Algorithmus 
+Im Vergleich zu dem schon existierenden \cb{} Algorithmus 
 wird mit dem in dieser Arbeit entwickelten Algorithmus 
-auf manchen Testinstanzen ein Speedup von bis zu 17 erreicht.
+auf manchen Testinstanzen ein Speedup von bis zu 17 auf einem Prozessor mit 8 Kernen und Hyperthreading 
+erreicht. Selbst ohne Parallelisierung wird mit einer sequenziellen Version des bipartiten \gc{} ein Speedup
+von bis zu 2 gegenüber \cb{} erreicht.
 
 
 

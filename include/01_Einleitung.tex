@@ -1,28 +1,29 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% Einleitung
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\glqq Bei der Analyse komplexer Netzwerke, wie beispielsweise soziale Netzwerke, 
+Bei der Analyse komplexer Netzwerke, wie beispielsweise soziale Netzwerke, 
 werden die zugrundeliegenden Graphen häufig mit zufälligen Graphen verglichen, 
-um deren Struktur zu untersuchen.\grqq\footnote{frei übersetzt aus \cite{DBLP:conf/esa/CarstensH0PTW18} Abschnitt 1}
+um deren Struktur zu untersuchen\cite{DBLP:conf/esa/CarstensH0PTW18}.
 \\
 
-Zum Erzeugen von zufälligen Graphen existieren diverse Modelle wie beispielsweise der Erdos-Renyi-Graph \cite{erdos}
+Zum Erzeugen von zufälligen Graphen existieren diverse Modelle wie 
+beispielsweise der Erd\H{o}s-R\'enyi-Graph \cite{erdos}
 oder der Gilbert-Graph \cite{gilbert}.
-\red{Diesen beiden Methoden ...?} 
-Dabei weisen jedoch die erstellten Graphen kaum eine Ähnlichkeit zu dem zu analysierenden Netzwerk auf.
-Deshalb sind meist Zufallsgraphen gesucht, die zu einem gegebenen Graphen eine identische Gradsequenz
+Diese Graphen
+weisen jedoch in der Regel kaum eine Ähnlichkeit zu dem zu analysierenden Netzwerk auf.
+Deshalb verwendet man Zufallsgraphen, die zu einem gegebenen Graphen eine identische Gradsequenz
 besitzen. Im Zufallsgraph soll also jeder Knoten denselben Grad haben wie im originalen Graph.
 \\
 
 Ein Algorithmus, welcher diese Eigenschaft erfüllt, ist beispielsweise Curveball \cite{curveball}.
-Hierbei wird ein Graph \glqq randomisiert, indem eine Sequenz an lokalen Modifikationen ausgeführt wird\grqq\footnote{\label{ftn:survey}frei übersetzt aus \cite{penschuck2020recent} Abschnitt 6.4}.
+Hierbei wird ein Graph randomisiert, indem eine Sequenz an lokalen Modifikationen ausgeführt wird \cite{penschuck2020recent}.
 Diese lokalen Modifikationen werden als \ct{} bezeichnet. Bei einem \ct{} werden von zwei zufälligen 
-Knoten die disjunkten Nachbarschaften durchgetauscht, damit bleiben die Knotengrade unverändert.
+Knoten die disjunkten Nachbarschaften zufällig durchgetauscht, damit bleiben die Knotengrade unverändert.
 Um den Graph zu randomisieren, werden einige dieser \ct{e} hintereinander auf jeweils zufälligen Knoten ausgeführt.
 Um sicherzugehen, dass alle Knoten Teil eines \ct{es} waren, werden auf diese Weise
-\glqq in Erwartung $\Theta(n\log(n))$  \ct{e} benötigt\grqq \footnote{frei übersetzt aus \cite{DBLP:conf/esa/CarstensH0PTW18} Abschnitt 3.3}.
-Um dies zu umgehen, \red{wurde} eine Erweiterung namens \gc{} \cite{DBLP:conf/esa/CarstensH0PTW18} eingeführt. 
-Ein \gc{} Tausch ist ein \glqq Super-Schritt\grqq \footref{ftn:survey}, in dem mehrere \ct{e} auf jeweils
+in Erwartung $\Theta(n\log(n))$  \ct{e} benötigt \cite{DBLP:conf/esa/CarstensH0PTW18}.
+Um dies zu umgehen, wurde eine Erweiterung namens \gc{} \cite{DBLP:conf/esa/CarstensH0PTW18} eingeführt. 
+Ein \gc{} Tausch ist ein \glqq Super-Schritt\grqq \cite{penschuck2020recent}, in dem mehrere \ct{e} auf jeweils
 unterschiedlichen Knoten nacheinander ausgeführt werden, sodass möglichst jeder Knoten Teil eines solchen Tausches ist. 
 Somit werden lediglich $\Theta(n)$ viele \ct{e} benötigt, %um sicherzugehen, 
 damit möglichst alle Knoten abgedeckt sind.
@@ -31,19 +32,20 @@ damit möglichst alle Knoten abgedeckt sind.
 \\
 
 Ziel dieser Bachelorarbeit ist die Anpassung von \gc{} an bipartite Graphen zur 
-Reduzierung der Laufzeit. Zum einen werden gewisse 
-Eigenschaften von bipartiten Graphen ausgenutzt, sodass Teile des originalen \gc{} Algorithmus
+Reduzierung der Laufzeit. 
+Zum einen werden die reduzierten Abhängigkeiten in
+ bipartiten Graphen ausgenutzt, sodass Teile des originalen \gc{} Algorithmus
 vereinfacht werden können. Zum anderen ist es möglich, einzelne \ct{e} parallel auszuführen.
-Auf diese Weise soll --- wie bereits erwähnt --- eine deutlich geringere Laufzeit im Vergleich zu dem ursprünglichen \gc{}
+Auf diese Weise soll ---wie bereits erwähnt--- eine deutlich geringere Laufzeit im Vergleich zu dem ursprünglichen \gc{}
 Algorithmus erreicht werden.
 Der neu entwickelte Algorithmus wird unter dem Namen \texttt{BipartiteGlobalCurveball} 
-Teil vom Open-Source Projekt \nk{} werden.
+Teil des Open-Source Projekt \nk{} werden.
 \\
 
 %\newpage
 Zu Beginn dieser Arbeit werden die wichtigsten Begriffe und mathematischen Grundlagen definiert.
-Im Anschluss werden verschiedene Methoden zur Umsetzung von \gc{}  aufgezeigt und \red{ unter Einbeziehung 
-theoretischer Aspekte miteinander verglichen.} 
+Im Anschluss werden verschiedene Algorithmen zur Umsetzung von \gc{}  aufgezeigt und unter Einbeziehung 
+theoretischer Aspekte miteinander verglichen.
 Mit Hilfe von Benchmark-Tests wird schließlich die Methode ausgewählt, welche die geringste Laufzeit 
-aufweist. Zum Abschluss der Arbeit wird die neu entwickelte Variante \texttt{BipartiteGlobalCurveball} 
-mit dem schon existierenden \gc{} verglichen.
+aufweist. Die neu entwickelte Variante \texttt{BipartiteGlobalCurveball} wird abschließend 
+mit dem existierenden \cb{} verglichen.
